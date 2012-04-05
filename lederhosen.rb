@@ -3,11 +3,115 @@
 require 'rubygems'
 require 'thor'
 require 'dna'
-require 'zlib'
+
+class Lederhosen < Thor
+
+  ##
+  # QUALITY TRIMMING
+  #
+  desc "trim", "trim sequences in raw_reads/ saves to trimmed/"
+  method_options :raw_reads => :string
+  def trim
+    raw_reads = options[:raw_reads] || 'spec/data/*'
+    `mkdir -p trimmed/`
+    raw_reads = Helpers.get_grouped_qseq_files raw_reads
+    puts "found #{raw_reads.length} pairs of reads"
+    puts "trimming!"
+    raw_reads.each do |a|
+      out = File.join('trimmed/', "#{File.basename(a[0])}.fasta")
+      Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
+    end
+  end
+
+  ##
+  # PAIRED-END READ WORK-AROUND (JOIN THEM)
+  #
+  desc "join", "join trimmed reads back to back"
+  def join
+    puts "joining!"
+    `mkdir -p joined/`
+    trimmed = Dir['trimmed/*.fasta']
+    output = File.open('joined/joined.fasta', 'w')
+    trimmed.each do |fasta_file|
+      records = Dna.new File.open(fasta_file)
+      records.each_slice(2) do |r, l|
+        output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
+      end
+    end
+  end
+
+  ##
+  # SORT JOINED READS BY LENGTH
+  #
+  desc "sort", "sort joined reads by length"
+  def sort
+    `uclust --sort joined/joined.fasta --output sorted.fasta`
+  end
+
+  ##
+  # FINALLY, CLUSTER!
+  #
+  desc "cluster", "cluster sorted joined reads"
+  method_options :id => :float, :out => :string
+  def cluster
+    identity = options[:identity] || 0.8
+    output = options[:output] || 'clusters.txt'
+    cmd = [
+      'uclust',
+      '--input sorted.fasta',
+      "--uc #{output}",
+      "--id #{identity}",
+    ].join(' ')
+    exec cmd
+  end
+
+  ##
+  # MAKE TABLES
+  #
+  desc "tables", "generate tables"
+  method_options :input => :string
+  def tables
+    input = options[:input] || 'clusters.txt'
+    clusters = Hash.new
+
+    # Load cluster table!
+    clusters = Helpers.load_uc_file(input)
+
+    clusters_total = clusters.values.collect{ |x| x[:count] }.inject(:+)
+
+    # Get representative sequences!
+    reads_total = 0
+    representatives = {}
+    clusters.each{ |k, x| representatives[x[:seed]] = k }
+
+    output = File.open('representatives.fasta', 'w')
+
+    File.open('joined/joined.fasta') do |handle|
+      records = Dna.new handle
+      records.each do |dna|
+        reads_total += 1
+        if !representatives[dna.name].nil?
+          dna.name = "#{dna.name}:cluster_#{representatives[dna.name]}"
+          output.puts dna
+        end
+      end
+    end
+
+    output.close
+
+    # Print some statistics
+    puts "reads in clusters:  #{clusters_total}"    
+    puts "number of reads:    #{reads_total}"
+    puts "unique clusters:    #{clusters.keys.length}"
+
+    # TODO: Shannon diversity index (for each sample...)
+    
+  end
+end
 
 class Helpers
   class << self
-  
+
   # Function for grouping qseq files produced by splitting illumina
   # reads by barcode
   #
@@ -26,10 +130,10 @@ class Helpers
     left_handle  = File.open left
     right_handle = File.open right
     out_handle   = File.open out, 'w'
-    
+
     left_reads  = Dna.new left_handle
     right_reads = Dna.new right_handle
-    
+
     i = 0
     left_reads.zip(right_reads).each do |a, b|
       i += 1
@@ -69,53 +173,30 @@ class Helpers
     dna.sequence[start, _end - start].gsub('.', 'N') rescue nil
   end
 
-  end
-end
-
-class Lederhosen < Thor
-  desc "trim", "trim sequences in raw_reads/ saves to trimmed/"
-  def trim
-    puts "trimming!"
-    `mkdir -p trimmed/`
-    raw_reads = Helpers.get_grouped_qseq_files 'spec/data/*'
-    raw_reads.each do |a|
-      out = File.join('trimmed/', "#{File.basename(a[0])}.fasta")
-      Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
-    end
-  end
-
-  desc "join", "join trimmed reads back to back"
-  def join
-    puts "joining!"
-    `mkdir -p joined/`
-    trimmed = Dir['trimmed/*.fasta']
-    output = File.open('joined/joined.fasta', 'w')
-    trimmed.each do |fasta_file|
-      records = Dna.new File.open(fasta_file)
-      records.each_slice(2) do |r, l|
-        output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
+  # Load uc file from uclust
+  # returns hash
+  # { "cluster_number" => { :seed => "seed_fasta_header", :count => "number of pairs" } }
+  def load_uc_file(input)
+    clusters = Hash.new
+    File.open(input) do |handle|
+      handle.each do |line|
+        next if line =~ /^#/
+        line = line.strip.split
+        type = line[0]
+        clusternr = line[1]
+        querylabel = line[8]
+        targetlabel = line[9]
+        # SEED CLUSTER
+        if type == 'S'
+          clusters[clusternr] = { :seed => querylabel, :count => 1 }
+        elsif type == 'H'
+          clusters[clusternr][:count] += 1
+        end
       end
     end
+    clusters
   end
-
-  desc "sort", "sort joined reads by length"
-  def sort
-    `uclust --sort joined/joined.fasta --output sorted.fasta`
-  end
-
-  desc "cluster", "cluster sorted joined reads"
-  method_options :identity => :float, :output => :string
-  def cluster
-    identity = options[:identity] || 0.8
-    output = options[:output] || 'clusters_80'
-    cmd = [
-      'uclust',
-      '--input sorted.fasta',
-      "--uc #{options[:output]}",
-      "--id #{options[:identity]}",
-    ].join(' ')
-    exec cmd
-  end
+  end # class << self
 end
 
-Munchen.start if __FILE__ == $0
+Lederhosen.start if __FILE__ == $0
