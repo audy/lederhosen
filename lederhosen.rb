@@ -51,7 +51,7 @@ class Lederhosen < Thor
   # SORT JOINED READS BY LENGTH
   #
   desc "sort fasta file by length", "--input=joined.fasta"
-  method_options :input => :string
+  method_options :input => :string, :outout => :string
   def sort
     input = options[:input] || 'joined.fasta'
     output = options[:output] || 'sorted.fasta'
