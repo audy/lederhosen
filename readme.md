@@ -15,20 +15,20 @@ Alternatively, you may use Bundler to install dependencies.
 
 ### 1. Trim raw reads
 
-`$ lederhosen.rb trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
+`$ lederhosen.rb trim --reads-dir=reads-dir/*.txt`
 
 ### 2. Join trimmed reads
 
-`$ lederhosen.rb join --reads-dir=trimmed/*.fasta --output=joined.fasta`
+`$ lederhosen.rb join`
 
 ### 3. Sort trimmed reads
 
-`$ lederhosen.rb sort --input=joined.fasta --output=sorted.fastsa`
+`$ lederhosen.rb sort`
 
 ### 4. Cluster sorted reads
 
-`$ lederhosen.rb cluster --input=sorted.fasta --identity=0.975 --output=clusters.txt`
+`$ lederhosen.rb cluster --idenity=0.974`
 
 ### 5. Make tables & Get representative sequences
 
-`% lederhosen.rb otu_table --clusters=clusters.txt --joined-reads=joined.fasta`
+`% lederhosen.rb otu_table --clusters=clusters_97.5.txt`
