@@ -9,16 +9,20 @@ class Lederhosen < Thor
   ##
   # QUALITY TRIMMING
   #
-  desc "trim", "trim sequences in raw_reads/ saves to trimmed/"
-  method_options :raw_reads => :string
+  desc "trim Illumina QSEQ files", "--reads_dir=reads/* --out_dir=trimmed.fasta"
+  method_options :reads_dir => :string, :out_dir => :string
   def trim
+    
     raw_reads = options[:raw_reads] || 'spec/data/*'
-    `mkdir -p trimmed/`
+    out_dir = options[:out] || 'trimmed/'
+    
+    `mkdir -p #{out_dir}`
+    
     raw_reads = Helpers.get_grouped_qseq_files raw_reads
     puts "found #{raw_reads.length} pairs of reads"
     puts "trimming!"
     raw_reads.each do |a|
-      out = File.join('trimmed/', "#{File.basename(a[0])}.fasta")
+      out = File.join(out_dir, "#{File.basename(a[0])}.fasta")
       Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
     end
   end
@@ -26,12 +30,15 @@ class Lederhosen < Thor
   ##
   # PAIRED-END READ WORK-AROUND (JOIN THEM)
   #
-  desc "join", "join trimmed reads back to back"
+  desc "join reads end-to-end", "--trimmed=trimmed/*.fasta --output=joined.fasta"
+  method_options :reads_dir => :string, :output => :string
   def join
     puts "joining!"
-    `mkdir -p joined/`
-    trimmed = Dir['trimmed/*.fasta']
-    output = File.open('joined/joined.fasta', 'w')
+
+    trimmed = Dir[options[:input] || 'trimmed/*.fasta']
+    output = options[:output] || 'joined.fasta'
+
+    output = File.open(output, 'w')
     trimmed.each do |fasta_file|
       records = Dna.new File.open(fasta_file)
       records.each_slice(2) do |r, l|
@@ -43,22 +50,27 @@ class Lederhosen < Thor
   ##
   # SORT JOINED READS BY LENGTH
   #
-  desc "sort", "sort joined reads by length"
+  desc "sort fasta file by length", "--input=joined.fasta"
+  method_options :input => :string
   def sort
-    `uclust --sort joined/joined.fasta --output sorted.fasta`
+    input = options[:input] || 'joined.fasta'
+    output = options[:output] || 'sorted.fasta'
+    `uclust --sort #{input} --output #{output}`
   end
 
   ##
   # FINALLY, CLUSTER!
   #
-  desc "cluster", "cluster sorted joined reads"
-  method_options :id => :float, :out => :string
+  desc "cluster fasta file", "--input=sorted.fasta --identity=0.80 --output=clusters.uc"
+  method_options :input => :string, :output => :string, :identity => :float
   def cluster
     identity = options[:identity] || 0.8
-    output = options[:output] || 'clusters.txt'
+    output = options[:output] || 'clusters.uc'
+    input = options[:input] || 'sorted.fasta'
+    
     cmd = [
       'uclust',
-      '--input sorted.fasta',
+      "--input #{input}",
       "--uc #{output}",
       "--id #{identity}",
     ].join(' ')
@@ -68,10 +80,13 @@ class Lederhosen < Thor
   ##
   # MAKE TABLES
   #
-  desc "tables", "generate tables"
-  method_options :input => :string
-  def tables
+  desc "generate otu tables & representative reads", "--clusters=clusters.txt --output=otu_prefix --joined_reads=joined.fasta"
+  method_options :clusters => :string, :output => :string, :joined_reads => :string
+  def otu_table
     input = options[:input] || 'clusters.txt'
+    output = options[:output] || 'otu_table.txt'
+    joined_reads = options[:joined_reads] || 'joined.fasta'
+
     clusters = Hash.new
 
     # Load cluster table!
@@ -84,9 +99,9 @@ class Lederhosen < Thor
     representatives = {}
     clusters.each{ |k, x| representatives[x[:seed]] = k }
 
-    output = File.open('representatives.fasta', 'w')
+    output = File.open("#{output}.fasta", 'w')
 
-    File.open('joined/joined.fasta') do |handle|
+    File.open(joined_reads) do |handle|
       records = Dna.new handle
       records.each do |dna|
         reads_total += 1
@@ -105,7 +120,9 @@ class Lederhosen < Thor
     puts "unique clusters:    #{clusters.keys.length}"
 
     # TODO: Shannon diversity index (for each sample...)
-    
+
+    # TODO: OTU abundance matrix
+
   end
 end
 
