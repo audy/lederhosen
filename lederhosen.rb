@@ -4,6 +4,9 @@ require 'rubygems'
 require 'thor'
 require 'dna'
 
+fail "you need to install uclust and have it in your $PATH" if `which uclust` == ''
+
+
 class Lederhosen < Thor
 
   ##
