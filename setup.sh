@@ -5,7 +5,6 @@ echo "Note: You may need to be root.\n\nIf you get an error try running this:\n 
 if [ ! `which uclust` ]; then
   echo "NOTE: You must have uclust installed and in your \$PATH \n"
 fi
-exit
 
 echo "Installing Lederhosen dependencies"
 for gem in dna bundler rspec thor; do
