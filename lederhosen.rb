@@ -83,8 +83,8 @@ class Lederhosen < Thor
   desc "generate otu tables & representative reads", "--clusters=clusters.txt --output=otu_prefix --joined_reads=joined.fasta"
   method_options :clusters => :string, :output => :string, :joined_reads => :string
   def otu_table
-    input = options[:input] || 'clusters.txt'
-    output = options[:output] || 'otu_table.txt'
+    input = options[:input] || 'clusters.uc'
+    output = options[:output] || 'otus'
     joined_reads = options[:joined_reads] || 'joined.fasta'
 
     clusters = Hash.new
