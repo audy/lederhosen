@@ -9,22 +9,22 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
 ## How do I use Lederhosen?
 
-### Trim raw reads
+### 1. Trim raw reads
 
 `$ ./lederhosen.rb trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
 
-### Join trimmed reads
+### 2. Join trimmed reads
 
 `$ ./lederhosen.rb join --reads-dir=trimmed/*.fasta --output=joined.fasta`
 
-### Sort trimmed reads
+### 3. Sort trimmed reads
 
 `$ ./lederhosen.rb sort --input=joined.fasta --output=sorted.fastsa`
 
-### Cluster sorted reads
+### 4. Cluster sorted reads
 
 `$ ./lederhosen.rb cluster --input=sorted.fasta --identity=0.975 --output=clusters.txt`
 
-### Make tables & Get representative sequences
+### 5. Make tables & Get representative sequences
 
 `% ./lederhosen.rb otu_table --clusters=clusters.txt --joined-reads=joined.fasta`
