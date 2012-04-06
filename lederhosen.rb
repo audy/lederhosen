@@ -16,7 +16,7 @@ class Lederhosen < Thor
   method_options :reads_dir => :string, :out_dir => :string
   def trim
     
-    raw_reads = options[:raw_reads] || 'spec/data/*'
+    raw_reads = options[:reads_dir]
     out_dir = options[:out_dir] || 'trimmed/'
     
     `mkdir -p #{out_dir}`
