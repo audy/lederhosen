@@ -4,7 +4,7 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
 ## How do I get Lederhosen?
 
-0. Obtain & Install uclust (64-bit)]
+0. Obtain & Install uclust (64-bit)
 1. Download & extract this repo.
 2. `(sudo) sh setup.sh`
 
