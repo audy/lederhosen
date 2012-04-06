@@ -13,22 +13,24 @@ Alternatively, you may use Bundler to install dependencies.
 
 ## How do I use Lederhosen?
 
+Type `lederhosen help` for complete instructions
+
 ### 1. Trim raw reads
 
-`$ lederhosen.rb trim --reads-dir=reads-dir/*.txt`
+`$ lederhosen trim --reads-dir=reads-dir/*.txt`
 
 ### 2. Join trimmed reads
 
-`$ lederhosen.rb join`
+`$ lederhosen join`
 
 ### 3. Sort trimmed reads
 
-`$ lederhosen.rb sort`
+`$ lederhosen sort`
 
 ### 4. Cluster sorted reads
 
-`$ lederhosen.rb cluster --idenity=0.974`
+`$ lederhosen cluster --idenity=0.974`
 
 ### 5. Make tables & Get representative sequences
 
-`% lederhosen.rb otu_table --clusters=clusters_97.5.txt`
+`% lederhosen otu_table --clusters=clusters_97.5.txt`
