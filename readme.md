@@ -4,6 +4,8 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
 ## How do I get Lederhosen?
 
+0. [Download & Install uclust (64-bit)](http://www.drive5.com/uclust/downloads1_2_22q.html)
+    (*note: this version of uclust is licensed for Qiime so only download it if you're using it with Qiime.)
 1. Download & extract this repo.
 2. `sh setup.sh`
 
