@@ -25,12 +25,12 @@ describe 'the pipeline' do
   end
 
   it 'should cluster reads' do
-    `./lederhosen.rb cluster --identity=0.80 --reads=#{test_dir}/sorted.fasta --output=#{test_dir}/clusters.uc`
+    `./lederhosen.rb cluster --identity=0.80 --input=#{test_dir}/sorted.fasta --output=#{test_dir}/clusters.uc`
     $?.success?.should be_true
   end
 
   it 'should build OTU abundance matrices' do
-    `./lederhosen.rb otu_table --clusters=#{test_dir}/clusters.uc --output=#{test_dir}/test_tables --joined_reads=#{test_dir}/joined.fasta`
+    `./lederhosen.rb otu_table --clusters=#{test_dir}/clusters.uc --output=#{test_dir}/test_tables --joined=#{test_dir}/joined.fasta`
     $?.success?.should be_true
   end
 

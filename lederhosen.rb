@@ -14,7 +14,7 @@ class Lederhosen < Thor
   def trim
     
     raw_reads = options[:raw_reads] || 'spec/data/*'
-    out_dir = options[:out] || 'trimmed/'
+    out_dir = options[:out_dir] || 'trimmed/'
     
     `mkdir -p #{out_dir}`
     
@@ -31,12 +31,14 @@ class Lederhosen < Thor
   # PAIRED-END READ WORK-AROUND (JOIN THEM)
   #
   desc "join reads end-to-end", "--trimmed=trimmed/*.fasta --output=joined.fasta"
-  method_options :reads_dir => :string, :output => :string
+  method_options :trimmed => :string, :output => :string
   def join
     puts "joining!"
 
-    trimmed = Dir[options[:input] || 'trimmed/*.fasta']
+    trimmed = Dir[options[:trimmed] || 'trimmed/*.fasta']
     output = options[:output] || 'joined.fasta'
+
+    fail "no reads in #{trimmed}" if trimmed.length == 0
 
     output = File.open(output, 'w')
     trimmed.each do |fasta_file|
@@ -50,8 +52,8 @@ class Lederhosen < Thor
   ##
   # SORT JOINED READS BY LENGTH
   #
-  desc "sort fasta file by length", "--input=joined.fasta"
-  method_options :input => :string, :outout => :string
+  desc "sort fasta file by length", "--input=joined.fasta --output=sorted.fasta"
+  method_options :input => :string, :output => :string
   def sort
     input = options[:input] || 'joined.fasta'
     output = options[:output] || 'sorted.fasta'
@@ -80,12 +82,12 @@ class Lederhosen < Thor
   ##
   # MAKE TABLES
   #
-  desc "generate otu tables & representative reads", "--clusters=clusters.uc --output=otu_prefix --joined_reads=joined.fasta"
-  method_options :clusters => :string, :output => :string, :joined_reads => :string
+  desc "generate otu tables & representative reads", "--clusters=clusters.uc --output=otu_prefix --joined=joined.fasta"
+  method_options :clusters => :string, :output => :string, :joined => :string
   def otu_table
     input = options[:clusters] || 'clusters.uc'
     output = options[:output] || 'otus'
-    joined_reads = options[:joined_reads] || 'joined.fasta'
+    joined_reads = options[:joined] || 'joined.fasta'
 
     clusters = Hash.new
 
