@@ -29,7 +29,7 @@ Type `lederhosen help` for complete instructions
 
 ### 4. Cluster sorted reads
 
-`$ lederhosen cluster --idenity=0.974`
+`$ lederhosen cluster --idenity=0.975`
 
 ### 5. Make tables & Get representative sequences
 
