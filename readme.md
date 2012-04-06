@@ -1,49 +1,30 @@
 # Lederhosen
 
-Cluster OTUs
+Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
 ## How do I get Lederhosen?
 
+1. Download & extract this repo.
+2. `sh setup.sh`
 
-### Download and install Lederhosen
-```
-$ git clone http://github.com/audy/lederhosen.git
-$ cd lederhosen
-$ sudo gem install bundler
-$ sudo bundle install
-```
+## How do I use Lederhosen?
 
-### At this point you should be able to hose your leders:
-```
-$ ./lederhosen.rb
+### Trim raw reads
 
-    Tasks:
-    lederhosen.rb cluster      # cluster sorted joined reads
-    lederhosen.rb help [TASK]  # Describe available tasks or one specific task
-    lederhosen.rb join         # join trimmed reads back to back
-    lederhosen.rb sort         # sort joined reads by length
-    lederhosen.rb trim         # trim sequences in raw_reads/ saves to trimmed/
-```
+`$ ./lederhosen.rb trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
 
-### Get some Illumina data
+### Join trimmed reads
 
-```
-$ ls raw_reads/
-ILT_L_9_B_001_1.txt ILT_L_9_B_001_3.txt
-```
+`$ ./lederhosen.rb join --reads-dir=trimmed/*.fasta --output=joined.fasta`
 
-### Kewl! The pipeline goes like this
-```
-# QUALITY TRIMMING
-./lederhosen.rb trim
+### Sort trimmed reads
 
-# JOIN READS
-./lederhosen.rb join
+`$ ./lederhosen.rb sort --input=joined.fasta --output=sorted.fastsa`
 
-# SORT READS
-./lederhosen.rb sort
+### Cluster sorted reads
 
-# CLUSTER THEM!
-./lederhosen.rb cluster --identity=0.95 --output=this_is_a_test
+`$ ./lederhosen.rb cluster --input=sorted.fasta --identity=0.975 --output=clusters.txt`
 
-```
+### Make tables & Get representative sequences
+
+`% ./lederhosen.rb otu_table --clusters=clusters.txt --joined-reads=joined.fasta`
