@@ -26,7 +26,8 @@ class Lederhosen < Thor
     puts "trimming!"
     raw_reads.each do |a|
       out = File.join(out_dir, "#{File.basename(a[0])}.fasta")
-      Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
+      # TODO get total and trimmed
+      total, trimmed = Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
     end
   end
 
