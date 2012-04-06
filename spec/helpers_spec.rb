@@ -5,7 +5,7 @@ describe Helpers do
   let (:groups) { Helpers.get_grouped_qseq_files('spec/data/*.txt') }
   
   it 'should have a method for grouping QSEQ files' do
-    groups.should == { "spec/data/ILT_L_9_B_001" => ["spec/data/ILT_L_9_B_001_1.txt", "spec/data/ILT_L_9_B_001_3.txt" ]}
+    groups.length.should == 2
   end
 
   it 'should have a method for trimming sequences' do
