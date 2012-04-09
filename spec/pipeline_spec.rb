@@ -34,4 +34,8 @@ describe 'the pipeline' do
     $?.success?.should be_true
   end
 
+  it 'should split joined.fasta into reads for each cluster' do
+    `./lederhosen.rb split --reads=#{test_dir}/joined.fasta --clusters=#{test_dir}/clusters.uc --output=#{test_dir}/split --min-clst-size=1`
+  end
+
 end

@@ -33,3 +33,9 @@ Type `lederhosen help` for complete instructions
 ### 5. Make tables & Get representative sequences
 
 `% lederhosen otu_table --clusters=clusters_97.5.txt`
+
+### 6. Get fasta files with reads for each cluster
+
+`% lederhosen split --clusters=clusters_97.5.txt --reads=joined.fasta --min-clst-size=100`
+
+`--min-clst-size` is the minimum reads a cluster must have in order to for a fasta file containing its reads to be created. The reason for needing this because it is computationally prohibitive to randomly write millions of files or store all reads in memory, sort, and output non-randomly.

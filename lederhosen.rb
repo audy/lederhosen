@@ -3,9 +3,10 @@
 require 'rubygems'
 require 'thor'
 require 'dna'
+require 'set'
+require 'progressbar'
 
 fail "you need to install uclust and have it in your $PATH" if `which uclust` == ''
-
 
 class Lederhosen < Thor
 
@@ -98,14 +99,14 @@ class Lederhosen < Thor
     # Load cluster table!
     clusters = Helpers.load_uc_file(input)
 
-    clusters_total = clusters.values.collect{ |x| x[:count] }.inject(:+)
+    clusters_total = clusters[:count_data].values.collect{ |x| x[:total] }.inject(:+)
 
     # Get representative sequences!
     reads_total = 0
     representatives = {}
-    clusters.each{ |k, x| representatives[x[:seed]] = k }
+    clusters[:count_data].each{ |k, x| representatives[x[:seed]] = k }
 
-    output = File.open("#{output}.fasta", 'w')
+    out_handle = File.open("#{output}.fasta", 'w')
 
     File.open(joined_reads) do |handle|
       records = Dna.new handle
@@ -113,23 +114,98 @@ class Lederhosen < Thor
         reads_total += 1
         if !representatives[dna.name].nil?
           dna.name = "#{dna.name}:cluster_#{representatives[dna.name]}"
-          output.puts dna
+          out_handle.puts dna
         end
       end
     end
 
-    output.close
+    out_handle.close
 
     # Print some statistics
     puts "reads in clusters:  #{clusters_total}"    
     puts "number of reads:    #{reads_total}"
     puts "unique clusters:    #{clusters.keys.length}"
 
-    # TODO: Shannon diversity index (for each sample...)
-
-    # TODO: OTU abundance matrix
+    # print OTU abundancy matrix
+    csv = Helpers.cluster_data_as_csv(clusters)
+    File.open("#{output}.csv", 'w') do |h|
+      h.puts csv
+    end
 
   end
+
+  ##
+  # Create a fasta file with nucleotide sequences for each cluster larger than a cutoff
+  #
+  desc "output separate fasta file containing sequences belonging to each cluster", "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=100"
+  method_options :clusters => :string, :reads=> :string, :buffer_size => :int, :min_clst_size => :int
+  def split
+    clusters = options[:clusters] || 'clusters.uc'
+    reads    = options[:reads]    || 'joined.fasta'
+    out_dir  = options[:out_dir]        || 'clusters_split'
+    buffer_size = (options[:buffer_size] || 1000).to_i
+    min_clst_size = (options[:min_clst_size] || 100).to_i
+    finalize_every = 100_000
+
+    `mkdir -p #{out_dir}/`
+
+    puts "loading #{clusters}"
+
+    # Load read id -> cluster
+    read_to_clusterid = Hash.new
+
+    # keep track of cluster sizes
+    cluster_counts    = Hash.new { |h, k| h[k] = 0}
+
+    File.open(clusters)do |handle|
+      handle.each do |line|
+        line = line.strip.split
+        cluster_nr = line[1]
+        if line[0] == 'S' || line[0] == 'H'
+          read = line[8]
+        else
+          next
+        end
+        read_to_clusterid[read] = cluster_nr
+        cluster_counts[cluster_nr] += 1
+      end
+    end
+
+    read_to_clusterid.delete_if do |read, cluster_nr|
+      cluster_counts[cluster_nr] < min_clst_size
+    end
+
+    total_reads = read_to_clusterid.length
+    total_clusters = read_to_clusterid.values.uniq.length
+    puts "#{total_reads} reads in #{total_clusters} clusters"
+
+    puts "writing out fasta files"
+    
+    pbar = ProgressBar.new "writing", total_reads
+
+    # Write reads to individual fasta files using Buffer
+    buffer = Buffer.new :buffer_max => buffer_size
+    File.open(reads) do |handle|
+      records = Dna.new handle
+      $stderr.puts "reads = #{reads}"
+      records.each_with_index do |record, i|
+        cluster_id = read_to_clusterid[record.name]
+        if cluster_id
+          pbar.inc
+          filename = File.join(out_dir, cluster_id + '.fasta')
+          buffer[filename] << record
+          buffer.finalize if (i%finalize_every == 0)
+        end
+      end
+    end
+
+    pbar.finish
+    puts "finalizing output"
+    buffer.finalize # finish writing out
+
+    puts "done"
+  end
+  
 end
 
 class Helpers
@@ -197,29 +273,115 @@ class Helpers
   end
 
   # Load uc file from uclust
-  # returns hash
-  # { "cluster_number" => { :seed => "seed_fasta_header", :count => "number of pairs" } }
+  # returns hash with various data
   def load_uc_file(input)
     clusters = Hash.new
+    
+    # store a list of samples
+    clusters[:samples] = Set.new
+    
+    # data for each cluster
+    # - total size
+    # - size by sample
+    # - seed sequence
+    clusters[:count_data] = Hash.new
+    
     File.open(input) do |handle|
       handle.each do |line|
+        
+        # skip comments
         next if line =~ /^#/
+        
         line = line.strip.split
+        
+        # things we want to know
         type = line[0]
         clusternr = line[1]
         querylabel = line[8]
         targetlabel = line[9]
-        # SEED CLUSTER
-        if type == 'S'
-          clusters[clusternr] = { :seed => querylabel, :count => 1 }
-        elsif type == 'H'
-          clusters[clusternr][:count] += 1
+        sample = line[8].split(':')[2]
+        
+        # keep track of all samples
+        clusters[:samples] << sample
+        
+        if type == 'S' # = Seed Sequence
+          clusters[:count_data][clusternr] = { :seed => querylabel, :total => 1, :counts => Hash.new{ |h, k| h[k] = 0 } }
+        elsif type == 'H' # = Seed Member
+          clusters[:count_data][clusternr][:total] += 1
+          clusters[:count_data][clusternr][:counts][sample] += 1
         end
+        
       end
     end
     clusters
   end
+  
+  def cluster_data_as_csv(data)
+    samples = data[:samples].to_a
+    counts = data[:count_data]
+  
+    sep = "\t"
+    csv = []
+    csv << ['-'] + samples
+    counts.keys.each do |cluster|
+      csv << ["cluster-#{cluster}"] + samples.collect { |x| "#{counts[cluster][:counts][x]}" }
+    end
+    csv.collect { |x| x.join("\t")}.join("\n")
+  end
+  
   end # class << self
 end
+
+class Buffer
+  # for when you need to write out to a shitload of files.
+
+  #
+  # Create a new buffer
+  #
+  def initialize(args={})
+    @buffer = Hash.new { |h, k| h[k] = Array.new }
+    @buffer_max = args[:buffer_max] || 100_000
+  end
+
+  #
+  # Add an object to the buffer
+  #
+  def add_to bucket, obj
+
+    @buffer[bucket] << obj.to_s
+
+    if @buffer[bucket].length > @buffer_max
+      # write out
+      File.open(bucket, 'a+') do |out|
+        @buffer[bucket].each do |v|
+          out.puts v
+        end
+      end
+
+      # clear that bucket
+      @buffer[bucket].clear
+    end
+  end
+
+  def [] k
+    @buffer[k]
+  end
+
+  #
+  # Writes out leftover objects
+  #
+  def finalize
+    @buffer.each_key do |bucket|
+      File.open(bucket, 'a+') do |out|
+        @buffer[bucket].each do |v|
+          out.puts v
+        end
+      end
+    end
+    @buffer = Hash.new { |h, k| h[k] = Array.new }
+  end
+
+end
+
 
 Lederhosen.start if __FILE__ == $0
