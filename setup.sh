@@ -7,7 +7,7 @@ if [ ! `which uclust` ]; then
 fi
 
 echo "Installing Lederhosen dependencies"
-for gem in dna bundler rspec thor; do
+for gem in dna bundler rspec thor progressbar; do
   gem install $gem --no-ri --no-rdoc > /dev/null
 done
 
