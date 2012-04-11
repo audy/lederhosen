@@ -62,7 +62,7 @@ class Lederhosen < Thor
   def sort
     input = options[:input] || 'joined.fasta'
     output = options[:output] || 'sorted.fasta'
-    `uclust --sort #{input} --output #{output}`
+    `uclust --mergesort #{input} --output #{output}`
   end
 
   ##
@@ -87,7 +87,7 @@ class Lederhosen < Thor
   ##
   # MAKE TABLES
   #
-  desc "generate otu tables & representative reads", "--clusters=clusters.uc --output=otu_prefix --joined=joined.fasta"
+  desc "otu_tables generates otu tables & representative reads", "--clusters=clusters.uc --output=otu_prefix --joined=joined.fasta"
   method_options :clusters => :string, :output => :string, :joined => :string
   def otu_table
     input = options[:clusters] || 'clusters.uc'
