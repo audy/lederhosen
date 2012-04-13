@@ -5,10 +5,7 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 ## How do I get Lederhosen?
 
 0. Obtain & Install uclust (64-bit)
-1. Download & extract this repo.
-2. `(sudo) sh setup.sh`
-
-Alternatively, you may use Bundler to install dependencies.
+1. `sudo gem install lederhosen`
 
 ## How do I use Lederhosen?
 
@@ -32,7 +29,7 @@ Type `lederhosen help` for complete instructions
 
 ### 5. Make tables & Get representative sequences
 
-`% lederhosen otu_table --clusters=clusters_97.5.txt`
+`% lederhosen otu_table --clusters=clusters.uc --output=clusters9.75.txt`
 
 ### 6. Get fasta files with reads for each cluster
 
