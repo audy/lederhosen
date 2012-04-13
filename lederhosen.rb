@@ -255,6 +255,14 @@ class Helpers
   # returns just the sequence
   def trim(dna, args={})
 
+    # trim primers off of sequence
+    # (THIS IS EXPERIMENT-SPECIFIC)
+    dna.sequence = dna.sequence[11..-1]
+    dna.quality  = dna.quality[11..-1]
+
+    # throw away any read with an ambiguous primer
+    return nil if dna.sequence =~ /N/
+
     min = args[:min] || 20
     offset = args[:cutoff] || 64
     _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
