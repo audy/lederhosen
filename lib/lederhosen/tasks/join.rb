@@ -23,7 +23,14 @@ module Lederhosen
 
       trimmed.each do |fasta_file|
         pbar.inc
-        records = Dna.new File.open(fasta_file)
+
+        begin
+          records = Dna.new File.open(fasta_file)
+        rescue
+          ohai "skipping #{fasta_file} (empty?)"
+          next
+        end
+
         records.each_slice(2) do |r, l|
           output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
         end
