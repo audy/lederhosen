@@ -14,8 +14,7 @@ module Lederhosen
       `mkdir -p #{out_dir}`
 
       raw_reads = Helpers.get_grouped_qseq_files raw_reads
-      puts "found #{raw_reads.length} pairs of reads"
-      puts "trimming!"
+      ohai "found #{raw_reads.length} pairs of reads"
 
       pbar = ProgressBar.new "trimming", raw_reads.length
 
@@ -35,7 +34,6 @@ module Lederhosen
     desc "join reads end-to-end", "--trimmed=trimmed/*.fasta --output=joined.fasta"
     method_options :trimmed => :string, :output => :string
     def join
-      puts "joining!"
 
       trimmed = Dir[options[:trimmed] || 'trimmed/*.fasta']
       output = options[:output] || 'joined.fasta'
@@ -124,9 +122,9 @@ module Lederhosen
       out_handle.close
 
       # Print some statistics
-      puts "reads in clusters:  #{clusters_total}"    
-      puts "number of reads:    #{reads_total}"
-      puts "unique clusters:    #{clusters.keys.length}"
+      ohai "reads in clusters:  #{clusters_total}"    
+      ohai "number of reads:    #{reads_total}"
+      ohai "unique clusters:    #{clusters.keys.length}"
 
       # print OTU abundancy matrix
       csv = Helpers.cluster_data_as_csv(clusters)
@@ -151,7 +149,7 @@ module Lederhosen
 
       `mkdir -p #{out_dir}/`
 
-      puts "loading #{clusters}"
+      ohai "loading #{clusters}"
 
       # Load read id -> cluster
       read_to_clusterid = Hash.new
@@ -179,17 +177,14 @@ module Lederhosen
 
       total_reads = read_to_clusterid.length
       total_clusters = read_to_clusterid.values.uniq.length
-      puts "#{total_reads} reads in #{total_clusters} clusters"
+      ohai "#{total_reads} reads in #{total_clusters} clusters"
 
-      puts "writing out fasta files"
-
-      pbar = ProgressBar.new "writing", total_reads
+      pbar = ProgressBar.new "saving", total_reads
 
       # Write reads to individual fasta files using Buffer
       buffer = Buffer.new :buffer_max => buffer_size
       File.open(reads) do |handle|
         records = Dna.new handle
-        $stderr.puts "reads = #{reads}"
         records.each_with_index do |record, i|
           cluster_id = read_to_clusterid[record.name]
           if cluster_id
@@ -202,11 +197,19 @@ module Lederhosen
       end
 
       pbar.finish
-      puts "finalizing output"
+      ohai "finalizing output"
       buffer.finalize # finish writing out
 
       puts "done"
     end
 
+    no_tasks do
+      # just print string to STDERR
+      def ohai(s)
+        $stderr.puts s
+      end
+    end
+
   end # class CLI
+
 end # module
