@@ -118,7 +118,7 @@ module Lederhosen
       samples = data[:samples].to_a
       counts = data[:count_data]
 
-      sep = "\t"
+      sep = ","
       csv = []
       csv << ['-'] + samples
       counts.keys.each do |cluster|
