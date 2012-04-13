@@ -14,7 +14,7 @@ describe Helpers do
       Dna.new(handle).first
     end
     # I should probably test with a bad read
-    Helpers.trim(record).length.should == 100
+    Helpers.trim(record).length.should == 90
   end
 
   it 'should be able to trim pairs of qseq files, outputting fasta file' do
