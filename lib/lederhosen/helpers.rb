@@ -8,7 +8,7 @@ module Lederhosen
     # Filenames should look like this:
     # IL5_L_1_B_007_1.txt
     def get_grouped_qseq_files(glob='raw_reads/*.txt')
-      Dir.glob(glob).group_by { |x| x.split('_')[0..4].join('_') }
+      Dir.glob(glob).group_by { |x| File.basename(x).split('_')[0..4].join('_') }
     end
 
     # Trim a pair of QSEQ files. Saves to a single,
