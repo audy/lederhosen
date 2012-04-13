@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'lederhosen'))
+
+fail "you need to install uclust and have it in your $PATH" if `which uclust` == ''
+
+Lederhosen::CLI.start if __FILE__ == $0
