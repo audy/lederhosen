@@ -16,11 +16,17 @@ module Lederhosen
       raw_reads = Helpers.get_grouped_qseq_files raw_reads
       puts "found #{raw_reads.length} pairs of reads"
       puts "trimming!"
+
+      pbar = ProgressBar.new "trimming", raw_reads.length
+
       raw_reads.each do |a|
+        pbar.inc
         out = File.join(out_dir, "#{File.basename(a[0])}.fasta")
         # TODO get total and trimmed
         total, trimmed = Helpers.trim_pairs a[1][0], a[1][1], out, :min_length => 70
       end
+
+      pbar.finish
     end
 
     ##
@@ -37,12 +43,17 @@ module Lederhosen
       fail "no reads in #{trimmed}" if trimmed.length == 0
 
       output = File.open(output, 'w')
+
+      pbar = ProgressBar.new "joining", trimmed.length
+
       trimmed.each do |fasta_file|
+        pbar.inc
         records = Dna.new File.open(fasta_file)
         records.each_slice(2) do |r, l|
           output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
         end
       end
+      pbar.finish
     end
 
     ##
