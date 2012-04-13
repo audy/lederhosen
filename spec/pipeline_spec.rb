@@ -35,7 +35,7 @@ describe 'the pipeline' do
   end
 
   it 'should split joined.fasta into reads for each cluster' do
-    `./bin/lederhosen split --reads=#{test_dir}/joined.fasta --clusters=#{test_dir}/clusters.uc --output=#{test_dir}/split --min-clst-size=1`
+    `./bin/lederhosen split --reads=#{test_dir}/joined.fasta --clusters=#{test_dir}/clusters.uc --out-dir=#{test_dir}/split --min-clst-size=1`
   end
 
 end

@@ -129,7 +129,7 @@ module Lederhosen
     # Create a fasta file with nucleotide sequences for each cluster larger than a cutoff
     #
     desc "output separate fasta file containing sequences belonging to each cluster", "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=100"
-    method_options :clusters => :string, :reads=> :string, :buffer_size => :int, :min_clst_size => :int
+    method_options :clusters => :string, :reads=> :string, :buffer_size => :int, :min_clst_size => :int, :out_dir => :string
     def split
       clusters = options[:clusters] || 'clusters.uc'
       reads    = options[:reads]    || 'joined.fasta'
