@@ -5,11 +5,12 @@ module Lederhosen
     # QUALITY TRIMMING
     #
     desc "trim Illumina QSEQ files", "--reads_dir=reads/* --out_dir=trimmed.fasta"
-    method_options :reads_dir => :string, :out_dir => :string
+    method_option :reads_dir, :type => :string, :required => true
+    method_option :out_dir,   :type => :string, :default => 'trimmed/'
     def trim
 
       raw_reads = options[:reads_dir]
-      out_dir = options[:out_dir] || 'trimmed/'
+      out_dir = options[:out_dir]
 
       `mkdir -p #{out_dir}`
 
@@ -32,11 +33,12 @@ module Lederhosen
     # PAIRED-END READ WORK-AROUND (JOIN THEM)
     #
     desc "join reads end-to-end", "--trimmed=trimmed/*.fasta --output=joined.fasta"
-    method_options :trimmed => :string, :output => :string
+    method_option :trimmed, :type => :string, :default => 'trimmed/*,fasta'
+    method_option :output,  :type => :string, :default => 'joined.fasta'
     def join
 
-      trimmed = Dir[options[:trimmed] || 'trimmed/*.fasta']
-      output = options[:output] || 'joined.fasta'
+      trimmed = Dir[options[:trimmed]]
+      output = options[:output]
 
       fail "no reads in #{trimmed}" if trimmed.length == 0
 
@@ -59,9 +61,11 @@ module Lederhosen
     #
     desc "sort fasta file by length", "--input=joined.fasta --output=sorted.fasta"
     method_options :input => :string, :output => :string
+    method_option :input,  :type => :string, :default => 'joined.fasta'
+    method_option :output, :type => :string, :default => 'sorted.fasta'
     def sort
-      input = options[:input] || 'joined.fasta'
-      output = options[:output] || 'sorted.fasta'
+      input = options[:input]
+      output = options[:output]
       `uclust --mergesort #{input} --output #{output}`
     end
 
@@ -69,11 +73,13 @@ module Lederhosen
     # FINALLY, CLUSTER!
     #
     desc "cluster fasta file", "--input=sorted.fasta --identity=0.80 --output=clusters.uc"
-    method_options :input => :string, :output => :string, :identity => :float
+    method_option :input,    :type => :string,  :default => 'sorted.fasta'
+    method_option :output,   :type => :string,  :default => 'clusters.uc'
+    method_option :identity, :type => :numeric, :default => 0.8
     def cluster
-      identity = options[:identity] || 0.8
-      output = options[:output] || 'clusters.uc'
-      input = options[:input] || 'sorted.fasta'
+      identity = options[:identity]
+      output = options[:output]
+      input = options[:input]
 
       cmd = [
         'uclust',
@@ -88,11 +94,13 @@ module Lederhosen
     # MAKE TABLES
     #
     desc "otu_tables generates otu tables & representative reads", "--clusters=clusters.uc --output=otu_prefix --joined=joined.fasta"
-    method_options :clusters => :string, :output => :string, :joined => :string
+    method_option :clusters, :type => :string, :default => 'clusters.uc'
+    method_option :output,   :type => :string, :default => 'otus'
+    method_option :joined,   :type => :string, :default => 'joined.fasta'
     def otu_table
-      input = options[:clusters] || 'clusters.uc'
-      output = options[:output] || 'otus'
-      joined_reads = options[:joined] || 'joined.fasta'
+      input = options[:clusters]
+      output = options[:output]
+      joined_reads = options[:joined]
 
       clusters = Hash.new
 
@@ -138,13 +146,17 @@ module Lederhosen
     # Create a fasta file with nucleotide sequences for each cluster larger than a cutoff
     #
     desc "output separate fasta file containing sequences belonging to each cluster", "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=100"
-    method_options :clusters => :string, :reads=> :string, :buffer_size => :int, :min_clst_size => :int, :out_dir => :string
+    method_option :clusters,      :type => :string,  :default => 'clusters.uc'
+    method_option :reads,         :type => :string,  :default => 'joined.fasta'
+    method_option :out_dir,       :type => :string,  :default => 'clusters_split'
+    method_option :buffer_size,   :type => :numeric, :default => 1000
+    method_option :min_clst_size, :type => :numeric, :default => 100
     def split
-      clusters = options[:clusters] || 'clusters.uc'
-      reads    = options[:reads]    || 'joined.fasta'
-      out_dir  = options[:out_dir]        || 'clusters_split'
-      buffer_size = (options[:buffer_size] || 1000).to_i
-      min_clst_size = (options[:min_clst_size] || 100).to_i
+      clusters = options[:clusters]
+      reads    = options[:reads]
+      out_dir  = options[:out_dir]
+      buffer_size = options[:buffer_size]
+      min_clst_size = options[:min_clst_size]
       finalize_every = 100_000
 
       `mkdir -p #{out_dir}/`
