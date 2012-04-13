@@ -269,57 +269,56 @@ class Helpers
         first = a
       end
     end
-    dna.sequence[start, _end - start].gsub('.', 'N') rescue nil
+    dna.sequence[start + 11, _end - start].gsub('.', 'N') rescue nil
   end
 
   # Load uc file from uclust
   # returns hash with various data
   def load_uc_file(input)
     clusters = Hash.new
-    
+
     # store a list of samples
     clusters[:samples] = Set.new
-    
+
     # data for each cluster
     # - total size
     # - size by sample
     # - seed sequence
     clusters[:count_data] = Hash.new
-    
+
     File.open(input) do |handle|
       handle.each do |line|
-        
+
         # skip comments
         next if line =~ /^#/
-        
         line = line.strip.split
-        
+
         # things we want to know
-        type = line[0]
-        clusternr = line[1]
-        querylabel = line[8]
+        type        = line[0]
+        clusternr   = line[1]
+        querylabel  = line[8]
         targetlabel = line[9]
-        sample = line[8].split(':')[2]
-        
+        sample      = line[8].split(':')[2]
+
         # keep track of all samples
         clusters[:samples] << sample
-        
+
         if type == 'S' # = Seed Sequence
           clusters[:count_data][clusternr] = { :seed => querylabel, :total => 1, :counts => Hash.new{ |h, k| h[k] = 0 } }
         elsif type == 'H' # = Seed Member
           clusters[:count_data][clusternr][:total] += 1
           clusters[:count_data][clusternr][:counts][sample] += 1
         end
-        
+
       end
     end
     clusters
   end
-  
+
   def cluster_data_as_csv(data)
     samples = data[:samples].to_a
     counts = data[:count_data]
-  
+
     sep = "\t"
     csv = []
     csv << ['-'] + samples
@@ -328,7 +327,7 @@ class Helpers
     end
     csv.collect { |x| x.join("\t")}.join("\n")
   end
-  
+
   end # class << self
 end
 
