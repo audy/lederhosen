@@ -1,5 +1,6 @@
 module Lederhosen
   class CLI < Thor
+    include Thor::Actions
 
     no_tasks do
       # just print string to STDERR

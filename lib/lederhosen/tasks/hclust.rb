@@ -38,19 +38,33 @@ module Lederhosen
         `mkdir -p #{out_dir}/split`
 
         glob.each do |input|
-          clst_out = File.join(out_dir, identity, '.uc')
+          clst_out = File.join(out_dir, "#{input}.clusters.uc")
 
-          invoke :cluster,
-                  :identity => identity,
-                  :input    => input,
-                  :outdir   => clst_out
+          # cluster
+          cmd = [ './bin/lederhosen',
+             'cluster',
+             "--identity=#{identity}",
+             "--input=#{input}",
+             "--output=#{clst_out}"
+          ].join(' ')
+          run cmd
 
-          invoke :split,
-                  :clusters => clst_out,
-                  :reads    => input,
-                  :out_dir  => File.join(args[:out_dir], 'split')
+          # split
+          cmd = [ './bin/lederhosen',
+             'split',
+             "--clusters=#{clst_out}",
+             "--reads=#{input}",
+             "--out-dir=#{File.join(args[:out_dir], "#{input}.split")}",          
+          ].join(' ')
 
-        end # glob.each        
+          run cmd
+
+        end # glob.each
+
+        # combine cluster files
+        cluster_files = File.join(args[:out_dir], "*.split")
+        cmd = "cat File.join(#{cluster_files}, '*') > clusters.uc"
+                
       end # cluster_and_split
     end # no_task
     
