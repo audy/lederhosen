@@ -8,9 +8,9 @@ module Lederhosen
     desc "otu_tables generates otu tables & representative reads",
          "--clusters=clusters.uc --output=otu_prefix --joined=joined.fasta"
 
-    method_option :clusters, :type => :string, :default => 'clusters.uc'
-    method_option :output,   :type => :string, :default => 'otus'
-    method_option :joined,   :type => :string, :default => 'joined.fasta'
+    method_option :clusters, :type => :string, :required => true
+    method_option :output,   :type => :string, :required => true
+    method_option :joined,   :type => :string, :required => true
 
     def otu_table
       input = options[:clusters]

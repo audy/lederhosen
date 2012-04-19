@@ -7,8 +7,8 @@ module Lederhosen
     desc "join reads end-to-end",
          "--trimmed=trimmed/*.fasta --output=joined.fasta"
 
-    method_option :trimmed, :type => :string, :default => 'trimmed/*.fasta'
-    method_option :output,  :type => :string, :default => 'joined.fasta'
+    method_option :trimmed, :type => :string, :required => true
+    method_option :output,  :type => :string, :required => true
 
     def join
 

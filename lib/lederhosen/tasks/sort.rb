@@ -8,9 +8,8 @@ module Lederhosen
     desc "sort fasta file by length",
          "--input=joined.fasta --output=sorted.fasta"
 
-    method_options :input => :string, :output => :string
-    method_option :input,  :type => :string, :default => 'joined.fasta'
-    method_option :output, :type => :string, :default => 'sorted.fasta'
+    method_option :input,  :type => :string, :required => true
+    method_option :output, :type => :string, :required => true
 
     def sort
       input = options[:input]

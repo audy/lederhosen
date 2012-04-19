@@ -8,9 +8,9 @@ module Lederhosen
     desc "cluster fasta file",
          "--input=sorted.fasta --identity=0.80 --output=clusters.uc"
 
-    method_option :input,    :type => :string,  :default => 'sorted.fasta'
-    method_option :output,   :type => :string,  :default => 'clusters.uc'
-    method_option :identity, :type => :numeric, :default => 0.8
+    method_option :input,    :type => :string,  :required => true
+    method_option :output,   :type => :string,  :required => true
+    method_option :identity, :type => :numeric, :required => true
 
     def cluster
       identity = options[:identity]

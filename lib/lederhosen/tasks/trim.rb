@@ -9,7 +9,7 @@ module Lederhosen
          "--reads_dir=reads/* --out_dir=trimmed.fasta"
 
     method_option :reads_dir, :type => :string, :required => true
-    method_option :out_dir,   :type => :string, :default => 'trimmed/'
+    method_option :out_dir,   :type => :string, :required => true
 
     def trim
 
