@@ -13,23 +13,23 @@ Type `lederhosen help` for complete instructions
 
 ### 1. Trim raw reads
 
-`$ lederhosen trim --reads-dir=reads-dir/*.txt`
+`$ lederhosen trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
 
 ### 2. Join trimmed reads
 
-`$ lederhosen join`
+`$ lederhosen join --trimmed=trimmed --output=joined.fasta`
 
 ### 3. Sort trimmed reads
 
-`$ lederhosen sort`
+`$ lederhosen sort --input=joined.fasta --output=sorted.fasta`
 
 ### 4. Cluster sorted reads
 
-`$ lederhosen cluster --identity=0.975`
+`$ lederhosen cluster --identity=0.975 --input=sorted.fasta --output=clusters`
 
 ### 5. Make tables & Get representative sequences
 
-`% lederhosen otu_table --clusters=clusters.uc --output=clusters.975`
+`% lederhosen otu_table --clusters=clusters.uc --output=clusters.975 --joined=joined.fasta`
 
 This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta`) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
 
