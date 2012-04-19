@@ -36,3 +36,11 @@ Type `lederhosen help` for complete instructions
 `% lederhosen split --clusters=clusters_97.5.txt --reads=joined.fasta --min-clst-size=100`
 
 `--min-clst-size` is the minimum reads a cluster must have in order to for a fasta file containing its reads to be created. The reason for needing this because it is computationally prohibitive to randomly write millions of files or store all reads in memory, sort, and output non-randomly.
+
+### 7. Figuring out what the clusters (naming them)
+
+1. Download NCBI BLAST, or something that generates BLAST-like tables (i.e: BLAT)
+2. Download a 16S rRNA database (such as [taxcollector](http://www.microgator.org/taxcollector)).
+4. Generate representative reads for each cluster (that should have been done with the otu_table command).
+5. BLAST those reads against your 16S rRNA database. Use `-outfmt 6` to get tabular output.
+6. _et viola!_ you have identified your clusters.
