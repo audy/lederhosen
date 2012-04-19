@@ -1,6 +1,6 @@
 # Lederhosen
 
-Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
+Cluster raw Illumina 16S rRNA amplicon data to generate OTUs. Use at your own risk.
 
 ## How do I get Lederhosen?
 
@@ -25,11 +25,13 @@ Type `lederhosen help` for complete instructions
 
 ### 4. Cluster sorted reads
 
-`$ lederhosen cluster --idenity=0.975`
+`$ lederhosen cluster --identity=0.975`
 
 ### 5. Make tables & Get representative sequences
 
-`% lederhosen otu_table --clusters=clusters.uc --output=clusters9.75.txt`
+`% lederhosen otu_table --clusters=clusters.uc --output=clusters.975`
+
+This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta1) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
 
 ### 6. Get fasta files with reads for each cluster
 
