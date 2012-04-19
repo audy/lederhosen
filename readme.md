@@ -31,7 +31,7 @@ Type `lederhosen help` for complete instructions
 
 `% lederhosen otu_table --clusters=clusters.uc --output=clusters.975`
 
-This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta1) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
+This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta`) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
 
 ### 6. Get fasta files with reads for each cluster
 
