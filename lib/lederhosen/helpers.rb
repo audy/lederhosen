@@ -104,6 +104,7 @@ module Lederhosen
 
           if type == 'S' # = Seed Sequence
             clusters[:count_data][clusternr] = { :seed => querylabel, :total => 1, :counts => Hash.new{ |h, k| h[k] = 0 } }
+            clusters[:count_data][clusternr][:counts][sample] += 1
           elsif type == 'H' # = Seed Member
             clusters[:count_data][clusternr][:total] += 1
             clusters[:count_data][clusternr][:counts][sample] += 1
