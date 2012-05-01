@@ -16,17 +16,13 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs. Use at your own ri
 
 Type `lederhosen help` for complete instructions
 
-### 0. Pipeline
-
-(TODO)
-
 ### 1. Trim raw reads
 
 `$ lederhosen trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
 
 ### 2. Join trimmed reads
 
-`$ lederhosen join --trimmed=trimmed --output=joined.fasta`
+`$ lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta`
 
 ### 3. Sort trimmed reads
 
@@ -36,22 +32,28 @@ Type `lederhosen help` for complete instructions
 
 `$ lederhosen cluster --identity=0.975 --input=sorted.fasta --output=clusters`
 
-### 5. Make tables & Get representative sequences
+### 5. Make OTU tables
 
-`% lederhosen otu_table --clusters=clusters.uc --output=clusters.975 --joined=joined.fasta`
+`% lederhosen otu_table --clusters=clusters.uc --output=clusters_975.csv`
 
 This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta`) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
 
-### 6. Get fasta files with reads for each cluster
+### 6. Get representative reads from each cluster
+
+`% lederhosen rep_reads --clusters=clusters.uc --joined=joined.fasta --output=representatives.fasta`
+
+### 6. Get a fasta file containing all reads for each cluster
+
+(time consuming and probably not necessary)
 
 `% lederhosen split --clusters=clusters_97.5.txt --reads=joined.fasta --min-clst-size=100`
 
 `--min-clst-size` is the minimum reads a cluster must have in order to for a fasta file containing its reads to be created. The reason for needing this because it is computationally prohibitive to randomly write millions of files or store all reads in memory, sort, and output non-randomly.
 
-### 7. Figuring out what the clusters (naming them)
+### 7. Identifying Clusters
 
-1. Download NCBI BLAST, or something that generates BLAST-like tables (i.e: BLAT)
-2. Download a 16S rRNA database (such as [taxcollector](http://www.microgator.org/taxcollector)).
-4. Generate representative reads for each cluster (that should have been done with the otu_table command).
-5. BLAST those reads against your 16S rRNA database. Use `-outfmt 6` to get tabular output.
-6. _et viola!_ you have identified your clusters.
+(Still under development)
+
+You need BLAT (in your `$PATH`) & TaxCollector.
+
+`$ lederhosen name --reps=representatives.fasta --db=taxcollector.fa --output=output_prefix`
