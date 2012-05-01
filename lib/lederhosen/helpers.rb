@@ -76,57 +76,54 @@ module Lederhosen
     def load_uc_file(input)
       clusters = Hash.new
 
-      # store a list of samples
+      # keep track of samples
+      samples = Set.new
+
+      # store a list of all the sample IDs
       clusters[:samples] = Set.new
 
       # data for each cluster
-      # - total size
-      # - size by sample
-      # - seed sequence
-      clusters[:count_data] = Hash.new
+      # clstr_counts[:clstr][:sample] = number_of_reads
+      clstr_counts = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
 
+      # clstrnr_to_seed[seed_sequence_id] = clstr_nr
+      seed_to_clstrnr = Hash.new
       File.open(input) do |handle|
         handle.each do |line|
 
-          # skip comments
-          next if line =~ /^#/
+          next if line =~ /^#/ # skip comments
+
           line = line.strip.split
 
           # things we want to know
           type        = line[0]
-          clusternr   = line[1]
+          clusternr   = line[1].to_i
           querylabel  = line[8]
           targetlabel = line[9]
           sample      = line[8].split(':')[2]
+          
+          # keep track of samples
+          samples.add sample
 
           # keep track of all samples
-          clusters[:samples] << sample
+          clusters[:samples].add sample
 
           if type == 'S' # = Seed Sequence
-            clusters[:count_data][clusternr] = { :seed => querylabel, :total => 1, :counts => Hash.new{ |h, k| h[k] = 0 } }
-            clusters[:count_data][clusternr][:counts][sample] += 1
+            clstr_counts[clusternr][sample] += 1
+            seed_to_clstrnr[querylabel] = clusternr
           elsif type == 'H' # = Seed Member
-            clusters[:count_data][clusternr][:total] += 1
-            clusters[:count_data][clusternr][:counts][sample] += 1
+            clstr_counts[clusternr][sample] += 1
           end
 
         end
       end
-      clusters
+      return {
+        :clstr_counts    => clstr_counts,
+        :seed_to_clstrnr => seed_to_clstrnr,
+        :samples         => samples
+      }
     end
 
-    def cluster_data_as_csv(data)
-      samples = data[:samples].to_a
-      counts = data[:count_data]
-
-      sep = ","
-      csv = []
-      csv << ['-'] + samples
-      counts.keys.each do |cluster|
-        csv << ["cluster-#{cluster}"] + samples.collect { |x| "#{counts[cluster][:counts][x]}" }
-      end
-      csv.collect { |x| x.join("\t")}.join("\n")
-    end
 
     end # class << self
   end # class Helpers
