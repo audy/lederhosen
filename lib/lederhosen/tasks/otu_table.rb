@@ -45,34 +45,6 @@ module Lederhosen
         end
           
       end
-
-      # # Get representative sequences!
-      # reads_total = 0
-      # representatives = {}
-      # clusters[:count_data].each{ |k, x| representatives[x[:seed]] = k }
-      # 
-      # out_handle = File.open("#{output}.fasta", 'w')
-      # 
-      # File.open(joined_reads) do |handle|
-      #   records = Dna.new handle
-      #   records.each do |dna|
-      #     reads_total += 1
-      #     if !representatives[dna.name].nil?
-      #       dna.name = "#{dna.name}:cluster_#{representatives[dna.name]}"
-      #       out_handle.puts dna
-      #     end
-      #   end
-      # end
-      # 
-      # out_handle.close
-      # 
-      # # Print some statistics
-      # ohai "reads in clusters:  #{clusters_total}"    
-      # ohai "number of reads:    #{reads_total}"
-      # ohai "unique clusters:    #{clusters.keys.length}"
-
-
-
     end
 
   end
