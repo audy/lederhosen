@@ -31,7 +31,7 @@ module Lederhosen
           next
         end
 
-        records.each_slice(2) do |r, l|
+        records.each_slice(2) do |l, r|
           output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
         end
       end
