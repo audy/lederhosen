@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency('bundler')
   s.add_dependency('progressbar')
   s.add_dependency('bundler')
+  s.add_dependency('awesome_print')
 end
