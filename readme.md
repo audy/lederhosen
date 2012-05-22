@@ -16,44 +16,15 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs. Use at your own ri
 
 Type `lederhosen help` for complete instructions
 
-### 1. Trim raw reads
+See pipeline.sh for example usage.
 
-`$ lederhosen trim --reads-dir=reads-dir/*.txt --out-dir=trimmed`
+## Features
 
-### 2. Join trimmed reads
-
-`$ lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta`
-
-### 3. Sort trimmed reads
-
-`$ lederhosen sort --input=joined.fasta --output=sorted.fasta`
-
-### 4. Cluster sorted reads
-
-`$ lederhosen cluster --identity=0.975 --input=sorted.fasta --output=clusters`
-
-### 5. Make OTU tables
-
-`% lederhosen otu_table --clusters=clusters.uc --output=clusters_975.csv`
-
-This will output a csv (`clusters.975.csv`) and a fasta (`clusters.975.fasta`) file. The fasta file can be used to identify clusters in a 16S rRNA database using BLAST or something.
-
-### 6. Get representative reads from each cluster
-
-`% lederhosen rep_reads --clusters=clusters.uc --joined=joined.fasta --output=representatives.fasta`
-
-### 6. Get a fasta file containing all reads for each cluster
-
-(time consuming and probably not necessary)
-
-`% lederhosen split --clusters=clusters_97.5.txt --reads=joined.fasta --min-clst-size=100`
-
-`--min-clst-size` is the minimum reads a cluster must have in order to for a fasta file containing its reads to be created. The reason for needing this because it is computationally prohibitive to randomly write millions of files or store all reads in memory, sort, and output non-randomly.
-
-### 7. Identifying Clusters
-
-(Still under development)
-
-You need BLAT (in your `$PATH`) & TaxCollector.
-
-`$ lederhosen name --reps=representatives.fasta --db=taxcollector.fa --output=output_prefix`
+- Sequence trimming (paired-end Illumina).
+- K-mer filtering.
+- Clustering w/ UCLUST.
+- UCLUST output filtering.
+- Separation of representative reads.
+- Separation of all reads belonging to each cluster.
+- Identification of clusters using TaxCollector.
+- Generation of OTU abundancy matrices.
