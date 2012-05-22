@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "filter fasta file",
+    desc "k_filter khmer filtering",
          "--input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50"
 
     method_option :input,    :type => :string,  :required => true
@@ -13,7 +13,7 @@ module Lederhosen
     method_option :k,        :type => :numeric, :required => true
     method_option :cutoff,   :type => :numeric, :required => true
 
-    def filter
+    def k_filter
       input  = options[:input]
       output = options[:output]
       k_len  = options[:k].to_i
@@ -39,7 +39,7 @@ module Lederhosen
 
       kept = 0
       total_reads = total_reads.to_f
-      
+
       pbar = ProgressBar.new "saving", total_reads.to_i
       output = File.open(output, 'w')
       File.open(input) do |handle|
@@ -60,7 +60,7 @@ module Lederhosen
               break
             end
           end
-      
+
           if keep
             kept += 1
             output.puts r
@@ -70,7 +70,7 @@ module Lederhosen
       end
 
       pbar.finish
-      
+
       ohai "survivors = #{kept} (#{kept/total_reads.to_f})"
       output.close
     end
