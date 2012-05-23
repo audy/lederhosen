@@ -19,9 +19,16 @@ module Lederhosen
 
       # run blat/blast
       cmd = [
-      'blat', 
-        
+        'blat',
+        database,
+        reps,
+        '-t=dna',
+        '-q=dna',
+        '-out=blast8',
+        output      
       ]
+      
+      exec cmd.join(' ')
 
     end
 
