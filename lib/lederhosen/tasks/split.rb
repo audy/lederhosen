@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "output separate fasta file containing sequences belonging to each cluster",
+    desc "split",
          "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=100"
 
     method_option :clusters,      :type => :string, :required => true

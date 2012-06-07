@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "cluster fasta file",
+    desc "cluster",
          "--input=sorted.fasta --identity=0.80 --output=clusters.uc"
 
     method_option :input,    :type => :string,  :required => true

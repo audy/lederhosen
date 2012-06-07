@@ -7,7 +7,7 @@ SEP = ','
 module Lederhosen
   class CLI
 
-    desc "otu_tables generates otu tables",
+    desc "otu_table",
          "--clusters=clusters.uc --output=otu_prefix"
 
     method_option :clusters, :type => :string, :required => true

@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "uc_filter filter uc file by min samples",
+    desc "uc_filter",
          "--input=clusters.uc --output=clusters.uc.filtered --reads=50 --samples=10"
 
     method_option :input,    :type => :string,  :required => true

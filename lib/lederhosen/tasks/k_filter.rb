@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "k_filter khmer filtering",
+    desc "k_filter",
          "--input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50"
 
     method_option :input,    :type => :string,  :required => true

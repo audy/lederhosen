@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "sort fasta file by length",
+    desc "sort",
          "--input=joined.fasta --output=sorted.fasta"
 
     method_option :input,  :type => :string, :required => true

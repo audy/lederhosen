@@ -5,7 +5,7 @@
 module Lederhosen
   class CLI
 
-    desc "trim Illumina QSEQ files",
+    desc "trim",
          "--reads_dir=reads/* --out_dir=trimmed.fasta"
 
     method_option :reads_dir, :type => :string, :required => true
