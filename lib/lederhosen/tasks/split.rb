@@ -6,13 +6,13 @@ module Lederhosen
   class CLI
 
     desc "split",
-         "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=100"
+         "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=1 --out-dir=output_directory"
 
     method_option :clusters,      :type => :string, :required => true
     method_option :reads,         :type => :string, :required => true
     method_option :out_dir,       :type => :string, :required => true
     method_option :buffer_size,   :type => :numeric, :default => 1000
-    method_option :min_clst_size, :type => :numeric, :default => 100
+    method_option :min_clst_size, :type => :numeric, :default => 1
 
     def split
       clusters = options[:clusters]
