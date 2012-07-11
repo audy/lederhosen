@@ -33,59 +33,60 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 
 ### trim
 
-Trim (Illumina) reads using quality scores
+Trim (Illumina) reads using quality scores. Output will be a directory of fasta files.
 
-    lederhosen trim --reads_dir=reads/* --out_dir=trimmed.fasta
+    lederhosen trim --reads_dir=reads/* --out_dir=trimmed/
 
 ### join
 
-Join reads end-to-end
+Join paired reads from all samples end-to-end. This method enables the use of uclust with paired-end data. Output will be a single fasta file.
 
     lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta
 
 ### sort
 
-Sort reads by length
+Sort reads by length. This is a requirement for uclust's single-linkage clustering algorithim.
 
     lederhosen sort --input=joined.fasta --output=sorted.fasta
 
 ### k_filter
 
-K-mer abundance noise filtering
+K-mer abundance noise filtering. This step is experimental and optional. It may reduce the time it takes to perform the clustering.
 
     lederhosen k_filter --input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50
 
 ### cluster
 
-Cluster reads using UCLUST
+Cluster reads using UCLUST. Output is a uc file.
 
     lederhosen cluster --input=sorted.fasta --identity=0.80 --output=clusters.uc
 
 ### uc_filter
 
-Filter UC file (more noise filtering)
+Filter UC file removing singleton clusters or clusters that are only present in a few samples. This greatly reduces the noise of the data without removing many of the reads.
 
     lederhosen uc_filter --input=clusters.uc --output=clusters.uc.filtered --reads=50 --samples=10
 
 ### otu_table
 
-Create an OTU table
+Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
-    lederhosen otu_table --clusters=clusters.uc --output=otu_prefix
+    lederhosen otu_table --clusters=clusters.uc --output=otu_prefix.csv
 
 ### rep_reads
 
-Get representative reads for each cluster
+Get representative reads for each cluster. Output is a single fasta file.
 
     lederhosen rep_reads --clusters=clusters.uc --joined=joined.fasta --output=representative_reads.fasta
 
 ### split
 
-Get all reads belonging to each cluster
+Get all reads belonging to each cluster. Output is a directory containing a fasta file for each cluster. The fasta file contains the joined reads.
 
     lederhosen split --clusters=clusters.uc --reads=joined.fasta --min-clst-size=100
 
 ### name
 
-    lederhosen name --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt
+Identify clusters in a database using the representative reads. This is a simple wrapper for BLAT. The output is a tab-delimited file similar to a BLAST output file. For this step you need to have BLAT installed and also a [TaxCollector](http://github.com/audy/taxcollector) database.
 
+    lederhosen name --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt
