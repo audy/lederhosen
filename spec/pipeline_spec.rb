@@ -38,4 +38,13 @@ describe 'the pipeline' do
     `./bin/lederhosen split --reads=#{test_dir}/joined.fasta --clusters=#{test_dir}/clusters.uc --out-dir=#{test_dir}/split --min-clst-size=1`
   end
 
+	it 'should name clusters given a taxcollector database'
+	
+	it 'should add names to otu abundance matrix given blat output' do
+		level = %w{kingdom domain phylum class order genus speces}.choice
+    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level}`
+		$?.success?.should be_true
+	end
+
+	it 'should squish otu abundance matrix by same name'
 end
