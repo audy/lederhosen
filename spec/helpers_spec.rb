@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Lederhosen::Helpers do
   
-  let (:groups) { Lederhosen::Helpers.get_grouped_qseq_files('spec/data/*.txt') }
+  let (:groups) { Lederhosen::Helpers.get_grouped_qseq_files('spec/data/IL*.txt') }
   
   it 'should have a method for grouping QSEQ files' do
     groups.length.should == 2
