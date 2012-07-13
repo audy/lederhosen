@@ -29,6 +29,8 @@ module Lederhosen
 				end
 			end
 
+			output = File.open(output) rescue $stdout
+
 			# print the new, squished csv file
 			column_names.uniq!.sort!
 			puts "-,#{column_names.join(',')}"
@@ -39,6 +41,8 @@ module Lederhosen
 				end
 				print "\n"
 			end
+	
+			output.close
 		end
 	end
 end
