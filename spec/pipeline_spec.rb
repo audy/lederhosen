@@ -42,9 +42,12 @@ describe 'the pipeline' do
 	
 	it 'should add names to otu abundance matrix given blat output' do
 		level = %w{kingdom domain phylum class order genus speces}.choice
-    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level}`
+    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level} --output=#{test_dir}/named_otus.csv`
 		$?.success?.should be_true
 	end
 
-	it 'should squish otu abundance matrix by same name'
+	it 'should squish otu abundance matrix by same name' do
+		`./bin/lederhosen squish --csv-file=#{test_dir}/named_otus.csv`
+		$?.success?.should be_true
+	end
 end
