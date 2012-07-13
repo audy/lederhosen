@@ -90,3 +90,17 @@ Get all reads belonging to each cluster. Output is a directory containing a fast
 Identify clusters in a database using the representative reads. This is a simple wrapper for BLAT. The output is a tab-delimited file similar to a BLAST output file. For this step you need to have BLAT installed and also a [TaxCollector](http://github.com/audy/taxcollector) database.
 
     lederhosen name --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt
+
+### add_names
+
+Add phylogenetic classification of clusters to OTU abundance file.
+
+		lederhosen add_names --blat=blat_output.txt --level=taxonomic_level --table=otu_file.csv --output=named_out_file.csv
+
+Where `taxonomic_level` can be: kingdom, domain, phylum, class, order, family, genus or species. This method only works with a TaxCollector database.
+
+### squish
+
+Squish an OTU abundance file by column name (phylogenetic description)
+
+		lederhosen squish --csv-file=named_out_file.csv --output=squished_named_out_file.csv
