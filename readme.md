@@ -95,7 +95,7 @@ Identify clusters in a database using the representative reads. This is a simple
 
 Add phylogenetic classification of clusters to OTU abundance file.
 
-		lederhosen add_names --blat=blat_output.txt --level=taxonomic_level --table=otu_file.csv --output=named_out_file.csv
+	lederhosen add_names --blat=blat_output.txt --level=taxonomic_level --table=otu_file.csv --output=named_out_file.csv
 
 Where `taxonomic_level` can be: kingdom, domain, phylum, class, order, family, genus or species. This method only works with a TaxCollector database.
 
@@ -103,4 +103,4 @@ Where `taxonomic_level` can be: kingdom, domain, phylum, class, order, family, g
 
 Squish an OTU abundance file by column name (phylogenetic description)
 
-		lederhosen squish --csv-file=named_out_file.csv --output=squished_named_out_file.csv
+	lederhosen squish --csv-file=named_out_file.csv --output=squished_named_out_file.csv
