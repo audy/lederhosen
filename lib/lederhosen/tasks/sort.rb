@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "sort",
-         "--input=joined.fasta --output=sorted.fasta"
+         "sort reads by length in descending order (pre-requisite for UCLUST)"
 
     method_option :input,  :type => :string, :required => true
     method_option :output, :type => :string, :required => true

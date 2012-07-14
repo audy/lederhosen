@@ -6,7 +6,7 @@ module Lederhosen
 	class CLI
 
 		desc "add_names",
-			"--blat=blat_output.txt --table=cluster_table.csv --level=taxonomic level (i.e 6 genus)"
+			"add names to otu abundance matrix using blat output and the out file"
 
 		method_option :blat,   :type => :string, :required => true
 		method_option :table,  :type => :string, :required => true

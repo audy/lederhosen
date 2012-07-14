@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "cluster",
-         "--input=sorted.fasta --identity=0.80 --output=clusters.uc"
+         "cluster a fasta file using UCLUST"
 
     method_option :input,    :type => :string,  :required => true
     method_option :output,   :type => :string,  :required => true

@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "k_filter",
-         "--input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50"
+         "filter novel reads likely to form small/singleton clusters (experimental)"
 
     method_option :input,    :type => :string,  :required => true
     method_option :output,   :type => :string,  :required => true

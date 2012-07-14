@@ -8,7 +8,7 @@ module Lederhosen
   class CLI
 
     desc "otu_table",
-         "--clusters=clusters.uc --output=otu_prefix"
+         "create an OTU abundance matrix from UCLUST output"
 
     method_option :clusters, :type => :string, :required => true
     method_option :output,   :type => :string, :required => true

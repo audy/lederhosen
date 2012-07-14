@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "uc_filter",
-         "--input=clusters.uc --output=clusters.uc.filtered --reads=50 --samples=10"
+         "filter UCLUST output to remove small, infrequent clusters"
 
     method_option :input,    :type => :string,  :required => true
     method_option :output,   :type => :string,  :required => true

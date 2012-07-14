@@ -14,7 +14,7 @@ module Lederhosen
     # Trim a pair of QSEQ files. Saves to a single,
     # interleaved .fasta file
     def trim_pairs(left, right, out, args={})
-      cutoff = args[:cutoff] || 20
+      cutoff     = args[:cutoff]     || 20
       min_length = args[:min_length] || 70
 
       left_handle  = File.open left
@@ -54,10 +54,12 @@ module Lederhosen
       # throw away any read with an ambiguous primer
       return nil if dna.sequence =~ /N/
 
-      min = args[:min] || 20
+      min    = args[:min]    || 20
       offset = args[:cutoff] || 64
-      _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
-      dna.quality.each_byte.each_with_index do |b, a|
+
+			_sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
+     
+			dna.quality.each_byte.each_with_index do |b, a|
         _sum += (b - offset - min)
         if _sum > _max
           _max = _sum
@@ -101,7 +103,7 @@ module Lederhosen
           querylabel  = line[8]
           targetlabel = line[9]
           sample      = line[8].split(':')[2]
-          
+
           # keep track of samples
           samples.add sample
 

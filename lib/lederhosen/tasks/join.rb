@@ -5,7 +5,7 @@ module Lederhosen
     # PAIRED-END READ WORK-AROUND (JOIN THEM)
     #
     desc "join",
-         "--trimmed=trimmed/*.fasta --output=joined.fasta"
+         "join trimmed reads into a single file"
 
     method_option :trimmed, :type => :string, :required => true
     method_option :output,  :type => :string, :required => true

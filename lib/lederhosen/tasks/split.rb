@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "split",
-         "--clusters=clusters.uc --reads=joined.fasta --min-clst-size=1 --out-dir=output_directory"
+         "create fasta files containing reads from each cluster"
 
     method_option :clusters,      :type => :string, :required => true
     method_option :reads,         :type => :string, :required => true

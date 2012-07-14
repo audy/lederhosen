@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "trim",
-         "--reads_dir=reads/* --out_dir=trimmed.fasta"
+         "trim reads based on quality scores"
 
     method_option :reads_dir, :type => :string, :required => true
     method_option :out_dir,   :type => :string, :required => true

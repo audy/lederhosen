@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "name",
-         "--reps --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt"
+         "identify representative reads in a TaxCollector database using BLAT"
 
     method_option :reps,     :type => :string, :required => true
     method_option :database, :type => :string, :required => true

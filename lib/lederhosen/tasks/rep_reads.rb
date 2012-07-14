@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "rep_reads",
-         "--clusters=clusters.uc --joined=joined.fasta --output=representative_reads.fasta"
+         "output a fasta file containing representative reads for each cluster given a UCLUST output file and the joined reads file"
 
     method_option :clusters, :type => :string, :required => true
     method_option :output,   :type => :string, :required => true
