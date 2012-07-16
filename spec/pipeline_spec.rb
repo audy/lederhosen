@@ -2,6 +2,8 @@ test_dir = "/tmp/lederhosen_test_#{(0...8).map{65.+(rand(25)).chr}.join}/"
 
 `mkdir -p #{test_dir}`
 
+$stderr.puts "test dir: #{test_dir}"; sleep 1
+
 describe 'the pipeline' do
 
   it 'should exist' do
@@ -47,7 +49,7 @@ describe 'the pipeline' do
 	end
 
 	it 'should squish otu abundance matrix by same name' do
-		`./bin/lederhosen squish --csv-file=#{test_dir}/named_otus.csv`
+		`./bin/lederhosen squish --csv-file=#{test_dir}/named_otus.csv --output=#{test_dir}/squished.csv"`
 		$?.success?.should be_true
 	end
 end
