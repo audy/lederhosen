@@ -21,7 +21,7 @@ module Lederhosen
 			kept = 0
 			File.open(input) do |handle|
 			  header  = handle.gets.strip
-				header  = handle.split(',')
+				header  = header.split(',')
 				samples = header[1..-1]
 	
 				puts header.join(',')
