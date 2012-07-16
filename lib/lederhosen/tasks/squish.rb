@@ -29,17 +29,17 @@ module Lederhosen
 				end
 			end
 
-			output = File.open(output) rescue $stdout
+			output = File.open(output, 'w') rescue $stdout
 
 			# print the new, squished csv file
 			column_names.uniq!.sort!
-			puts "-,#{column_names.join(',')}"
+			output.puts "-,#{column_names.join(',')}"
 			total_by_sample_by_column.each_pair do |sample_id, row|
-				print "#{sample_id}"
+				output.print "#{sample_id}"
 				column_names.each do |column_name|
-					print ",#{row[column_name]}"
+					output.print ",#{row[column_name]}"
 				end
-				print "\n"
+				output.print "\n"
 			end
 	
 			output.close
