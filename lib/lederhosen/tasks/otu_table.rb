@@ -26,23 +26,23 @@ module Lederhosen
       samples         = clstr_info[:samples]
 
       # print OTU abundance matrix
-			# clusters as columns
-			# samples as rows
+  		# clusters as columns
+  		# samples as rows
 
       File.open("#{output}.csv", 'w') do |h|
         samples  = samples.sort
         clusters = clstr_counts.keys
 
         # print header (cluster names)
-				h.puts '-' + SEP + clusters.map { |x| "cluster-#{x}" }.join(SEP)
+  			h.puts '-' + SEP + clusters.map { |x| "cluster-#{x}" }.join(SEP)
 
-				samples.each do |sample|
-					h.print sample
-					clusters.each do |cluster|
-						h.print "#{SEP}#{clstr_counts[cluster][sample]}"
-					end
-					h.print "\n"
-				end
+  			samples.each do |sample|
+  				h.print sample
+  				clusters.each do |cluster|
+  					h.print "#{SEP}#{clstr_counts[cluster][sample]}"
+  				end
+  				h.print "\n"
+  			end
       end
     end
 
