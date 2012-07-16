@@ -45,7 +45,7 @@ Join paired reads from all samples end-to-end. This method enables the use of uc
 
 If your reads are not paired, then you do not need to do this step. Instead, concatenate all of the trimmed reads files.
 
-		cat trimmed/*.fasta > joined.fasta
+    cat trimmed/*.fasta > joined.fasta
 
 ### sort
 
