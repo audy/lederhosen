@@ -1,6 +1,6 @@
 # Lederhosen
 
-Cluster raw Illumina 16S rRNA amplicon data to generate OTUs. Use at your own risk.
+Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
 ## How do I get Lederhosen?
 
@@ -42,6 +42,10 @@ Trim (Illumina) reads using quality scores. Output will be a directory of fasta 
 Join paired reads from all samples end-to-end. This method enables the use of uclust with paired-end data. Output will be a single fasta file.
 
     lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta
+
+If your reads are not paired, then you do not need to do this step. Instead, concatenate all of the trimmed reads files.
+
+		cat trimmed/*.fasta > joined.fasta
 
 ### sort
 
