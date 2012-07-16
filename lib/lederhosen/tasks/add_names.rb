@@ -6,7 +6,7 @@ module Lederhosen
 	class CLI
 
 		desc "add_names",
-			"add names to otu abundance matrix using blat output and the out file"
+			"add names to otu abundance matrix using blat output" 
 
 		method_option :blat,   :type => :string, :required => true
 		method_option :table,  :type => :string, :required => true
