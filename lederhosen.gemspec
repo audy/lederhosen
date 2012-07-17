@@ -20,9 +20,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency('dna')
   s.add_dependency('thor')
-  s.add_dependency('rspec')
-  s.add_dependency('bundler')
   s.add_dependency('progressbar')
-  s.add_dependency('bundler')
-  s.add_dependency('awesome_print')
 end

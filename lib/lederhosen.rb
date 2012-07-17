@@ -1,10 +1,8 @@
 require 'rubygems'
 require 'thor'
-require 'dna'
-require 'set'
 require 'progressbar'
-require 'awesome_print'
 require 'zlib'
+require 'dna'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'lederhosen', '*.rb')).each { |f| require f }
 
