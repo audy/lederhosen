@@ -1,4 +1,4 @@
-test_dir = "/tmp/lederhosen_test_#{(0...8).map{65.+(rand(25)).chr}.join}/"
+test_dir = ENV['TEST_DIR'] || "/tmp/lederhosen_test_#{(0...8).map{65.+(rand(25)).chr}.join}/"
 
 `mkdir -p #{test_dir}`
 
@@ -40,16 +40,16 @@ describe 'the pipeline' do
     `./bin/lederhosen split --reads=#{test_dir}/joined.fasta --clusters=#{test_dir}/clusters.uc --out-dir=#{test_dir}/split --min-clst-size=1`
   end
 
-	it 'should name clusters given a taxcollector database'
-	
-	it 'should add names to otu abundance matrix given blat output' do
-		level = %w{kingdom domain phylum class order genus speces}.choice
-    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level} --output=#{test_dir}/named_otus.csv`
-		$?.success?.should be_true
-	end
+  it 'should name clusters given a taxcollector database'
 
-	it 'should squish otu abundance matrix by same name' do
-		`./bin/lederhosen squish --csv-file=#{test_dir}/named_otus.csv --output=#{test_dir}/squished.csv"`
-		$?.success?.should be_true
-	end
+  it 'should add names to otu abundance matrix given blat output' do
+    level = %w{kingdom domain phylum class order genus speces}.choice
+    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level} --output=#{test_dir}/named_otus.csv`
+    $?.success?.should be_true
+  end
+
+  it 'should squish otu abundance matrix by same name' do
+    `./bin/lederhosen squish --csv-file=#{test_dir}/named_otus.csv --output=#{test_dir}/squished.csv`
+    $?.success?.should be_true
+  end
 end
