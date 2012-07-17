@@ -12,7 +12,7 @@ describe 'the pipeline' do
   end
 
   it 'should trim reads' do
-    `./bin/lederhosen trim --reads-dir=spec/data/IL*.txt --out-dir=#{test_dir}/trimmed`
+    `./bin/lederhosen trim --reads-dir=spec/data/IL*.txt.gz --out-dir=#{test_dir}/trimmed`
     $?.success?.should be_true
   end
 

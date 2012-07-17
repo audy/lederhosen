@@ -1,20 +1,20 @@
 require 'spec_helper'
 
 describe Lederhosen::Helpers do
-  
-  let (:groups) { Lederhosen::Helpers.get_grouped_qseq_files('spec/data/IL*.txt') }
-  
+
+  let (:groups) { Lederhosen::Helpers.get_grouped_qseq_files('spec/data/IL*.txt.gz') }
+
   it 'should have a method for grouping QSEQ files' do
     groups.length.should == 2
   end
 
   it 'should have a method for trimming sequences' do
     reads = groups.values.first.first
-    record = File.open(reads) do |handle|
+    record = Zlib::GzipReader.open(reads) do |handle|
       Dna.new(handle).first
     end
     # I should probably test with a bad read
-    Lederhosen::Helpers.trim(record).length.should == 79
+    Lederhosen::Helpers.trim(record).length.should == 58
   end
 
   it 'should be able to trim pairs of qseq files, outputting fasta file' do

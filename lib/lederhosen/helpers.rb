@@ -17,8 +17,13 @@ module Lederhosen
       cutoff     = args[:cutoff]     || 20
       min_length = args[:min_length] || 70
 
-      left_handle  = File.open left
-      right_handle = File.open right
+      left_handle, right_handle =
+        begin
+          [ Zlib::GzipReader.open(left), Zlib::GzipReader.open(right)]
+        rescue Zlib::GzipFile::Error
+          [ File.open(left), File.open(right) ]
+        end
+
       out_handle   = File.open out, 'w'
 
       left_reads  = Dna.new left_handle
@@ -57,9 +62,9 @@ module Lederhosen
       min    = args[:min]    || 20
       offset = args[:cutoff] || 64
 
-			_sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
-     
-			dna.quality.each_byte.each_with_index do |b, a|
+      _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
+
+      dna.quality.each_byte.each_with_index do |b, a|
         _sum += (b - offset - min)
         if _sum > _max
           _max = _sum
