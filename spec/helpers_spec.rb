@@ -19,8 +19,8 @@ describe Lederhosen::Helpers do
 
   it 'should be able to trim pairs of qseq files, outputting fasta file' do
     reads = groups.values.first
-    Lederhosen::Helpers.trim_pairs reads[0], reads[1], '/tmp/munchen_trim_test.fasta'
+    Lederhosen::Helpers.trim_pairs reads[0], reads[1], "#{$test_dir}/munchen_trim_test.fasta"
     # this test will break if trim parameters change
-    File.read('/tmp/munchen_trim_test.fasta').grep(/^>/).length.should be_even
+    File.read("#{$test_dir}/munchen_trim_test.fasta").grep(/^>/).length.should be_even
   end
 end
