@@ -19,7 +19,7 @@ module Lederhosen
 
 
       # Load cluster table!
-      clstr_info      = Helpers.load_uc_file input     
+      clstr_info      = Helpers.load_uc_file input
       clstr_counts    = clstr_info[:clstr_counts] # clstr_counts[:clstr][sample.to_i] = reads
       seed_to_clstrnr = clstr_info[:seed_to_clstrnr]
       samples         = clstr_info[:samples]
@@ -36,7 +36,7 @@ module Lederhosen
           end
         end
       end
-      
+
       out_handle.close
     end
 

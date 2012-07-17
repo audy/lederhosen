@@ -23,7 +23,7 @@ module Lederhosen
         header  = handle.gets.strip
         header  = header.split(',')
         samples = header[1..-1]
-  
+
         puts header.join(',')
 
         handle.each do |line|
@@ -34,12 +34,12 @@ module Lederhosen
           # should be the same as uc_filter
           if counts.reject { |x| x < reads }.length > samples
             puts line.join(',')
-            kept += 1  
+            kept += 1
           end
         end
       end
       ohai "kept #{kept} clusters."
     end
-    
+
   end
 end

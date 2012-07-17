@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc 'squish', 'merge cell values (reads) in a csv file by column name (cluster)'
-    
+
     method_option :csv_file, :type => :string, :required => true
     method_option :output,   :type => :string, :required => false
 
@@ -41,7 +41,7 @@ module Lederhosen
         end
         output.print "\n"
       end
-  
+
       output.close
     end
   end

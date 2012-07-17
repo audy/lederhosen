@@ -25,9 +25,9 @@ module Lederhosen
         '-t=dna',
         '-q=dna',
         '-out=blast8',
-        output      
+        output
       ]
-      
+
       exec cmd.join(' ')
 
     end

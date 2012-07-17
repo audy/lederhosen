@@ -48,7 +48,7 @@ module Lederhosen
       end
       @buffer = Hash.new { |h, k| h[k] = Array.new }
     end
-  
+
   end
 
 end

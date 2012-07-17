@@ -16,7 +16,7 @@ module Lederhosen
       identity = options[:identity]
       output = options[:output]
       input = options[:input]
-    
+
       cmd = [
         'uclust',
         "--input #{input}",

@@ -26,10 +26,10 @@ lederhosen split --clusters=$out/clusters_0.80.uc.filtered --reads=$reads --out-
 # now cluster each of those at 90%
 for fasta in $out/split_80/*.fasta
 do
-  
+
   # sort (awww, do I really have to do this again?)
   lederhosen sort --input=$fasta --output=$fasta.sorted
-  
+
   # cluster
   lederhosen cluster --input=$fasta.sorted --output=$fasta.uc --identity=0.90
 
@@ -40,7 +40,7 @@ done
 
 # Do it again at 95%
 for fasta in $out/split_80/split_*_90.fasta/*.fasta
-do  
+do
   # cluster
   lederhosen cluster --input=$fasta --output=$fasta.uc --identity=90
 

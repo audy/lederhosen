@@ -6,7 +6,7 @@ module Lederhosen
   class CLI
 
     desc "add_names",
-      "add names to otu abundance matrix using blat output" 
+      "add names to otu abundance matrix using blat output"
 
     method_option :blat,   :type => :string, :required => true
     method_option :table,  :type => :string, :required => true
@@ -19,7 +19,7 @@ module Lederhosen
       level = options[:level]
       output = options[:output] || $stdout
 
-      levels = { 'kingdom' => 0, 
+      levels = { 'kingdom' => 0,
                  'domain'  => 0,
                  'phylum'  => 1,
                  'class'   => 2,
@@ -70,7 +70,7 @@ module Lederhosen
         # read in header, replace clusterids to names
         header = handle.gets.strip.split(',')
         header[1..-1] = header[1..-1].map { |x| clusterid_to_name[x] }
-        
+
         # print new header
         output.puts header.join(',')
 
