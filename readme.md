@@ -33,9 +33,9 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 
 ### trim
 
-Trim (Illumina) reads using quality scores. Output will be a directory of fasta files.
+Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
 
-    lederhosen trim --reads_dir=reads/* --out_dir=trimmed/
+    lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 
 ### join
 
