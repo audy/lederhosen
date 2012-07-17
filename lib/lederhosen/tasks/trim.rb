@@ -16,7 +16,7 @@ module Lederhosen
       raw_reads = options[:reads_dir]
       out_dir = options[:out_dir]
 
-      `mkdir -p #{out_dir}`
+      run "mkdir -p #{out_dir}"
 
       raw_reads = Helpers.get_grouped_qseq_files raw_reads
       ohai "found #{raw_reads.length} pairs of reads"

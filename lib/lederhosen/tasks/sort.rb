@@ -14,8 +14,9 @@ module Lederhosen
     def sort
       input = options[:input]
       output = options[:output]
-      `uclust --mergesort #{input} --output #{output}`
+      @shell.mute {
+        run "uclust --mergesort #{input} --output #{output}"
+      }
     end
-
   end
 end

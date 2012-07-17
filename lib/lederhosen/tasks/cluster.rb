@@ -23,7 +23,8 @@ module Lederhosen
         "--uc #{output}",
         "--id #{identity}",
       ].join(' ')
-      exec cmd
+
+      @shell.mute { run cmd }
     end
 
   end

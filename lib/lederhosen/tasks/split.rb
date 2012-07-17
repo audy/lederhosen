@@ -22,7 +22,7 @@ module Lederhosen
       min_clst_size = options[:min_clst_size]
       finalize_every = 100_000
 
-      `mkdir -p #{out_dir}/`
+      run "mkdir -p #{out_dir}/"
 
       ohai "loading #{clusters}"
 
