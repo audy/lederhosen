@@ -115,10 +115,18 @@ module Lederhosen
           # keep track of all samples
           clusters[:samples].add sample
 
-          if type == 'S' # = Seed Sequence
+          # L=LibSeed
+          # S=NewSeed
+          # H=Hit
+          # R=Reject
+          # D=LibCluster
+          # C=NewCluster
+          # N=NoHit
+
+          if type =~ /[LS]/ # = Seed Sequence
             clstr_counts[clusternr][sample] += 1
             seed_to_clstrnr[querylabel] = clusternr
-          elsif type == 'H' # = Seed Member
+          elsif type =~ /H/ # = Seed Member
             clstr_counts[clusternr][sample] += 1
           end
 
