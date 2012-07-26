@@ -3,6 +3,7 @@ require 'thor'
 require 'progressbar'
 require 'zlib'
 require 'dna'
+require 'set'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'lederhosen', '*.rb')).each { |f| require f }
 
