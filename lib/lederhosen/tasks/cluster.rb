@@ -12,9 +12,10 @@ module Lederhosen
     method_option :output,      :type => :string,  :required => true
     method_option :identity,    :type => :numeric, :required => true
     method_option :stepwords,   :type => :numeric, :default  => 8
-    method_option :wordlen,    :type  => :numeric, :default  => 8
-    method_option :maxaccepts, :type  => :numeric, :default  => 1
-    method_option :maxrejects, :type  => :numeric, :default  => 8
+    method_option :wordlen,     :type => :numeric, :default  => 8
+    method_option :maxaccepts,  :type => :numeric, :default  => 1
+    method_option :maxrejects,  :type => :numeric, :default  => 8
+    method_option :lib,         :type => :string
 
     def cluster
       identity   = options[:identity]
@@ -24,6 +25,7 @@ module Lederhosen
       maxaccepts = options[:maxaccepts]
       maxrejects = options[:maxrejects]
       wordlen    = options[:wordlen]
+      lib        = options[:lib]
 
       cmd = [
         'uclust',
@@ -34,7 +36,11 @@ module Lederhosen
         "--maxaccepts #{maxaccepts}",
         "--maxrejects #{maxrejects}",
         "--w #{wordlen}"
-      ].join(' ')
+      ]
+
+      cmd << "--lib #{lib}" unless lib.nil?
+
+      cmd = cmd.join(' ')
 
       @shell.mute { run cmd }
     end
