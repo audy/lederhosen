@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require 'lib/version'
+
+require File.join(File.dirname(__FILE__), 'lib/version')
 
 Gem::Specification.new do |s|
   s.name        = 'lederhosen'
