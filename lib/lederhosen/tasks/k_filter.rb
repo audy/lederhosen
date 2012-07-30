@@ -23,14 +23,18 @@ module Lederhosen
       total_reads = 0
 
       ohai "counting kmers"
+      total_reads = `grep -c '^>' #{input}`.strip.split.first.to_i
+      pbar = ProgressBar.new 'count kmers', total_reads.to_i
       File.open(input) do |handle|
         records = Dna.new handle
         records.each do |r|
+          pbar.inc
           total_reads += 1
           kmers = r.sequence.to_kmers(k_len)
           kmers.each { |x| counting_table[x] += 1 }
         end
       end
+      pbar.finish
 
       sum_of_kmers = counting_table.values.inject(:+)
 
@@ -65,7 +69,7 @@ module Lederhosen
             kept += 1
             output.puts r
           end
-          pbar.inc      
+          pbar.inc
         end
       end
 
