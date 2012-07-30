@@ -22,8 +22,13 @@ describe 'the pipeline' do
     $?.success?.should be_true
   end
 
+  it 'should k_filter reads' do
+    `./bin/lederhosen k_filter --input=#{$test_dir}/sorted.fasta --output=#{$test_dir}/filtered.fasta -k=15 --cutoff 1`
+    $?.success?.should be_true
+  end
+
   it 'should cluster reads' do
-    `./bin/lederhosen cluster --identity=0.80 --input=#{$test_dir}/sorted.fasta --output=#{$test_dir}/clusters.uc`
+    `./bin/lederhosen cluster --identity=0.80 --input=#{$test_dir}/filtered.fasta --output=#{$test_dir}/clusters.uc`
     $?.success?.should be_true
   end
 
