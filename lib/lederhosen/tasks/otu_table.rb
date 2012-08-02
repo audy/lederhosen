@@ -29,7 +29,7 @@ module Lederhosen
       # clusters as columns
       # samples as rows
 
-      File.open("#{output}.csv", 'w') do |h|
+      File.open("#{output}", 'w') do |h|
         samples  = samples.sort
         clusters = clstr_counts.keys
 
