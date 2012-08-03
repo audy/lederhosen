@@ -95,7 +95,10 @@ module Lederhosen
 
       # clstrnr_to_seed[seed_sequence_id] = clstr_nr
       seed_to_clstrnr = Hash.new
+      lines = `wc -l #{input}`.split.first.to_i
+      pbar = ProgressBar.new 'loading uc file', lines
       File.open(input) do |handle|
+        pbar.inc
         handle.each do |line|
 
           next if line =~ /^#/ # skip comments
@@ -132,6 +135,7 @@ module Lederhosen
 
         end
       end
+      pbar.finish
       return {
         :clstr_counts    => clstr_counts,
         :seed_to_clstrnr => seed_to_clstrnr,
