@@ -98,9 +98,8 @@ module Lederhosen
       lines = `wc -l #{input}`.split.first.to_i
       pbar = ProgressBar.new 'loading uc file', lines
       File.open(input) do |handle|
-        pbar.inc
         handle.each do |line|
-
+          pbar.inc
           next if line =~ /^#/ # skip comments
 
           line = line.strip.split
