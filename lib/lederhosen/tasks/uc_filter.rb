@@ -32,9 +32,12 @@ module Lederhosen
 
       # print filtered uc file
       out = File.open(output, 'w')
-      kept, total = 0, 0
+      kept, total = 1, 0
+      lines = `wc -l #{input}`.split.first.to_i
+      pbar = ProgressBar.new 'saving', lines
       File.open(input) do |handle|
         handle.each do |line|
+          pbar.inc
           if line =~ /^#/
             out.print line
             next
@@ -48,6 +51,7 @@ module Lederhosen
           end
         end
       end
+      pbar.finish
       out.close
       ohai "Survivors"
       ohai "clusters: #{surviving_clusters.length}/#{clstr_counts.keys.length} = #{100*surviving_clusters.length/clstr_counts.keys.length.to_f}%"
