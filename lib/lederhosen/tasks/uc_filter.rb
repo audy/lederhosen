@@ -1,6 +1,7 @@
 ##
 # FILTER UC FILE BY MIN SAMPLES
 #
+require 'set'
 
 module Lederhosen
   class CLI
@@ -28,7 +29,7 @@ module Lederhosen
         b.reject{ |i, j| j < reads }.length < samples
       end
 
-      surviving_clusters = survivors.keys
+      surviving_clusters = survivors.keys.to_set
 
       # print filtered uc file
       out = File.open(output, 'w')
