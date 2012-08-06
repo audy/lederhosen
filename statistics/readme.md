@@ -2,6 +2,16 @@
 
 Various statistics and plotting scripts compatible with Lederhosen outputs.
 
+## Requirements
+
+- R
+- reshape
+- ggplot2
+
+Get R at [r-project.org](http://www.r-project.org/) then install ggplot2 and reshape by pasting this command:
+
+`r -q -e "install.packages(c('reshape', 'ggplot2'))"`
+
 ## Plots
 
 ### Cluster Survival
