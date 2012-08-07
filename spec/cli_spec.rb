@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'the pipeline' do
+describe Lederhosen::CLI do
 
-  it 'should exist' do
+  it 'should have an executable' do
     `./bin/lederhosen`
     $?.success?.should be_true
   end
@@ -41,7 +41,13 @@ describe 'the pipeline' do
     `./bin/lederhosen split --reads=#{$test_dir}/joined.fasta --clusters=#{$test_dir}/clusters.uc --out-dir=#{$test_dir}/split --min-clst-size=1`
   end
 
-  it 'should name clusters given a taxcollector database'
+  it 'should create a fasta file containing representative reads for each cluster' do
+    `./bin/lederhosen rep_reads --clusters=#{$test_dir}/clusters.uc --joined=#{$test_dir}/filtered.fasta --output=#{$test_dir}/representatives.fasta`
+    $?.success?.should be_true
+  end
+
+  # Need a taxcollector database for this one.
+  it 'should identify clusters given a taxcollector database'
 
   it 'should add names to otu abundance matrix given blat output' do
     level = %w{kingdom domain phylum class order genus speces}.choice
