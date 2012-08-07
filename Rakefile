@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'bundler'
 
-require './lib/version.rb'
+require './lib/lederhosen/version.rb'
 
 begin
   Bundler.setup(:default, :development)
