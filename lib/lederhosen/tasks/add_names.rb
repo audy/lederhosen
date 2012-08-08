@@ -60,6 +60,10 @@ module Lederhosen
           # I want to match Actinobacteria given level_no = 2
           level_name = taxonomic_description.match(/\[#{level_no}\](\w*)[;\[]/)[1] rescue next
 
+          # keep cluster id if name is 'null' (bad taxonomic description)
+          # but put paranthesis around it so I know
+          level_name = "(#{cluster_id})" if level_name =~ /null/
+
           clusterid_to_name[cluster_id] = level_name
         end
       end
