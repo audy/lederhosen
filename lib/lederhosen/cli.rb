@@ -5,7 +5,7 @@ module Lederhosen
     no_tasks do
       # just print string to STDERR
       def ohai(s)
-        @shell.say(s)
+        @shell.say_status('okay', s, 'green')
       end
     end
 
