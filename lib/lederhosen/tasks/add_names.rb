@@ -79,7 +79,7 @@ module Lederhosen
       end
 
       # print status message
-      ohai "Got #{clusterid_to_name.keys.reject { |x| x =~ /cluster/ }.size} names (#{clusterid_to_name.keys.size} total)"
+      ohai "Got #{clusterid_to_name.values.reject { |x| x =~ /cluster/ }.size} names (#{clusterid_to_name.keys.size} total)"
     end
 
   end
