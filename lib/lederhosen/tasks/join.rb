@@ -11,11 +11,12 @@ module Lederhosen
     method_option :output,  :type => :string, :required => true
 
     def join
-
       trimmed = Dir[options[:trimmed]]
-      output = options[:output]
+      output  = options[:output]
 
-      fail "no reads in #{trimmed}" if trimmed.length == 0
+      ohai "joining #{File.dirname(trimmed.first)} saving to #{output}"
+
+      ohno "no reads in #{trimmed}" if trimmed.length == 0
 
       output = File.open(output, 'w')
 

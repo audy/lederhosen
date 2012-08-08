@@ -19,12 +19,13 @@ module Lederhosen
       k_len  = options[:k].to_i
       cutoff = options[:cutoff]
 
+      ohai "kmer filtering #{input} (k = #{k_len}, cutoff = #{cutoff})"
+
       counting_table = Hash.new { |h, k| h[k] = 0 }
       total_reads = 0
 
-      ohai "counting kmers"
       total_reads = `grep -c '^>' #{input}`.strip.split.first.to_i
-      pbar = ProgressBar.new 'count kmers', total_reads.to_i
+      pbar = ProgressBar.new 'counting', total_reads.to_i
       File.open(input) do |handle|
         records = Dna.new handle
         records.each do |r|

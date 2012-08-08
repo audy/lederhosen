@@ -17,6 +17,7 @@ module Lederhosen
       output       = options[:output]
       joined_reads = options[:joined]
 
+      ohai "getting represntative reads for #{input} w/ reads #{joined_reads} and saving to #{output}"
 
       # Load cluster table!
       clstr_info      = Helpers.load_uc_file input

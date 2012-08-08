@@ -17,6 +17,8 @@ module Lederhosen
       database = options[:database]
       output   = options[:output]
 
+      ohai "identifying #{reps} in #{database} and saving to #{output}"
+
       # run blat/blast
       cmd = [
         'blat',

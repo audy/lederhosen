@@ -12,6 +12,8 @@ module Lederhosen
     def uc_stats
       input = options[:input]
 
+      ohai "calculating statistics for #{input}"
+
       # TODO add more stats
       cluster_stats = Hash.new { |h, k|
         h[k] = {

@@ -3,9 +3,13 @@ module Lederhosen
     include Thor::Actions
 
     no_tasks do
-      # just print string to STDERR
       def ohai(s)
         @shell.say_status('okay', s, 'green')
+      end
+
+      def ohno(s)
+        @shell.say_status('fail', s, 'red')
+        exit(-1)
       end
     end
 

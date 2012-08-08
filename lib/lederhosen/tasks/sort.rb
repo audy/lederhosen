@@ -12,8 +12,11 @@ module Lederhosen
     method_option :output, :type => :string, :required => true
 
     def sort
-      input = options[:input]
+      input  = options[:input]
       output = options[:output]
+
+      ohai "sorting #{input}"
+
       @shell.mute {
         run "uclust --mergesort #{input} --output #{output}"
       }

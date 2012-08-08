@@ -16,7 +16,8 @@ module Lederhosen
     def otu_table
       input        = options[:clusters]
       output       = options[:output]
-      joined_reads = options[:joined]
+
+      ohai "generating otu table from #{input}, saving to #{output}"
 
       # Load cluster table
 

@@ -14,6 +14,8 @@ module Lederhosen
       reads   = options[:reads]
       samples = options[:samples]
 
+      ohai "filtering otu file #{input} (reads = #{reads}, samples = #{samples}), saving to #{output}"
+
       ##
       # Iterate over otu table line by line.
       # Only print if cluster meets criteria

@@ -27,6 +27,12 @@ module Lederhosen
       wordlen    = options[:wordlen]
       lib        = options[:lib]
 
+      ohai "clustering #{input}, saving to #{output}"
+
+      options.each_pair do |key, value|
+        ohai "#{key} = #{value}"
+      end
+
       cmd = [
         'uclust',
         "--input #{input}",

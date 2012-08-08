@@ -14,9 +14,9 @@ module Lederhosen
     method_option :output, :type => :string, :required => false
 
     def add_names
-      blat =  options[:blat]
-      table = options[:table]
-      level = options[:level]
+      blat   = options[:blat]
+      table  = options[:table]
+      level  = options[:level]
       output = options[:output] || $stdout
 
       levels = { 'kingdom' => 0,
@@ -28,7 +28,9 @@ module Lederhosen
                  'genus'   => 5,
                  'species' => 6 }
 
-      fail "unknown level. try #{levels.keys.join(', ')}" unless levels.include? level
+      ohno "unknown level #{level}. try #{levels.keys.join(', ')}" unless levels.include? level
+
+      ohai "adding names to #{table} using #{blat} @ #{levels[level]} (#{level}). Saving to #{output}"
 
       # Corresponds with the numbers used in the TaxCollector database
       # taxonomic descriptions

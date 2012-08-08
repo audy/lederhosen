@@ -22,6 +22,9 @@ module Lederhosen
       min_clst_size = options[:min_clst_size]
       finalize_every = 100_000
 
+      ohai "spltting #{reads} by #{clusters} and saving to #{out_dir}"
+      ohai "minimum cluster size = #{min_clst_size}"
+
       run "mkdir -p #{out_dir}/"
 
       ohai "loading #{clusters}"

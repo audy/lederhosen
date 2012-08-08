@@ -14,9 +14,12 @@ module Lederhosen
       csv_file = options[:csv_file]
       output   = options[:output] || $stdout
 
+      ohai "squishing #{csv_file} to #{output}"
+
       # sample_name -> column name -> total number of reads
       total_by_sample_by_column = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
       column_names = '' # scope
+
       # Load CSV file, merge counts in columns with the same name
       File.open(csv_file) do |handle|
         column_names = handle.gets.strip.split(',')[1..-1]

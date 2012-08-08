@@ -20,6 +20,8 @@ module Lederhosen
       reads   = options[:reads].to_i
       samples = options[:samples].to_i
 
+      ohai "filtering #{input} to #{output}, reads = #{reads} & samples = #{samples}"
+
       # load UC file
       clstr_info   = Helpers.load_uc_file input
       clstr_counts = clstr_info[:clstr_counts] # clstr_counts[:clstr][sample.to_i] = reads
