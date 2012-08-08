@@ -17,7 +17,7 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   gem.name = "lederhosen"
-  gem.homepage = "http://github.com/audy/lederhosen"
+  gem.homepage = "http://audy.github.com/lederhosen"
   gem.license = "MIT"
   gem.summary = "OTU Clustering"
   gem.description = "Various tools for OTU clustering"
