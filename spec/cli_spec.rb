@@ -7,6 +7,10 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
+  it 'should have a version command' do
+    `./bin/lederhosen version`.strip.should == "lederhosen-#{Lederhosen::Version::STRING}"
+  end
+
   it 'should trim reads' do
     `./bin/lederhosen trim --reads-dir=spec/data/IL*.txt.gz --out-dir=#{$test_dir}/trimmed`
     $?.success?.should be_true
