@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "0.2.8"
+  s.version = "0.2.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2012-08-07"
+  s.date = "2012-08-08"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -19,6 +19,9 @@ Gem::Specification.new do |s|
     "Gemfile",
     "Rakefile",
     "bin/lederhosen",
+    "examples/hierarchical_clustering.sh",
+    "examples/pipeline.sh",
+    "lederhosen.gemspec",
     "lib/lederhosen.rb",
     "lib/lederhosen/buffer.rb",
     "lib/lederhosen/cli.rb",
@@ -39,8 +42,6 @@ Gem::Specification.new do |s|
     "lib/lederhosen/tasks/uc_stats.rb",
     "lib/lederhosen/tasks/uniquify.rb",
     "lib/lederhosen/version.rb",
-    "pipelines/hierarchical_clustering.sh",
-    "pipelines/pipeline.sh",
     "readme.md",
     "spec/cli_spec.rb",
     "spec/data/ILT_L_9_B_001_1.txt.gz",
