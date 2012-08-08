@@ -46,13 +46,16 @@ module Lederhosen
 
       File.open(input) do |handle|
         handle.each do |line|
-          pbar.inc
+          # output lederhosen filtering information because I often
+          # forget to write this down :)
+          out.puts "# filtered: #{input}"
+          out.puts "# #{reads} reads in at least #{samples} samples"
 
+          pbar.inc
           if line =~ /^#/
             out.print line
             next
           end
-
           total += 1
 
           # check if cluster is in surviving clusters
