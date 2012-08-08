@@ -21,6 +21,6 @@ describe Lederhosen::Helpers do
     reads = groups.values.first
     Lederhosen::Helpers.trim_pairs reads[0], reads[1], "#{$test_dir}/munchen_trim_test.fasta"
     # this test will break if trim parameters change
-    File.read("#{$test_dir}/munchen_trim_test.fasta").grep(/^>/).length.should be_even
+    File.readlines("#{$test_dir}/munchen_trim_test.fasta").grep(/^>/).length.should be_even
   end
 end

@@ -54,7 +54,13 @@ describe Lederhosen::CLI do
   it 'should identify clusters given a taxcollector database'
 
   it 'should add names to otu abundance matrix given blat output' do
-    level = %w{kingdom domain phylum class order genus speces}.choice
+    levels = %w{kingdom domain phylum class order genus speces}
+    level =
+      begin
+        levels.sample # 1.9 and up
+      rescue
+        levels.choice # 1.8 and lower
+      end
     `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level} --output=#{$test_dir}/named_otus.csv`
     $?.success?.should be_true
   end
