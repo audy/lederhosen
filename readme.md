@@ -2,6 +2,10 @@
 
 Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
+## Who can use Lederhosen?
+
+Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/)
+
 ## How do I get Lederhosen?
 
 0. Obtain & Install [UCLUST](http://www.drive5.com/) (64-bit)
