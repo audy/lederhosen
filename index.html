@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lederhosen by audy</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lederhosen</h1>
+        <p>Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.</p>
+
+        <p class="view"><a href="https://github.com/audy/lederhosen">View the Project on GitHub <small>audy/lederhosen</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/audy/lederhosen/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/audy/lederhosen/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/audy/lederhosen">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Who should use Lederhosen?</h2>
+
+<p>People who have paired-end Illumina 16S rRNA amplicons who, for some reason, don't want to use QIIME.</p>
+
+<h2>Who can use Lederhosen?</h2>
+
+<p>Lederhosen is free and open source under the <a href="http://opensource.org/licenses/mit-license.php/">MIT open source license</a></p>
+
+<h2>How do I get Lederhosen?</h2>
+
+<ol>
+<li>Obtain &amp; Install <a href="http://www.drive5.com/">UCLUST</a> (64-bit)</li>
+<li>Obtain &amp; Install <a href="http://genome.ucsc.edu/FAQ/FAQblat.html#blat3">BLAT</a>
+</li>
+<li>Get a copy of <a href="http://github.com/audy/taxcollector">TaxCollector</a>
+</li>
+<li>
+<p>Install Lederhosen by typing:</p>
+
+<p><code>sudo gem install lederhosen</code></p>
+</li>
+<li><p>Check installation by typing <code>lederhosen</code>. You should see some help text.</p></li>
+</ol><h2>Features</h2>
+
+<ul>
+<li>Sequence trimming (paired-end Illumina).</li>
+<li>K-mer filtering.</li>
+<li>Clustering w/ UCLUST.</li>
+<li>UCLUST output filtering.</li>
+<li>Separation of representative reads.</li>
+<li>Separation of all reads belonging to each cluster.</li>
+<li>Identification of clusters using TaxCollector.</li>
+<li>Generation of OTU abundancy matrices.</li>
+</ul><h2>How do I use Lederhosen?</h2>
+
+<p>Lederhosen is just a convenient wrapper for UCLUST and BLAT with some scripts for quality filtering, de-noising of data as well as creation of nice tables. It is similar to QIIME but meant for paired-end Illumina data rather than single-end 454. The basic lederhosen pipeline consists of: trimming, joining, sorting, filtering, clustering, more filtering, and output generation (OTU tables, representative reads, reads by cluster, and taxonomic descriptions for clusters). See the example pipeline in <code>pipeline.sh</code>.</p>
+
+<h2>Tasks</h2>
+
+<p>Lederhosen is invoked by typing <code>lederhosen [TASK]</code></p>
+
+<h3>trim</h3>
+
+<p>Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.</p>
+
+<pre><code>lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
+</code></pre>
+
+<h3>join</h3>
+
+<p>Join paired reads from all samples end-to-end. This method enables the use of uclust with paired-end data. Output will be a single fasta file.</p>
+
+<pre><code>lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta
+</code></pre>
+
+<p>If your reads are not paired, then you do not need to do this step. Instead, concatenate all of the trimmed reads files.</p>
+
+<pre><code>cat trimmed/*.fasta &gt; joined.fasta
+</code></pre>
+
+<h3>sort</h3>
+
+<p>Sort reads by length. This is a requirement for uclust's single-linkage clustering algorithim.</p>
+
+<pre><code>lederhosen sort --input=joined.fasta --output=sorted.fasta
+</code></pre>
+
+<h3>k_filter</h3>
+
+<p>K-mer abundance noise filtering. This step is experimental and optional. It may reduce the time it takes to perform the clustering.</p>
+
+<pre><code>lederhosen k_filter --input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50
+</code></pre>
+
+<h3>cluster</h3>
+
+<p>Cluster reads using UCLUST. Output is a uc file.</p>
+
+<pre><code>lederhosen cluster --input=sorted.fasta --identity=0.80 --output=clusters.uc
+</code></pre>
+
+<h3>uc_filter</h3>
+
+<p>Filter UC file removing singleton clusters or clusters that are only present in a few samples. This greatly reduces the noise of the data without removing many of the reads.</p>
+
+<pre><code>lederhosen uc_filter --input=clusters.uc --output=clusters.uc.filtered --reads=50 --samples=10
+</code></pre>
+
+<h3>otu_table</h3>
+
+<p>Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.</p>
+
+<pre><code>lederhosen otu_table --clusters=clusters.uc --output=otu_prefix.csv
+</code></pre>
+
+<h3>rep_reads</h3>
+
+<p>Get representative reads for each cluster. Output is a single fasta file.</p>
+
+<pre><code>lederhosen rep_reads --clusters=clusters.uc --joined=joined.fasta --output=representative_reads.fasta
+</code></pre>
+
+<h3>split</h3>
+
+<p>Get all reads belonging to each cluster. Output is a directory containing a fasta file for each cluster. The fasta file contains the joined reads.</p>
+
+<pre><code>lederhosen split --clusters=clusters.uc --reads=joined.fasta --min-clst-size=100
+</code></pre>
+
+<h3>name</h3>
+
+<p>Identify clusters in a database using the representative reads. This is a simple wrapper for BLAT. The output is a tab-delimited file similar to a BLAST output file. For this step you need to have BLAT installed and also a <a href="http://github.com/audy/taxcollector">TaxCollector</a> database.</p>
+
+<pre><code>lederhosen name --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt
+</code></pre>
+
+<h3>add_names</h3>
+
+<p>Add phylogenetic classification of clusters to OTU abundance file.</p>
+
+<pre><code>lederhosen add_names --blat=blat_output.txt --level=taxonomic_level --table=otu_file.csv --output=named_out_file.csv
+</code></pre>
+
+<p>Where <code>taxonomic_level</code> can be: kingdom, domain, phylum, class, order, family, genus or species. This method only works with a TaxCollector database.</p>
+
+<h3>squish</h3>
+
+<p>Squish an OTU abundance file by column name (phylogenetic description)</p>
+
+<pre><code>lederhosen squish --csv-file=named_out_file.csv --output=squished_named_out_file.csv
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/audy">audy</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
