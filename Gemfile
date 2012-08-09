@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'dna'
+gem 'dna', '0.0.12'
 gem 'progressbar'
 gem 'thor'
 
