@@ -37,7 +37,7 @@ describe Lederhosen::CLI do
   end
 
   it 'should build OTU abundance matrices' do
-    `./bin/lederhosen otu_table --clusters=#{$test_dir}/clusters.uc --output=#{$test_dir}/test_tables --joined=#{$test_dir}/joined.fasta`
+    `./bin/lederhosen otu_table --clusters=#{$test_dir}/clusters.uc --output=#{$test_dir}/test_tables`
     $?.success?.should be_true
   end
 
