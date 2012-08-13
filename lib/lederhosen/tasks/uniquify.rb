@@ -24,7 +24,7 @@ module Lederhosen
 
       out = File.open(output, 'w')
 
-      no_records = `grep -c #{input} '^>'`.split.first.to_i
+      no_records = `grep -c '^>' #{input}`.split.first.to_i
       pbar = ProgressBar.new 'loading', no_records
       File.open(input) do |handle|
         Dna.new(handle).each do |record|
