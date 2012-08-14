@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "0.3.3"
+  s.version = "0.3.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
     "lib/lederhosen/tasks/rep_reads.rb",
     "lib/lederhosen/tasks/sort.rb",
     "lib/lederhosen/tasks/split.rb",
+    "lib/lederhosen/tasks/split_fasta.rb",
     "lib/lederhosen/tasks/squish.rb",
     "lib/lederhosen/tasks/trim.rb",
     "lib/lederhosen/tasks/uc_filter.rb",
