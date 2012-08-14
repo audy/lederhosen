@@ -33,7 +33,7 @@ module Lederhosen
         end
 
         records.each_slice(2) do |l, r|
-          output.puts ">#{r.name}:#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
+          output.puts ">#{r.name}:split=#{r.sequence.size}:sample=#{File.basename(fasta_file, '.fasta')}\n#{r.sequence.reverse+l.sequence}"
         end
       end
       pbar.finish

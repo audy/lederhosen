@@ -109,10 +109,20 @@ module Lederhosen
           clusternr   = line[1].to_i
           querylabel  = line[8]
           targetlabel = line[9]
-          sample      = line[8].split(':')[2]
+          header      = line[8]
+
+          # get the sample id via regexp match
+          # this way more info can be stored in the header.
+          sample = line[8].match(/sample=(.*)/)[1]
+
+          # Need to maintain some backwards compatibility here
+          # this is the old way of getting the same id.
+          if sample.nil?
+            sample = line[8].split(':')[2]
+          end
 
           # keep track of samples
-          samples.add sample
+          samples.add(sample)
 
           # keep track of all samples
           clusters[:samples].add sample
