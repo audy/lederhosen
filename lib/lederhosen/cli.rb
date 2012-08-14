@@ -1,4 +1,8 @@
 module Lederhosen
+
+  ##
+  # The CLI class holds all of the Thor tasks
+  #
   class CLI < Thor
     include Thor::Actions
 
