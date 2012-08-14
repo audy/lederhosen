@@ -12,21 +12,26 @@ module Lederhosen
       input   = options[:input]
       output  = options[:output]
       reads   = options[:reads]
-      samples = options[:samples]
+      min_samples = options[:samples]
 
-      ohai "filtering otu file #{input} (reads = #{reads}, samples = #{samples}), saving to #{output}"
+      ohai "filtering otu file #{input} (reads = #{reads}, samples = #{min_samples}), saving to #{output}"
 
       ##
       # Iterate over otu table line by line.
       # Only print if cluster meets criteria
       #
-      kept = 0
+      kept_clusters = 0
+      total_reads   = 0
+      kept_reads    = 0
+
+      out = File.open(output, 'w')
+
       File.open(input) do |handle|
         header  = handle.gets.strip
         header  = header.split(',')
         samples = header[1..-1]
 
-        puts header.join(',')
+        out.puts header.join(',')
 
         handle.each do |line|
           line       = line.strip.split(',')
@@ -34,13 +39,17 @@ module Lederhosen
           counts     = line[1..-1].collect { |x| x.to_i }
 
           # should be the same as uc_filter
-          if counts.reject { |x| x < reads }.length > samples
-            puts line.join(',')
-            kept += 1
+          if counts.reject { |x| x < reads }.length > min_samples
+            out.puts line.join(',')
+            kept_clusters += 1
+            kept_reads += counts.inject(:+)
           end
+          total_reads += counts.inject(:+)
         end
       end
-      ohai "kept #{kept} clusters."
+
+      ohai "kept #{kept_reads} reads (#{kept_reads/total_reads.to_f})."
+      ohai "kept #{kept_clusters} clusters."
     end
 
   end

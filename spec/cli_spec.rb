@@ -37,8 +37,12 @@ describe Lederhosen::CLI do
   end
 
   it 'should build OTU abundance matrices' do
-    `./bin/lederhosen otu_table --clusters=#{$test_dir}/clusters.uc --output=#{$test_dir}/test_tables`
+    `./bin/lederhosen otu_table --clusters=#{$test_dir}/clusters.uc --output=#{$test_dir}/otu_table.csv`
     $?.success?.should be_true
+  end
+
+  it 'should filter OTU abundance matrices' do
+    `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
   end
 
   it 'should split joined.fasta into reads for each cluster' do
