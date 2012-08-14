@@ -37,6 +37,20 @@ module Lederhosen
       # filter sample_cluster_count
       filtered = cluster_sample_count.reject { |k, v| v.reject { |k, v| v < reads }.size < min_samples }
 
+      # save the table
+      out = File.open(output, 'w')
+      samples = filtered.values.map(&:keys).flatten.uniq
+      clusters = filtered.keys
+      out.puts "-,#{clusters.join(',')}"
+      samples.each do |sample|
+        out.print "#{sample}"
+        clusters.each do |cluster|
+          out.print ",#{filtered[cluster][sample]}"
+        end
+        out.print "\n"
+      end
+      out.close
+
       ohai "kept #{filtered.keys.size} clusters (#{filtered.keys.size/cluster_sample_count.size.to_f})."
       kept_reads = filtered.values.map { |x| x.values.inject(:+) }.inject(:+)
       total_reads = cluster_sample_count.values.map { |x| x.values.inject(:+) }.inject(:+)
