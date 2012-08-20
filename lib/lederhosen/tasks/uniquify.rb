@@ -19,15 +19,21 @@ module Lederhosen
       ohai "uniquifying #{input} to #{output} w/ table #{table_out}"
 
       sequence_counts = Hash.new { |h, k| h[k] = 0 }
+      sequence_to_id = Hash.new
 
       out = File.open(output, 'w')
 
       no_records = `grep -c '^>' #{input}`.split.first.to_i
       pbar = ProgressBar.new 'loading', no_records
+
       File.open(input) do |handle|
         Dna.new(handle).each do |record|
           pbar.inc
           unless sequence_counts.has_key? record.sequence
+            # store the sequence and id so we can have ids in the
+            # table. If the file is sorted by length then this
+            # should also be a seed sequence.
+            sequence_to_id[record.sequence] = record.name
             out.puts record
           end
           sequence_counts[record.sequence] += 1
@@ -42,7 +48,8 @@ module Lederhosen
       File.open(table_out, 'w') do |out|
         sequence_counts.each_pair do |sequence, count|
           pbar.inc
-          out.puts "#{sequence.name},#{count}"
+          id = sequence_to_id[sequence]
+          out.puts "#{id},#{count}"
         end
       end
       pbar.finish
