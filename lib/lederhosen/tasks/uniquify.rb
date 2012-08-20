@@ -49,7 +49,7 @@ module Lederhosen
         sequence_counts.each_pair do |sequence, count|
           pbar.inc
           id = sequence_to_id[sequence]
-          out.puts "#{id},#{count}"
+          out.puts "#{id}\t#{count}"
         end
       end
       pbar.finish
