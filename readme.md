@@ -8,7 +8,7 @@ Lederhosen is free and open source under the [MIT open source license](http://op
 
 ## How do I get Lederhosen?
 
-0. Obtain & Install [UCLUST](http://www.drive5.com/) (64-bit)
+0. Obtain & Install [UCLUST](http://www.drive5.com/)
 1. Obtain & Install [BLAT](http://genome.ucsc.edu/FAQ/FAQblat.html#blat3)
 2. Get a copy of [TaxCollector](http://github.com/audy/taxcollector)
 3. Install Lederhosen by typing:
