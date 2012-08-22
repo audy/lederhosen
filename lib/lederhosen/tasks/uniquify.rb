@@ -1,11 +1,13 @@
 ##
-# uniquify - uniquify a fasta file, also output table with sequence_id -> number of reads
+# uniquify - uniquify a fasta file generating a fasta file of only unique sequences
+# also output table with sequence_id -> number of reads
 #
 
 module Lederhosen
   class CLI
     desc 'uniquify',
-      'uniquify a fasta file and generate a table with sequence_id -> abundance'
+      'uniquify a fasta file generating a fasta file of only unique sequences.' +\
+      'also generate a table with sequence_id -> abundance'
 
     method_option :input,     :type => :string, :required => true
     method_option :output,    :type => :string, :required => true
