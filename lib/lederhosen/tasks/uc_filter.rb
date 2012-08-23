@@ -45,13 +45,14 @@ module Lederhosen
       kept, total = 1, 0
 
       File.open(input) do |handle|
+        pbar = ProgressBar.new 'saving', File.size(input)
         handle.each do |line|
           # output lederhosen filtering information because I often
           # forget to write this down :)
           out.puts "# filtered: #{input}"
           out.puts "# #{reads} reads in at least #{samples} samples"
 
-          pbar.inc
+          pbar.inc handle.pos
           if line =~ /^#/
             out.print line
             next
@@ -65,9 +66,9 @@ module Lederhosen
           end
 
         end
+        pbar.finish
       end
 
-      pbar.finish
       out.close
 
       ohai "clusters: #{surviving_clusters.length}/#{clstr_counts.keys.length} = #{100*surviving_clusters.length/clstr_counts.keys.length.to_f}%"

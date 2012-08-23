@@ -24,18 +24,17 @@ module Lederhosen
       counting_table = Hash.new { |h, k| h[k] = 0 }
       total_reads = 0
 
-      total_reads = `grep -c '^>' #{input}`.strip.split.first.to_i
-      pbar = ProgressBar.new 'counting', total_reads.to_i
       File.open(input) do |handle|
+        pbar = ProgressBar.new 'counting', File.size(input)
         records = Dna.new handle
         records.each do |r|
-          pbar.inc
+          pbar.inc(handle.pos)
           total_reads += 1
           kmers = r.sequence.to_kmers(k_len)
           kmers.each { |x| counting_table[x] += 1 }
         end
+        pbar.finish
       end
-      pbar.finish
 
       sum_of_kmers = counting_table.values.inject(:+)
 
@@ -49,7 +48,6 @@ module Lederhosen
       output = File.open(output, 'w')
       File.open(input) do |handle|
         records = Dna.new handle
-
         records.each do |r|
           kmers = r.sequence.to_kmers(k_len)
 
