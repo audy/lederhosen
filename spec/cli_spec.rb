@@ -45,11 +45,6 @@ describe Lederhosen::CLI do
     `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
   end
 
-  it 'should uniquify reads' do
-    `./bin/lederhosen uniquify --input=#{$test_dir}/sorted.fasta --output=#{$test_dir}/uniqued.fasta --table-out=#{$test_dir}/uniquify.txt`
-    $?.success?.should be_true
-  end
-
   it 'should split joined.fasta into reads for each cluster' do
     `./bin/lederhosen split --reads=#{$test_dir}/joined.fasta --clusters=#{$test_dir}/clusters.uc --out-dir=#{$test_dir}/split --min-clst-size=1`
   end
