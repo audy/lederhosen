@@ -53,7 +53,7 @@ module Lederhosen
         pbar = ProgressBar.new 'saving', File.size(input)
         handle.each do |line|
 
-          pbar.inc handle.pos
+          pbar.set handle.pos
           if line =~ /^#/
             out.print line
             next

@@ -99,7 +99,7 @@ module Lederhosen
       pbar = ProgressBar.new 'loading uc file', bytes
       File.open(input) do |handle|
         handle.each do |line|
-          pbar.inc handle.pos
+          pbar.set handle.pos
           next if line =~ /^#/ # skip comments
 
           line = line.strip.split

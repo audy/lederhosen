@@ -24,7 +24,7 @@ module Lederhosen
       File.open input do |handle|
         pbar = ProgressBar.new 'splitting', File.size(handle)
         Dna.new(handle).each_with_index do |record, i|
-          pbar.inc handle.pos
+          pbar.set handle.pos
           @out = File.open(File.join(out_dir, "split_#{i/n}.fasta"), 'w') if i%n == 0
           @out.puts record
         end

@@ -28,7 +28,7 @@ module Lederhosen
         pbar = ProgressBar.new 'counting', File.size(input)
         records = Dna.new handle
         records.each do |r|
-          pbar.inc(handle.pos)
+          pbar.set handle.pos
           total_reads += 1
           kmers = r.sequence.to_kmers(k_len)
           kmers.each { |x| counting_table[x] += 1 }
