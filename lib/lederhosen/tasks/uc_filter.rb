@@ -44,12 +44,13 @@ module Lederhosen
       pbar = ProgressBar.new 'saving', lines
       kept, total = 1, 0
 
+      # output lederhosen filtering information because I often
+      # forget to write this down :)
+      out.puts "# filtered: #{input}"
+      out.puts "# #{reads} reads in at least #{samples} samples"
+
       File.open(input) do |handle|
         handle.each do |line|
-          # output lederhosen filtering information because I often
-          # forget to write this down :)
-          out.puts "# filtered: #{input}"
-          out.puts "# #{reads} reads in at least #{samples} samples"
 
           pbar.inc
           if line =~ /^#/
