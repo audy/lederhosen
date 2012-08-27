@@ -111,15 +111,16 @@ module Lederhosen
           targetlabel = line[9]
           header      = line[8]
 
-          # get the sample id via regexp match
-          # this way more info can be stored in the header.
-          sample = line[8].match(/sample=(.*)/)[1]
-
-          # Need to maintain some backwards compatibility here
-          # this is the old way of getting the same id.
-          if sample.nil?
-            sample = line[8].split(':')[2]
-          end
+          sample =
+            begin
+              # get the sample id via regexp match
+              # this way more info can be stored in the header.
+              line[8].match(/sample=(.*)/)[1]
+            rescue NoMethodError # catch no method [] for NilClass
+              # Need to maintain some backwards compatibility here
+              # this is the old way of getting the same id.
+              sample = line[8].split(':')[2]
+            end
 
           # keep track of samples
           samples.add(sample)
