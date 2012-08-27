@@ -95,11 +95,11 @@ module Lederhosen
 
       # clstrnr_to_seed[seed_sequence_id] = clstr_nr
       seed_to_clstrnr = Hash.new
-      lines = `wc -l #{input}`.split.first.to_i
-      pbar = ProgressBar.new 'loading uc file', lines
+      bytes = File.size(input)
+      pbar = ProgressBar.new 'loading uc file', bytes
       File.open(input) do |handle|
         handle.each do |line|
-          pbar.inc
+          pbar.inc handle.pos
           next if line =~ /^#/ # skip comments
 
           line = line.strip.split
