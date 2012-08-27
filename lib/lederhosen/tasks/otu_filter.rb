@@ -16,9 +16,11 @@ module Lederhosen
       reads       = options[:reads]
       min_samples = options[:samples]
 
-      ohai "filtering otu file #{input} (reads = #{reads}, samples = #{min_samples}), saving to #{output}"
+      ohai "filtering otu file #{input} (reads = #{reads}, samples = #{min_samples})"
 
       cluster_sample_count = Hash.new { |h, k| h[k] = Hash.new }
+
+      ohai "loading csv file #{input}"
 
       # slurp up CSV file
       File.open input do |handle|
@@ -34,8 +36,12 @@ module Lederhosen
         end
       end
 
+      ohai "filtering"
+
       # filter sample_cluster_count
       filtered = cluster_sample_count.reject { |k, v| v.reject { |k, v| v < reads }.size < min_samples }
+
+      ohai "saving to #{output}"
 
       # save the table
       out = File.open(output, 'w')
