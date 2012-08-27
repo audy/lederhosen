@@ -25,12 +25,10 @@ module Lederhosen
 
       out = File.open(output, 'w')
 
-      no_records = `grep -c '^>' #{input}`.split.first.to_i
-      pbar = ProgressBar.new 'loading', no_records
-
       File.open(input) do |handle|
+        pbar = ProgressBar.new 'loading', File.size(input)
         Dna.new(handle).each do |record|
-          pbar.inc
+          pbar.inc handle.pos
           unless sequence_counts.has_key? record.sequence
             # store the sequence and id so we can have ids in the
             # table. If the file is sorted by length then this
@@ -40,13 +38,13 @@ module Lederhosen
           end
           sequence_counts[record.sequence] += 1
         end
+        pbar.finish
       end
 
-      pbar.finish
       out.close
 
       # write table
-      pbar = ProgressBar.new 'table', no_records
+      pbar = ProgressBar.new 'table', sequence_counts.size
       File.open(table_out, 'w') do |out|
         sequence_counts.each_pair do |sequence, count|
           pbar.inc
