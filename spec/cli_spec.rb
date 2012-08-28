@@ -45,6 +45,11 @@ describe Lederhosen::CLI do
     `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
   end
 
+  it 'should split a fasta file into smaller fasta files (optionally gzipped)' do
+    `./bin/lederhosen split_fasta --input=#{$test_dir}/joined.fasta --out-dir=#{$test_dir}/split/ --gzip true -n 100`
+    $?.success?.should be_true
+  end
+
   it 'should split joined.fasta into reads for each cluster' do
     `./bin/lederhosen split --reads=#{$test_dir}/joined.fasta --clusters=#{$test_dir}/clusters.uc --out-dir=#{$test_dir}/split --min-clst-size=1`
   end
