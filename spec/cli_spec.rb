@@ -9,6 +9,7 @@ describe Lederhosen::CLI do
 
   it 'should have a version command' do
     `./bin/lederhosen version `.strip.should == "lederhosen-#{Lederhosen::Version::STRING}"
+    $?.success?.should be_true
   end
 
   it 'should trim reads' do
@@ -43,6 +44,7 @@ describe Lederhosen::CLI do
 
   it 'should filter OTU abundance matrices' do
     `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
+    $?.success?.should be_true
   end
 
   it 'should split a fasta file into smaller fasta files (optionally gzipped)' do
@@ -52,6 +54,7 @@ describe Lederhosen::CLI do
 
   it 'should split joined.fasta into reads for each cluster' do
     `./bin/lederhosen split --reads=#{$test_dir}/joined.fasta --clusters=#{$test_dir}/clusters.uc --out-dir=#{$test_dir}/split --min-clst-size=1`
+    $?.success?.should be_true
   end
 
   it 'should create a fasta file containing representative reads for each cluster' do
