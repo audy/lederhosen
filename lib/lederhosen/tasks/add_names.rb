@@ -43,8 +43,10 @@ module Lederhosen
 
       # map clusterid to name using blat output
       ohai "loading BLAT output from #{blat}"
+      pbar = ProgressBar.new "loading", File.size(blat)
       File.open(blat) do |handle|
         handle.each do |line|
+          pbar.set handle.pos
           line = line.strip.split
 
           # Only get first match
@@ -68,6 +70,7 @@ module Lederhosen
           clusterid_to_name[cluster_id] = level_name
         end
       end
+      pbar.finish
 
       ohai "#{clusterid_to_name.keys.size} clusters were identified"
 
