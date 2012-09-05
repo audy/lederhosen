@@ -49,7 +49,8 @@ module Lederhosen
 
           # Only get first match
           # TODO something smarter here
-          cluster_id = line[0].split(':')[3]
+
+          cluster_id = "cluster-#{line[0].match(/cluster-(\d*)/)[1]}"
           next if clusterid_to_name.include? cluster_id
 
           taxonomic_description = line[1]
@@ -58,7 +59,7 @@ module Lederhosen
           # Example:
           # [0]Bacteria;[1]Actinobacteria;[2]Actinobacteria;[3]Acidimicrobiales;[4]Acidimicrobiaceae;[5]Acidimicrobium;[6]Acidimicrobium_ferrooxidans;
           # I want to match Actinobacteria given level_no = 2
-          level_name = taxonomic_description.match(/\[#{level_no}\](\w*)[;\[]/)[1] rescue next
+          level_name = taxonomic_description.match(/\[#{level_no}\](\w*)[;\[]/)[1] rescue nil
 
           # keep cluster id if name is 'null' (bad taxonomic description)
           # but put paranthesis around it so I know
@@ -67,6 +68,8 @@ module Lederhosen
           clusterid_to_name[cluster_id] = level_name
         end
       end
+
+      ohai "#{clusterid_to_name.keys.size} clusters were identified"
 
       # load table, replace cluster names with taxonomic descriptions
       output = File.open(output, 'w') unless output == $stdout
