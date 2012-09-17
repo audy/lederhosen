@@ -22,6 +22,12 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
+  it 'should support libonly clustering (w/ maxaccepts and maxrejects too)' do
+    # clustering reads against themselves because there is no reference database
+    # included in specs/data
+    `./bin/lederhosen cluster --input=#{$test_dir}/joined.fasta --output=#{$test_dir}/joined.libonly.uc --lib=#{$test_dir}/joined.fasta --libonly --identity 0.95 --maxaccepts 500 --maxrejects 12`
+  end
+
   it 'should sort reads' do
     `./bin/lederhosen sort --input=#{$test_dir}/joined.fasta --output=#{$test_dir}/sorted.fasta`
     $?.success?.should be_true

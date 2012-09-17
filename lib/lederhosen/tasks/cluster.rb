@@ -16,6 +16,7 @@ module Lederhosen
     method_option :maxaccepts,  :type => :numeric, :default  => 1
     method_option :maxrejects,  :type => :numeric, :default  => 8
     method_option :lib,         :type => :string
+    method_option :libonly,     :type => :boolean, :default  => false
 
     def cluster
       identity   = options[:identity]
@@ -26,6 +27,7 @@ module Lederhosen
       maxrejects = options[:maxrejects]
       wordlen    = options[:wordlen]
       lib        = options[:lib]
+      libonly    = options[:libonly]
 
       ohai "clustering #{input}, saving to #{output}"
 
@@ -45,6 +47,7 @@ module Lederhosen
       ]
 
       cmd << "--lib #{lib}" unless lib.nil?
+      cmd << "--libonly" if libonly == true
 
       cmd = cmd.join(' ')
 
