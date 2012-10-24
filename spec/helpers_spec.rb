@@ -8,6 +8,10 @@ describe Lederhosen::Helpers do
     groups.length.should == 2
   end
 
+  it 'should have a method for reverse complementing a dna sequence' do
+    Lederhosen::Helpers.reverse_complement("GATCCCGANNANTAGGACCAA").should == "TTGGTCCTANTNNTCGGGATC"
+  end
+
   it 'should have a method for trimming sequences' do
     reads = groups.values.first.first
     record = Zlib::GzipReader.open(reads) do |handle|

@@ -2,6 +2,12 @@ module Lederhosen
   class Helpers
     class << self
 
+    # reverse complement a DNA sequence
+    # assumes only GATCN nucleotides
+    def reverse_complement(s)
+      s.reverse.tr('GATCNgatcn','CTAGNctagn')
+    end
+
     # Function for grouping qseq files produced by splitting illumina
     # reads by barcode
     #
