@@ -41,38 +41,29 @@ Trim (Illumina) reads using quality scores. Output will be a directory of fasta 
 
     lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 
-### k_filter
+### Create database
 
-K-mer abundance noise filtering. This step is experimental and optional. It may reduce the time it takes to perform the clustering.
+Create UDB database required by usearch from TaxCollector
 
-    lederhosen k_filter --input=joined.fasta --output=filtered.fasta --k=10 --cutoff=50
+    lederhosen make_udb --input=taxcollector.fa --output=taxcollector.udb
 
-### cluster
+### Cluster Reads using USEARCH
 
 Cluster reads using USEARCH. Output is a uc file.
 
-    lederhosen cluster --input=sorted.fasta --identity=0.80 --output=clusters.uc
+    lederhosen cluster --input=*.fasta --identity=0.80 --output=clusters_80.uc --database=taxcollector.udb
 
-### uc_filter
-
-Filter UC file removing singleton clusters or clusters that are only present in a few samples. This greatly reduces the noise of the data without removing many of the reads.
-
-    lederhosen uc_filter --input=clusters.uc --output=clusters.uc.filtered --reads=50 --samples=10
-
-### otu_table
+### Generate OTU tables
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
-    lederhosen otu_table --clusters=clusters.uc --output=otu_prefix.csv
+    lederhosen otu_table --clusters=clusters.uc --output=genus.csv --level=genus
 
-### rep_reads
+Level can be Kingdom, Domain, Phylum, Class, Order, Family or Genus. To make tables at all levels do:
 
-Get representative reads for each cluster. Output is a single fasta file.
-
-    lederhosen rep_reads --clusters=clusters.uc --joined=joined.fasta --output=representative_reads.fasta
-
-### split
-
-Get all reads belonging to each cluster. Output is a directory containing a fasta file for each cluster. The fasta file contains the joined reads.
-
-    lederhosen split --clusters=clusters.uc --reads=joined.fasta --min-clst-size=100
+```bash
+for level in domain phylum class order family genus species
+do
+  lederhosen otu_table --clusters=clusters.uc --output=$level --level=$level
+done
+```
