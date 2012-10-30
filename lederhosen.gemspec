@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "0.5.7"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2012-09-17"
+  s.date = "2012-10-30"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -30,18 +30,14 @@ Gem::Specification.new do |s|
     "lib/lederhosen/buffer.rb",
     "lib/lederhosen/cli.rb",
     "lib/lederhosen/helpers.rb",
-    "lib/lederhosen/tasks/add_names.rb",
     "lib/lederhosen/tasks/cluster.rb",
-    "lib/lederhosen/tasks/join.rb",
     "lib/lederhosen/tasks/k_filter.rb",
-    "lib/lederhosen/tasks/name.rb",
+    "lib/lederhosen/tasks/make_udb.rb",
     "lib/lederhosen/tasks/otu_filter.rb",
     "lib/lederhosen/tasks/otu_table.rb",
     "lib/lederhosen/tasks/rep_reads.rb",
-    "lib/lederhosen/tasks/sort.rb",
     "lib/lederhosen/tasks/split.rb",
     "lib/lederhosen/tasks/split_fasta.rb",
-    "lib/lederhosen/tasks/squish.rb",
     "lib/lederhosen/tasks/trim.rb",
     "lib/lederhosen/tasks/uc_filter.rb",
     "lib/lederhosen/tasks/uc_stats.rb",
@@ -53,8 +49,7 @@ Gem::Specification.new do |s|
     "spec/data/ILT_L_9_B_001_3.txt.gz",
     "spec/data/ILT_L_9_B_002_1.txt.gz",
     "spec/data/ILT_L_9_B_002_3.txt.gz",
-    "spec/data/blat.txt",
-    "spec/data/otus.csv",
+    "spec/data/test.uc",
     "spec/helpers_spec.rb",
     "spec/misc_spec.rb",
     "spec/spec_helper.rb"
