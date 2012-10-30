@@ -26,15 +26,14 @@ describe Lederhosen::CLI do
     `./bin/lederhosen cluster --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
   end
 
-  %w{domain phylum class ORDER Family genus species}.each do |level|
-    it "should build #{level} abundance matrix" do
-      `./bin/lederhosen otu_table --files=spec/data/test.uc --output=#{$test_dir}/otu_table.csv --level=#{level}`
-      $?.success?.should be_true
-    end
+  it 'should build abundance matrices for each level' do
+    levels = "domain phylum class order FAMILY genus Species"
+    `./bin/lederhosen otu_table --files=spec/data/test.uc --prefix=#{$test_dir}/otu_table --levels=#{levels}`
+    $?.success?.should be_true
   end
 
   it 'should filter OTU abundance matrices' do
-    `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
+    `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.species.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
     $?.success?.should be_true
   end
 

@@ -8,24 +8,31 @@ module Lederhosen
   class CLI
 
     desc "otu_table",
-         "create an OTU abundance matrix from USEARCH output"
+         "create an OTU abundance matrix from USEARCH prefix"
 
     method_option :files,  :type => :string, :required => true
-    method_option :output, :type => :string, :required => true
-    method_option :level,  :type => :string, :required => true, :banner => 'valid options: domain, kingdom, phylum, class, order, genus, or species'
+
+    method_option :prefix, :type => :string, :required => true,
+                  :banner => 'prefix prefix'
+
+    method_option :levels, :type => :array, :required => true,
+                  :banner => 'valid options: domain, kingdom, phylum, class, order, genus, or species (or all of them at once)'
 
     def otu_table
       input  = Dir[options[:files]]
-      output = options[:output]
-      level  = options[:level].downcase
+      prefix = options[:prefix]
+      levels = options[:levels].map(&:downcase)
 
-      ohai "generating #{level} table from #{input.size} file(s) and saving to #{output}."
+      ohai "generating #{levels.join(', ')} table(s) from #{input.size} file(s) and saving to prefix #{prefix}."
 
-      fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom}.include? level
+      # sanity check
+      levels.each do |level|
+        fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom}.include? level
+      end
 
-      sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
+      level_sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } } }
 
-      all_names = Set.new
+      all_names = Hash.new { |h, k| h[k] = Set.new }
       pbar = ProgressBar.new "loading", input.size
 
       # Load cluster table
@@ -35,36 +42,41 @@ module Lederhosen
           handle.each do |line|
             dat = parse_usearch_line(line.strip)
             next if dat.nil?
-            name = dat[level] rescue ohai(dat.inspect)
 
-            all_names << name
-            sample_cluster_count[input_file][name] += 1
+            levels.each do |level|
+              name = dat[level] rescue nil
+              all_names[level] << name
+              level_sample_cluster_count[level][input_file][name] += 1
+            end
+
           end
         end
       end
 
       pbar.finish
 
-      ohai "found #{all_names.size} unique taxa at #{level} level"
+      # save to csv(s)
+      levels.each do |level|
 
-      # save to csv
-      File.open(output, 'w') do |handle|
-        header = all_names.to_a.compact.sort
-        handle.puts "#{level.capitalize},#{header.join(',')}"
-        samples = sample_cluster_count.keys.sort
+        ohai "saving #{level} table"
 
-        samples.each do |sample|
-          handle.print "#{sample}"
-          header.each do |name|
-            handle.print ",#{sample_cluster_count[sample][name]}"
+        File.open("#{prefix}.#{level}.csv", 'w') do |handle|
+          header = all_names[level].to_a.compact.sort
+          handle.puts "#{level.capitalize},#{header.join(',')}"
+
+          input.each do |sample|
+            handle.print "#{sample}"
+            header.each do |name|
+              handle.print ",#{level_sample_cluster_count[level][sample][name]}"
+            end
+            handle.print "\n"
           end
-          handle.print "\n"
         end
       end
     end
 
     no_tasks do
-      # parse a line of usearch output
+      # parse a line of usearch prefix
       # return a hash in the form:
       # { :taxonomy => '', :identity => 0.00, ... }
       # unless the line is not a "hit" in which case
