@@ -2,7 +2,7 @@
 # MAKE TABLES
 #
 
-SEP = ','
+require 'set'
 
 module Lederhosen
   class CLI
@@ -12,22 +12,49 @@ module Lederhosen
 
     method_option :files,  :type => :string, :required => true
     method_option :output, :type => :string, :required => true
+    method_option :level,  :type => :string, :required => true, :banner => 'valid options: domain, kingdom, phylum, class, order, genus, or species'
 
     def otu_table
-      input  = options[:files]
+      input  = Dir[options[:files]]
       output = options[:output]
+      level  = options[:level].downcase
 
-      ohai "generating otu table from #{input}, saving to #{output}"
+      ohai "generating #{level} table from #{input.size} file(s) and saving to #{output}."
 
-      sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { h[k] = 0 } }
+      fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom}.include? level
+
+      sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
+
+      all_names = Set.new
 
       # Load cluster table
       input.each do |input_file|
         File.open(input_file) do |handle|
           handle.each do |line|
             dat = parse_usearch_line(line.strip)
+            next if dat.nil?
+            name = dat[level] rescue ohai(dat.inspect)
 
+            all_names << name
+            sample_cluster_count[input_file][name] += 1
           end
+        end
+      end
+
+      ohai "found #{all_names.size} unique taxa at #{level} level"
+
+      # save to csv
+      File.open(output, 'w') do |handle|
+        header = all_names.to_a.sort
+        handle.puts "#{level.capitalize},#{header.join(',')}"
+        samples = sample_cluster_count.keys.sort
+
+        samples.each do |sample|
+          handle.print "#{sample}"
+          header.each do |name|
+            handle.print ",#{sample_cluster_count[sample][name]}"
+          end
+          handle.print "\n"
         end
       end
     end
@@ -39,14 +66,19 @@ module Lederhosen
       # unless the line is not a "hit" in which case
       # the function returns nil
       def parse_usearch_line(str)
-        str = str.split
 
         # skip non hits
-        return nil unless line =~ /^H/
-        taxonomic_description = str[8]
-        identity = line[3].to_f
+        return nil unless str =~ /^H/
 
-        { :taxonomy => taxonomic_description, :identity => identity }
+        str = str.split
+
+        taxonomic_description = str[9]
+        identity = str[3].to_f
+
+        # parse taxonomic_description
+        taxonomies = parse_taxonomy(taxonomic_description)
+
+        { :identity => identity }.merge(taxonomies)
       end
 
       # parse a taxonomic description using the
@@ -65,7 +97,7 @@ module Lederhosen
         names = Hash.new
 
         levels.each_pair do |level, num|
-          name = taxonomy.match(/\[#{num}\](\w*)[;\[]/) rescue nil
+          name = taxonomy.match(/\[#{num}\](\w*)[;\[]/)[1] rescue nil
           names[level] = name
         end
 
