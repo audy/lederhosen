@@ -3,7 +3,6 @@ source :rubygems
 gem 'dna', '0.0.12'
 gem 'progressbar'
 gem 'thor'
-gem 'thrash', '~> 1.0.1'
 
 group :test do
   gem 'rspec'
