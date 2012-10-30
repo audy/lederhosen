@@ -26,9 +26,11 @@ module Lederhosen
       sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
 
       all_names = Set.new
+      pbar = ProgressBar.new "loading", input.size
 
       # Load cluster table
       input.each do |input_file|
+        pbar.inc
         File.open(input_file) do |handle|
           handle.each do |line|
             dat = parse_usearch_line(line.strip)
@@ -40,6 +42,8 @@ module Lederhosen
           end
         end
       end
+
+      pbar.finish
 
       ohai "found #{all_names.size} unique taxa at #{level} level"
 
