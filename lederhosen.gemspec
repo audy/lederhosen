@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.1.0"
+  s.version = "1.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "lib/lederhosen.rb",
     "lib/lederhosen/cli.rb",
     "lib/lederhosen/tasks/cluster.rb",
+    "lib/lederhosen/tasks/join_otu_tables.rb",
     "lib/lederhosen/tasks/make_udb.rb",
     "lib/lederhosen/tasks/otu_filter.rb",
     "lib/lederhosen/tasks/otu_table.rb",
