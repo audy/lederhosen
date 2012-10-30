@@ -7,7 +7,7 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 - Lederhosen is a project born out of the Triplett Lab at the University of Florida.
 - Lederhosen is designed to be a fast and simple method of clustering 16S rRNA amplicons sequenced
 using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq).
-- Lederhosen uses Semantic Versioning.
+- Lederhosen uses [Semantic Versioning](http://semver.org/).
 - Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/).
 - Except for USEARCH which requires a license, Lederhosen is available for commercial use.
 
