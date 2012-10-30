@@ -54,10 +54,12 @@ Cluster reads using USEARCH. Output is a uc file.
 
     lederhosen cluster --input=trimmed/*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
 
-### Generate OTU tables
+### Generate OTU table(s)
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
-    lederhosen otu_table --clusters=clusters_95.uc --output=genus.csv --level=genus
+    lederhosen otu_table --clusters=clusters_95.uc --prefix=otu_table --level=domain phylum class order family genus species
 
-Level can be Kingdom, Domain, Phylum, Class, Order, Family or Genus.
+This will create the files:
+
+    otu_table.domain.csv, ..., otu_table.species.csv
