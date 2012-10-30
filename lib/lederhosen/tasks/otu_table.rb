@@ -45,7 +45,7 @@ module Lederhosen
 
       # save to csv
       File.open(output, 'w') do |handle|
-        header = all_names.to_a.sort
+        header = all_names.to_a.compact.sort
         handle.puts "#{level.capitalize},#{header.join(',')}"
         samples = sample_cluster_count.keys.sort
 

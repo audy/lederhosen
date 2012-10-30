@@ -26,9 +26,11 @@ describe Lederhosen::CLI do
     `./bin/lederhosen cluster --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
   end
 
-  it 'should build OTU abundance matrices' do
-    `./bin/lederhosen otu_table --clusters=#{$test_dir}/clusters.uc --output=#{$test_dir}/otu_table.csv`
-    $?.success?.should be_true
+  %w{domain phylum class ORDER Family genus species}.each do |level|
+    it "should build #{level} abundance matrix" do
+      `./bin/lederhosen otu_table --files=spec/data/test.uc --output=#{$test_dir}/otu_table.csv --level=#{level}`
+      $?.success?.should be_true
+    end
   end
 
   it 'should filter OTU abundance matrices' do
@@ -37,12 +39,9 @@ describe Lederhosen::CLI do
   end
 
   it 'should split a fasta file into smaller fasta files (optionally gzipped)' do
-    `./bin/lederhosen split_fasta --input=#{$test_dir}/joined.fasta --out-dir=#{$test_dir}/split/ --gzip true -n 100`
+    `./bin/lederhosen split_fasta --input=#{$test_dir}/trimmed/ILT_L_9_B_001.fasta --out-dir=#{$test_dir}/split/ --gzip true -n 100`
     $?.success?.should be_true
   end
 
-  it 'should create a fasta file containing representative reads for each cluster' do
-    `./bin/lederhosen rep_reads --clusters=#{$test_dir}/clusters.uc --joined=#{$test_dir}/filtered.fasta --output=#{$test_dir}/representatives.fasta`
-    $?.success?.should be_true
-  end
+  it 'should create a fasta file containing representative reads for each cluster'
 end
