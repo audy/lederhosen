@@ -2,13 +2,20 @@
 
 Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 
-## Who can use Lederhosen?
+### About
+
+Lederhosen is a project born out of the Triplett Lab at the University of Florida.
+
+It is designed to be a fast and simple method of clustering 16S rRNA amplicons sequenced
+using paired and non-paired end short reads such Illumina (GAIIx, HiSeq and MiSeq).
+
+Lederhosen uses Semantic Versioning.
 
 Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/)
 
 ## How do I get Lederhosen?
 
-0. Obtain & Install [USEARCH](http://www.drive5.com/) (32bit is fine)
+0. Obtain & Install [USEARCH](http://www.drive5.com/) (32bit is fine for non-commercial use)
 2. Get a copy of [TaxCollector](http://github.com/audy/taxcollector)
 3. Install Lederhosen by typing:
 
@@ -18,13 +25,8 @@ Lederhosen is free and open source under the [MIT open source license](http://op
 ## Features
 
 - Sequence trimming (paired-end Illumina).
-- K-mer filtering.
-- Clustering w/ UCLUST.
-- UCLUST output filtering.
-- Separation of representative reads.
-- Separation of all reads belonging to each cluster.
-- Identification of clusters using TaxCollector.
-- Generation of OTU abundancy matrices.
+- Parallel, referenced-based clustering to TaxCollector using USEARCH
+- Generation and filtering of OTU abundancy matrices.
 
 ## How do I use Lederhosen?
 
@@ -39,6 +41,8 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
 
     lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
+
+The trimming process will reverse complement the "right" pair so that both reads are in the forward orientation.
 
 ### Create Database
 
