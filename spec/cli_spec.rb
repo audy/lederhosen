@@ -17,30 +17,13 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
-  it 'should join reads' do
-    `./bin/lederhosen join --trimmed=#{$test_dir}/trimmed/*.fasta --output=#{$test_dir}/joined.fasta`
+  it 'can create a usearch udb using usearch' do
+    `./bin/lederhosen make_udb --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --output #{$test_dir}/test_db.udb`
     $?.success?.should be_true
   end
 
-  it 'should support libonly clustering (w/ maxaccepts and maxrejects too)' do
-    # clustering reads against themselves because there is no reference database
-    # included in specs/data
-    `./bin/lederhosen cluster --input=#{$test_dir}/joined.fasta --output=#{$test_dir}/joined.libonly.uc --lib=#{$test_dir}/joined.fasta --libonly --identity 0.95 --maxaccepts 500 --maxrejects 12`
-  end
-
-  it 'should sort reads' do
-    `./bin/lederhosen sort --input=#{$test_dir}/joined.fasta --output=#{$test_dir}/sorted.fasta`
-    $?.success?.should be_true
-  end
-
-  it 'should k_filter reads' do
-    `./bin/lederhosen k_filter --input=#{$test_dir}/sorted.fasta --output=#{$test_dir}/filtered.fasta -k=15 --cutoff 1`
-    $?.success?.should be_true
-  end
-
-  it 'should cluster reads' do
-    `./bin/lederhosen cluster --identity=0.80 --input=#{$test_dir}/filtered.fasta --output=#{$test_dir}/clusters.uc`
-    $?.success?.should be_true
+  it 'can cluster reads using usearch' do
+    `./bin/lederhosen cluster --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
   end
 
   it 'should build OTU abundance matrices' do
@@ -58,29 +41,8 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
-  it 'should split joined.fasta into reads for each cluster' do
-    `./bin/lederhosen split --reads=#{$test_dir}/joined.fasta --clusters=#{$test_dir}/clusters.uc --out-dir=#{$test_dir}/split --min-clst-size=1`
-    $?.success?.should be_true
-  end
-
   it 'should create a fasta file containing representative reads for each cluster' do
     `./bin/lederhosen rep_reads --clusters=#{$test_dir}/clusters.uc --joined=#{$test_dir}/filtered.fasta --output=#{$test_dir}/representatives.fasta`
-    $?.success?.should be_true
-  end
-
-  # Need a taxcollector database for this one.
-  it 'should identify clusters given a taxcollector database'
-
-  it 'should add names to otu abundance matrix given blat output' do
-    levels = %w{kingdom domain phylum class order genus speces}
-    # Ruby 1.9 vs Ruby 1.8
-    level = levels.sample rescue levels.choice
-    `./bin/lederhosen add_names --table=spec/data/otus.csv --blat=spec/data/blat.txt --level=#{level} --output=#{$test_dir}/named_otus.csv`
-    $?.success?.should be_true
-  end
-
-  it 'should squish otu abundance matrix by same name' do
-    `./bin/lederhosen squish --csv-file=#{$test_dir}/named_otus.csv --output=#{$test_dir}/squished.csv`
     $?.success?.should be_true
   end
 end

@@ -42,6 +42,7 @@ module Lederhosen
         seqb = trim b
         unless [seqa, seqb].include? nil
           if seqb.length >= min_length && seqa.length >= min_length
+            seqb = reverse_complement(seqb)
             out_handle.puts ">#{i}:0\n#{seqa}\n>#{i}:1\n#{seqb}"
           end
         end

@@ -8,44 +8,71 @@ module Lederhosen
   class CLI
 
     desc "otu_table",
-         "create an OTU abundance matrix from UCLUST output"
+         "create an OTU abundance matrix from USEARCH output"
 
-    method_option :clusters, :type => :string, :required => true
-    method_option :output,   :type => :string, :required => true
+    method_option :files,  :type => :string, :required => true
+    method_option :output, :type => :string, :required => true
 
     def otu_table
-      input        = options[:clusters]
-      output       = options[:output]
+      input  = options[:files]
+      output = options[:output]
 
       ohai "generating otu table from #{input}, saving to #{output}"
 
+      sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { h[k] = 0 } }
+
       # Load cluster table
+      input.each do |input_file|
+        File.open(input_file) do |handle|
+          handle.each do |line|
+            dat = parse_usearch_line(line.strip)
 
-      clstr_info      = Helpers.load_uc_file input
-      clstr_counts    = clstr_info[:clstr_counts] # clstr_counts[:clstr][sample.to_i] = reads
-      clstrnr_to_seed = clstr_info[:clstrnr_to_seed]
-      samples         = clstr_info[:samples]
-
-      # print OTU abundance matrix
-      # clusters as columns
-      # samples as rows
-
-      File.open("#{output}", 'w') do |h|
-        samples  = samples.sort
-        clusters = clstr_counts.keys
-
-        # print header (cluster names)
-        h.puts '-' + SEP + clusters.map { |x| "cluster-#{x}" }.join(SEP)
-
-        samples.each do |sample|
-          h.print sample
-          clusters.each do |cluster|
-            h.print "#{SEP}#{clstr_counts[cluster][sample]}"
           end
-          h.print "\n"
         end
       end
     end
 
-  end
-end
+    no_tasks do
+      # parse a line of usearch output
+      # return a hash in the form:
+      # { :taxonomy => '', :identity => 0.00, ... }
+      # unless the line is not a "hit" in which case
+      # the function returns nil
+      def parse_usearch_line(str)
+        str = str.split
+
+        # skip non hits
+        return nil unless line =~ /^H/
+        taxonomic_description = str[8]
+        identity = line[3].to_f
+
+        { :taxonomy => taxonomic_description, :identity => identity }
+      end
+
+      # parse a taxonomic description using the
+      # taxcollector format returning name at each level (genus, etc...)
+      def parse_taxonomy(taxonomy)
+
+        levels = { 'domain'  => 0,
+                   'kingdom' => 0,
+                   'phylum'  => 1,
+                   'class'   => 2,
+                   'order'   => 3,
+                   'family'  => 4,
+                   'genus'   => 5,
+                   'species' => 6 }
+
+        names = Hash.new
+
+        levels.each_pair do |level, num|
+          name = taxonomy.match(/\[#{num}\](\w*)[;\[]/) rescue nil
+          names[level] = name
+        end
+
+        names
+      end
+
+    end # no tasks
+
+  end # class CLI
+end # module Lederhosen

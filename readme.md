@@ -41,22 +41,6 @@ Trim (Illumina) reads using quality scores. Output will be a directory of fasta 
 
     lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 
-### join
-
-Join paired reads from all samples end-to-end. This method enables the use of uclust with paired-end data. Output will be a single fasta file.
-
-    lederhosen join --trimmed=trimmed/*.fasta --output=joined.fasta
-
-If your reads are not paired, then you do not need to do this step. Instead, concatenate all of the trimmed reads files.
-
-    cat trimmed/*.fasta > joined.fasta
-
-### sort
-
-Sort reads by length. This is a requirement for uclust's single-linkage clustering algorithim.
-
-    lederhosen sort --input=joined.fasta --output=sorted.fasta
-
 ### k_filter
 
 K-mer abundance noise filtering. This step is experimental and optional. It may reduce the time it takes to perform the clustering.
@@ -65,7 +49,7 @@ K-mer abundance noise filtering. This step is experimental and optional. It may 
 
 ### cluster
 
-Cluster reads using UCLUST. Output is a uc file.
+Cluster reads using USEARCH. Output is a uc file.
 
     lederhosen cluster --input=sorted.fasta --identity=0.80 --output=clusters.uc
 
@@ -92,23 +76,3 @@ Get representative reads for each cluster. Output is a single fasta file.
 Get all reads belonging to each cluster. Output is a directory containing a fasta file for each cluster. The fasta file contains the joined reads.
 
     lederhosen split --clusters=clusters.uc --reads=joined.fasta --min-clst-size=100
-
-### name
-
-Identify clusters in a database using the representative reads. This is a simple wrapper for BLAT. The output is a tab-delimited file similar to a BLAST output file. For this step you need to have BLAT installed and also a [TaxCollector](http://github.com/audy/taxcollector) database.
-
-    lederhosen name --reps=representative_reads.fasta --database taxcollector.fa --output blast_like_output.txt
-
-### add_names
-
-Add phylogenetic classification of clusters to OTU abundance file.
-
-	lederhosen add_names --blat=blat_output.txt --level=taxonomic_level --table=otu_file.csv --output=named_out_file.csv
-
-Where `taxonomic_level` can be: kingdom, domain, phylum, class, order, family, genus or species. This method only works with a TaxCollector database.
-
-### squish
-
-Squish an OTU abundance file by column name (phylogenetic description)
-
-	lederhosen squish --csv-file=named_out_file.csv --output=squished_named_out_file.csv
