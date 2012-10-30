@@ -8,7 +8,7 @@ module Lederhosen
     desc 'version', 'print version string and exit'
 
     def version
-      puts "lederhosen-#{Lederhosen::Version::STRING}"
+      puts "lederhosen-#{Lederhosen::Version::STRING} codename #{Lederhosen::Version::CODENAME}"
     end
   end
 end
