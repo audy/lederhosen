@@ -8,7 +8,8 @@ Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
 - Lederhosen is designed to be a fast and simple method of clustering 16S rRNA amplicons sequenced
 using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq).
 - Lederhosen uses Semantic Versioning.
-- Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/)
+- Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/).
+- Except for USEARCH which requires a license, Lederhosen is available for commercial use.
 
 ## How do I get Lederhosen?
 
@@ -59,4 +60,4 @@ Create an OTU abundance table where rows are samples and columns are clusters. T
 
     lederhosen otu_table --clusters=clusters_95.uc --output=genus.csv --level=genus
 
-Level can be Kingdom, Domain, Phylum, Class, Order, Family or Genus. To make tables at all levels do:
+Level can be Kingdom, Domain, Phylum, Class, Order, Family or Genus.
