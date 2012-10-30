@@ -33,13 +33,19 @@ module Lederhosen
       level_sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } } }
 
       all_names = Hash.new { |h, k| h[k] = Set.new }
-      pbar = ProgressBar.new "loading", input.size
+
+      # create a progress bar with the total number of bytes of
+      # the files we're slurping up
+      pbar = ProgressBar.new "loading", input.map{ |x| File.size(x) }.reduce(&:+)
 
       # Load cluster table
       input.each do |input_file|
-        pbar.inc
         File.open(input_file) do |handle|
           handle.each do |line|
+
+            # increase progressbar by the number of bytes in each line
+            pbar.inc line.unpack('*C').size
+
             dat = parse_usearch_line(line.strip)
             next if dat.nil?
 

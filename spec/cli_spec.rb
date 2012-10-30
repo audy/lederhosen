@@ -37,6 +37,11 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
+  it 'should combine OTU abundance matrices' do
+    `./bin/lederhosen join_otu_tables --input=#{$test_dir}/otu_table*.csv --output=#{$test_dir}/merged.csv`
+    $?.success?.should be_true
+  end
+
   it 'should split a fasta file into smaller fasta files (optionally gzipped)' do
     `./bin/lederhosen split_fasta --input=#{$test_dir}/trimmed/ILT_L_9_B_001.fasta --out-dir=#{$test_dir}/split/ --gzip true -n 100`
     $?.success?.should be_true
