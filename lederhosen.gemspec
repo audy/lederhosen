@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -23,24 +23,15 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "Rakefile",
     "bin/lederhosen",
-    "examples/hierarchical_clustering.sh",
-    "examples/pipeline.sh",
     "lederhosen.gemspec",
     "lib/lederhosen.rb",
-    "lib/lederhosen/buffer.rb",
     "lib/lederhosen/cli.rb",
-    "lib/lederhosen/helpers.rb",
     "lib/lederhosen/tasks/cluster.rb",
-    "lib/lederhosen/tasks/k_filter.rb",
     "lib/lederhosen/tasks/make_udb.rb",
     "lib/lederhosen/tasks/otu_filter.rb",
     "lib/lederhosen/tasks/otu_table.rb",
-    "lib/lederhosen/tasks/rep_reads.rb",
-    "lib/lederhosen/tasks/split.rb",
     "lib/lederhosen/tasks/split_fasta.rb",
     "lib/lederhosen/tasks/trim.rb",
-    "lib/lederhosen/tasks/uc_filter.rb",
-    "lib/lederhosen/tasks/uc_stats.rb",
     "lib/lederhosen/tasks/version.rb",
     "lib/lederhosen/version.rb",
     "readme.md",
@@ -50,7 +41,6 @@ Gem::Specification.new do |s|
     "spec/data/ILT_L_9_B_002_1.txt.gz",
     "spec/data/ILT_L_9_B_002_3.txt.gz",
     "spec/data/test.uc",
-    "spec/helpers_spec.rb",
     "spec/misc_spec.rb",
     "spec/spec_helper.rb"
   ]
