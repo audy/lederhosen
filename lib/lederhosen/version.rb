@@ -1,9 +1,9 @@
 module Lederhosen
   module Version
     MAJOR = 1
-    CODENAME = 'Hefeweizen'
-    MINOR = 0
-    PATCH = 2
+    MINOR = 1
+    CODENAME = 'Apfelstrudel' # changes for minor versions
+    PATCH = 0
 
     STRING = [MAJOR, MINOR, PATCH].join('.')
   end
