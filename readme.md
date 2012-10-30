@@ -51,19 +51,12 @@ Create UDB database required by usearch from TaxCollector
 
 Cluster reads using USEARCH. Output is a uc file.
 
-    lederhosen cluster --input=*.fasta --identity=0.80 --output=clusters_80.uc --database=taxcollector.udb
+    lederhosen cluster --input=*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
 
 ### Generate OTU tables
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
-    lederhosen otu_table --clusters=clusters.uc --output=genus.csv --level=genus
+    lederhosen otu_table --clusters=clusters_95.uc --output=genus.csv --level=genus
 
 Level can be Kingdom, Domain, Phylum, Class, Order, Family or Genus. To make tables at all levels do:
-
-```bash
-for level in domain phylum class order family genus species
-do
-  lederhosen otu_table --clusters=clusters.uc --output=$level --level=$level
-done
-```
