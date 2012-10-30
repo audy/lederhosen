@@ -34,13 +34,13 @@ Lederhosen is just a convenient wrapper for UCLUST and BLAT with some scripts fo
 
 Lederhosen is invoked by typing `lederhosen [TASK]`
 
-### trim
+### Trim Reads
 
 Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
 
     lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 
-### Create database
+### Create Database
 
 Create UDB database required by usearch from TaxCollector
 
@@ -50,7 +50,7 @@ Create UDB database required by usearch from TaxCollector
 
 Cluster reads using USEARCH. Output is a uc file.
 
-    lederhosen cluster --input=*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
+    lederhosen cluster --input=trimmed/*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
 
 ### Generate OTU tables
 
