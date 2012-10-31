@@ -82,22 +82,31 @@ using paired and non-paired end short reads such as those produced by Illumina (
 
 <p>Create UDB database required by usearch from TaxCollector</p>
 
-<pre><code>lederhosen make_udb --input=taxcollector.fa --output=taxcollector.udb
-</code></pre>
+<div class="highlight"><pre>lederhosen make_udb <span class="se">\</span>
+    --input<span class="o">=</span>taxcollector.fa <span class="se">\</span>
+    --output<span class="o">=</span>taxcollector.udb
+</pre></div>
 
 <h3>Cluster Reads using USEARCH</h3>
 
 <p>Cluster reads using USEARCH. Output is a uc file.</p>
 
-<pre><code>lederhosen cluster --input=trimmed/*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
-</code></pre>
+<div class="highlight"><pre>lederhosen cluster <span class="se">\</span>
+    --input<span class="o">=</span>trimmed/*.fasta <span class="se">\</span>
+    --identity<span class="o">=</span>0.95 <span class="se">\</span>
+    --output<span class="o">=</span>clusters_95.uc <span class="se">\</span>
+    --database<span class="o">=</span>taxcollector.udb
+</pre></div>
 
 <h3>Generate OTU table(s)</h3>
 
 <p>Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.</p>
 
-<pre><code>lederhosen otu_table --clusters=clusters_95.uc --prefix=otu_table --level=domain phylum class order family genus species
-</code></pre>
+<div class="highlight"><pre>lederhosen otu_table <span class="se">\</span>
+    --clusters<span class="o">=</span>clusters_95.uc <span class="se">\</span>
+    --prefix<span class="o">=</span>otu_table <span class="se">\</span>
+    --level<span class="o">=</span>domain phylum class order family genus species
+</pre></div>
 
 <p>This will create the files:</p>
 
