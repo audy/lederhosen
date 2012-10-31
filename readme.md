@@ -46,19 +46,33 @@ The trimming process will reverse complement the "right" pair so that both reads
 
 Create UDB database required by usearch from TaxCollector
 
-    lederhosen make_udb --input=taxcollector.fa --output=taxcollector.udb
+```bash
+lederhosen make_udb \
+	--input=taxcollector.fa \
+	--output=taxcollector.udb
+```
 
 ### Cluster Reads using USEARCH
 
 Cluster reads using USEARCH. Output is a uc file.
 
-    lederhosen cluster --input=trimmed/*.fasta --identity=0.95 --output=clusters_95.uc --database=taxcollector.udb
-
+```bash
+lederhosen cluster \
+	--input=trimmed/*.fasta \
+	--identity=0.95 \
+	--output=clusters_95.uc \
+	--database=taxcollector.udb
+```
 ### Generate OTU table(s)
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
-    lederhosen otu_table --clusters=clusters_95.uc --prefix=otu_table --level=domain phylum class order family genus species
+```bash
+lederhosen otu_table \
+	--clusters=clusters_95.uc \
+	--prefix=otu_table \
+	--level=domain phylum class order family genus species
+```
 
 This will create the files:
 
