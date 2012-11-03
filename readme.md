@@ -1,3 +1,5 @@
+<img src="http://d.pr/i/Rscz+#.png" align="right">
+
 # Lederhosen
 
 Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
