@@ -1,4 +1,4 @@
-<img src="http://d.pr/i/Rscz+#.png" align="right">
+<img src="http://d.pr/i/26Js+#.png" align="right">
 
 # Lederhosen
 
