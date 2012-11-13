@@ -12,4 +12,5 @@ group :development do
   gem 'rdoc', '~> 3.12'
   gem 'bundler'
   gem 'jeweler'
+  gem 'pry'
 end

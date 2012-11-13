@@ -12,6 +12,11 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
+  it 'can convert otu abundance matrices to biom format' do
+    `./bin/lederhosen csv_to_biom --input=spec/data/test.csv --output=#{$test_dir}/test.biom --metadata=spec/data/test_metadata.csv`
+    File.exists?(File.join($test_dir, 'test.biom')).should be_true
+  end
+
   it 'should trim reads' do
     `./bin/lederhosen trim --reads-dir=spec/data/IL*.txt.gz --out-dir=#{$test_dir}/trimmed`
     $?.success?.should be_true
