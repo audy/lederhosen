@@ -16,7 +16,7 @@ using paired and non-paired end short reads such as those produced by Illumina (
 ## How do I get Lederhosen?
 
 0. Obtain & Install [USEARCH](http://www.drive5.com/) (32bit is fine for non-commercial use)
-2. Get a copy of [TaxCollector](http://github.com/audy/taxcollector)
+2. Get a copy of [TaxCollector](http://github.com/audy/taxcollector) or [GreenGenes](http://greengenes.lbl.gov) 16S database
 3. Install Lederhosen by typing:
 
     `sudo gem install lederhosen`
