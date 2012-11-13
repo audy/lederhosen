@@ -15,17 +15,16 @@ module Lederhosen
 
       taxa = Set.new
 
-      ohai "getting representative database sequences from #{database} using #{inputs} clusters and saving to #{output}"
+      ohai "getting representative database sequences from #{database} using #{inputs.size} cluster file(s) and saving to #{output}"
 
       # parse uc file, get list of taxa we need to get
       # full sequences for from the database
-      total_bytes = inputs.map { |x| File.size(x) }.inject(:+)
-      pbar = ProgressBar.new 'reading uc(s)', total_bytes
+      pbar = ProgressBar.new 'reading uc(s)', inputs.size
 
       inputs.each do |input|
         File.open(input) do |handle|
           handle.each do |line|
-            pbar.inc line.unpack('*C').size
+            pbar.inc
             header = parse_usearch_line(line.strip)
             taxa << header[:original] rescue nil
           end

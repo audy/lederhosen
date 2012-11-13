@@ -3,7 +3,7 @@ module Lederhosen
     MAJOR = 1
     MINOR = 2
     CODENAME = 'Regenmantel' # changes for minor versions
-    PATCH = 2
+    PATCH = 3
 
     STRING = [MAJOR, MINOR, PATCH].join('.')
   end
