@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.1.1"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2012-10-30"
+  s.date = "2012-11-13"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -26,7 +26,9 @@ Gem::Specification.new do |s|
     "lederhosen.gemspec",
     "lib/lederhosen.rb",
     "lib/lederhosen/cli.rb",
+    "lib/lederhosen/no_tasks.rb",
     "lib/lederhosen/tasks/cluster.rb",
+    "lib/lederhosen/tasks/get_reps.rb",
     "lib/lederhosen/tasks/join_otu_tables.rb",
     "lib/lederhosen/tasks/make_udb.rb",
     "lib/lederhosen/tasks/otu_filter.rb",
@@ -48,7 +50,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://audy.github.com/lederhosen"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "1.8.23"
   s.summary = "OTU Clustering"
 
   if s.respond_to? :specification_version then
