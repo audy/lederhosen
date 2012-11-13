@@ -26,7 +26,7 @@ module Lederhosen
           pbar.inc
           handle.each do |line|
             header = parse_usearch_line(line.strip)
-            taxa << header[:original] rescue nil
+            taxa << header['original'] rescue nil
           end
         end
       end

@@ -23,9 +23,61 @@ module Lederhosen
         { :identity => identity }.merge(taxonomies)
       end
 
+      # detect whether the taxonomy is one of the following
+      # possible formats:
+      #
+      # - :taxcollector
+      # - :greengenes
+      # 
+      def detect_taxonomy_format(taxonomy)
+        # greengenes has a number as the first item in the header
+        # so let's just go with that
+        if taxonomy.split.first =~ /^[\d*]/
+          :greengenes
+        else
+          :taxcollector
+        end
+      end
+
+      def parse_taxonomy(taxonomy)
+        format = detect_taxonomy_format(taxonomy)
+
+        case format
+        when :greengenes
+          parse_taxonomy_greengenes(taxonomy)
+        when :taxcollector
+          parse_taxonomy_taxcollector(taxonomy)
+        else
+          fail 'unknown format!'
+        end
+      end
+
+      def parse_taxonomy_greengenes(taxonomy)
+
+        levels = { 'domain'  => /k__(\w*)/,
+                   'kingdom' => /k__(\w*)/,
+                   'phylum'  => /p__(\w*)/,
+                   'class'   => /c__(\w*)/,
+                   'order'   => /o__(\w*)/,
+                   'family'  => /f__(\w*)/,
+                   'genus'   => /g__(\w*)/,
+                   'species' => /s__(\w*)/
+                  }
+
+        names = Hash.new
+
+        levels.each_pair do |level, regexp|
+          names[level] = taxonomy.match(regexp)[1] rescue nil
+        end
+
+        names['original'] = taxonomy
+
+        names
+      end
+
       # parse a taxonomic description using the
       # taxcollector format returning name at each level (genus, etc...)
-      def parse_taxonomy(taxonomy)
+      def parse_taxonomy_taxcollector(taxonomy)
 
         levels = { 'domain'  => 0,
                    'kingdom' => 0,
@@ -44,7 +96,7 @@ module Lederhosen
         end
 
         # keep original taxonomic description
-        names[:original] = taxonomy
+        names['original'] = taxonomy
 
         names
       end
