@@ -23,8 +23,8 @@ module Lederhosen
 
       inputs.each do |input|
         File.open(input) do |handle|
+          pbar.inc
           handle.each do |line|
-            pbar.inc
             header = parse_usearch_line(line.strip)
             taxa << header[:original] rescue nil
           end
