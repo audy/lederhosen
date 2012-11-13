@@ -1,5 +1,3 @@
-$stderr.puts 'no_tasks'
-
 module Lederhosen
   class CLI
     no_tasks do
