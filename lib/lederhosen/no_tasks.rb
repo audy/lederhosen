@@ -45,6 +45,9 @@ module Lederhosen
           names[level] = name
         end
 
+        # keep original taxonomic description
+        names[:original] = taxonomy
+
         names
       end
 
