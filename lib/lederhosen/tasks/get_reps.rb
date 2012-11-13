@@ -10,8 +10,8 @@ module Lederhosen
 
     def get_reps
       inputs   = Dir[options[:input]]
-      database = options[:database]
-      output   = options[:output]
+      database = File.expand_path(options[:database])
+      output   = File.expand_path(options[:output])
 
       taxa = Set.new
 

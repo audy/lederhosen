@@ -11,8 +11,8 @@ module Lederhosen
     method_option :samples, :type => :numeric, :required => true
 
     def otu_filter
-      input       = options[:input]
-      output      = options[:output]
+      input       = File.expand_path(options[:input])
+      output      = File.expand_path(options[:output])
       reads       = options[:reads]
       min_samples = options[:samples]
 

@@ -16,7 +16,7 @@ module Lederhosen
     method_option :gzip,    :type => :boolean, :default  => false
 
     def split_fasta
-      input   = options[:input]
+      input   = File.expand_path(options[:input])
       out_dir = options[:out_dir]
       n       = options[:n].to_i
       gzip    = options[:gzip]

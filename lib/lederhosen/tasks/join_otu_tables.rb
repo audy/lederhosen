@@ -12,7 +12,7 @@ module Lederhosen
     def join_otu_tables
 
       input = Dir[options[:input]]
-      output = options[:output]
+      output = File.expand_path(options[:output])
 
       ohai "combining #{input.size} file(s) and saving to #{output}"
 

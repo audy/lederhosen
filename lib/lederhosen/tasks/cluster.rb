@@ -12,11 +12,11 @@ module Lederhosen
     method_option :strand,   :type => :string,  :default => 'plus'
 
     def cluster
-      input    = options[:input]
-      database = options[:database]
+      input    = File.expand_path(options[:input])
+      database = File.expand_path(options[:database])
       threads  = options[:threads]
       identity = options[:identity]
-      output   = options[:output]
+      output   = File.expand_path(options[:output])
       strand   = options[:strand]
 
       ohai "clustering #{input} to #{database} and saving to #{output}"
