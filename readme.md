@@ -87,6 +87,6 @@ the __database__ you ran usearch with. Make sure you use the same database that 
 
     lederhosen get_reps --input=clusters.uc --database=taxcollector.fa --output=representatives.fasta
 
-You can get the representatives from more than one cluster file by piping them:
+You can get the representatives from more than one cluster file using a glob:
 
-    cat *.uc | lederhosen get_reps --input=/dev/stdin --database=taxcollector.fa --output=representatives.fasta
+    lederhosen get_reps --input=*.uc --database=taxcollector.fa --output=representatives.fasta
