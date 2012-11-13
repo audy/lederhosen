@@ -15,6 +15,10 @@ describe 'no_tasks' do
     lederhosen.detect_taxonomy_format(taxcollector_taxonomy).should == :taxcollector
   end
 
+  it '#detect_taxonomy_format should fail on unknown formats' do
+    lederhosen.detect_taxonomy_format('this is not a taxonomic description').should raise_error
+  end
+
   it '#parse_taxonomy_taxcollector should parse taxcollector taxonomy' do
     taxonomy = lederhosen.parse_taxonomy_taxcollector(taxcollector_taxonomy)
     taxonomy['original'].should == taxcollector_taxonomy
