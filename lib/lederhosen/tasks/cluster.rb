@@ -6,7 +6,7 @@ module Lederhosen
 
     method_option :input,    :type => :string,  :required => true
     method_option :database, :type => :string,  :required => true
-    method_option :threads,  :type => :numeric, :default  => 0
+    method_option :threads,  :type => :numeric, :default  => false
     method_option :identity, :type => :numeric, :required => true
     method_option :output,   :type => :string,  :required => true
     method_option :strand,   :type => :string,  :default => 'plus'
@@ -33,8 +33,8 @@ module Lederhosen
         "--strand #{strand}"
       ]
 
-      # threads = 0 : use all threads (default)
-      if threads != 0
+      # threads = False : use all threads (default)
+      if threads != false
         cmd << "--threads #{threads}"
       end
 
