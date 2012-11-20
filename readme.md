@@ -2,7 +2,11 @@
 
 # Lederhosen
 
-Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.
+OTU clustering for rRNA amplicons. Lederhosen is intended to be simple, robust and easy to use.
+
+### Why not QIIME?
+
+QIIME is great but imagine for a moment, if you will, a world where there was only one web browser.
 
 ### About
 
@@ -27,11 +31,6 @@ using paired and non-paired end short reads such as those produced by Illumina (
 
     `sudo gem install lederhosen`
 4. Check installation by typing `lederhosen`. You should see some help text.
-
-
-## How do I use Lederhosen?
-
-Lederhosen is just a convenient wrapper for UCLUST and BLAT with some scripts for quality filtering, de-noising of data as well as creation of nice tables. It is similar to QIIME but meant for paired-end Illumina data rather than single-end 454. The basic lederhosen pipeline consists of: trimming, joining, sorting, filtering, clustering, more filtering, and output generation (OTU tables, representative reads, reads by cluster, and taxonomic descriptions for clusters). See the example pipeline in `pipeline.sh`.
 
 ## Tasks
 
