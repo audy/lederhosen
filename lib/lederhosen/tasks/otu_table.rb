@@ -47,12 +47,15 @@ module Lederhosen
             pbar.inc line.unpack('*C').size
 
             dat = parse_usearch_line(line.strip)
-            next if dat.nil?
 
-            levels.each do |level|
-              name = dat[level] rescue nil
-              all_names[level] << name
-              level_sample_cluster_count[level][input_file][name] += 1
+            if dat.nil? # unclassified
+              levels.each { |level| level_sample_cluster_count[level][input_file]['unclassified_reads'] += 1 }
+            else # classified
+              levels.each do |level|
+                name = dat[level] rescue nil
+                all_names[level] << name
+                level_sample_cluster_count[level][input_file][name] += 1
+              end
             end
 
           end
