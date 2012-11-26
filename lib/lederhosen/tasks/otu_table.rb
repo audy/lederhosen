@@ -36,15 +36,13 @@ module Lederhosen
 
       # create a progress bar with the total number of bytes of
       # the files we're slurping up
-      pbar = ProgressBar.new "loading", input.map{ |x| File.size(x) }.reduce(&:+)
+      pbar = ProgressBar.new "loading", input.size
 
       # Load cluster table
       input.each do |input_file|
+        pbar.inc
         File.open(input_file) do |handle|
           handle.each do |line|
-
-            # increase progressbar by the number of bytes in each line
-            pbar.inc line.unpack('*C').size
 
             dat = parse_usearch_line(line.strip)
             levels.each do |level|
