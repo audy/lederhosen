@@ -28,14 +28,13 @@ module Lederhosen
       #
       # - :taxcollector
       # - :greengenes
-      # 
+      #
       def detect_taxonomy_format(taxonomy)
-        # greengenes has a number as the first item in the header
-        # so let's just go with that
-        if taxonomy.split.first =~ /^[\d*]/
-          :greengenes
-        else
+        # taxcollector taxonomy starts with a open square bracked
+        if taxonomy =~ /^\[/
           :taxcollector
+        else
+          :greengenes
         end
       end
 
