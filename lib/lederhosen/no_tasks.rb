@@ -76,6 +76,13 @@ module Lederhosen
 
       # parse a taxonomic description using the
       # taxcollector format returning name at each level (genus, etc...)
+      #
+      # - If the species names contains the word '_bacterium', use the strain
+      # name as the species name:
+      #
+      #   Escherichia_bacterium -> Escherichia_bacterium_strain_X123
+      #   Arcanobacterium_phocae -> Arcanobacterium_phocae (no change)
+      #
       def parse_taxonomy_taxcollector(taxonomy)
 
         levels = { 'domain'  => 0,
@@ -85,13 +92,20 @@ module Lederhosen
                    'order'   => 3,
                    'family'  => 4,
                    'genus'   => 5,
-                   'species' => 6 }
+                   'species' => 6,
+                   'strain'  => 7 }
 
         names = Hash.new
 
         levels.each_pair do |level, num|
           name = taxonomy.match(/\[#{num}\](\w*)[;\[]/)[1] rescue nil
           names[level] = name
+        end
+
+        # check if species name contains the word 'bacterium'
+        # if so, replace it with the strain name
+        if names['species'] =~ /_bacterium/
+          names['species'] = names['strain']
         end
 
         # keep original taxonomic description
