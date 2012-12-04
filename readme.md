@@ -71,9 +71,9 @@ Create an OTU abundance table where rows are samples and columns are clusters. T
 
 ```bash
 lederhosen otu_table \
-  --clusters=clusters_95.uc \
+  --files=clusters_95.uc \
   --prefix=otu_table \
-  --level=domain phylum class order family genus species
+  --levels=domain phylum class order family genus species
 ```
 
 This will create the files:
