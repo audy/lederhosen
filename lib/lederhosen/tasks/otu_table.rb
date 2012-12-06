@@ -16,7 +16,7 @@ module Lederhosen
                   :banner => 'prefix prefix'
 
     method_option :levels, :type => :array, :required => true,
-                  :banner => 'valid options: domain, kingdom, phylum, class, order, genus, or species (or all of them at once)'
+                  :banner => 'valid options: domain, kingdom, phylum, class, order, genus, species, original (or all of them at once)'
 
     def otu_table
       input  = Dir[options[:files]]
@@ -27,7 +27,7 @@ module Lederhosen
 
       # sanity check
       levels.each do |level|
-        fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom}.include? level
+        fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom original}.include? level
       end
 
       level_sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } } }
