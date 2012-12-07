@@ -1,7 +1,9 @@
 require 'rubygems'
 require 'bundler'
-Bundler.require :default
 require 'set'
+require 'dna'
+require 'progressbar'
+require 'thor'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'lederhosen', '*.rb')).each { |f| require f }
 
