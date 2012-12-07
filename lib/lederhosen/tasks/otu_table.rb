@@ -46,9 +46,7 @@ module Lederhosen
           handle.each do |line|
 
             dat = parse_usearch_line(line.strip)
-
             levels.each do |level|
-
               name =
                 if dat.nil?
                   'unclassified_reads'

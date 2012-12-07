@@ -21,7 +21,7 @@ module Lederhosen
         identity = str[3].to_f
 
         # parse taxonomic_description
-        taxonomies = parse_taxonomy(taxonomic_description) rescue { :original => str[9] }
+        taxonomies = parse_taxonomy(taxonomic_description) rescue { 'original' => str[9] }
 
         { :identity => identity }.merge(taxonomies)
       end
@@ -31,31 +31,31 @@ module Lederhosen
       #
       # - :taxcollector
       # - :greengenes
+      # - :qiime (subset of greengenes)
       #
       def detect_taxonomy_format(taxonomy)
         # taxcollector taxonomy starts with a open square bracked
-        @taxonomy_format ||=
-          if taxonomy =~ /^\[/
-            :taxcollector
-          elsif taxonomy =~ /^\d/
-            :greengenes
-          else
-            :qiime
-          end
+        if taxonomy =~ /^\[/
+          :taxcollector
+        elsif taxonomy =~ /^\d/
+          :greengenes
+        else
+          :qiime
+        end
       end
 
       def parse_taxonomy(taxonomy)
-        format = detect_taxonomy_format(taxonomy)
+        @taxonomy_format ||= detect_taxonomy_format(taxonomy)
 
-        case format
+        case @taxonomy_format
         when :greengenes
           parse_taxonomy_greengenes(taxonomy)
         when :taxcollector
           parse_taxonomy_taxcollector(taxonomy)
         when :qiime
           parse_taxonomy_qiime(taxonomy)
-        else
-          fail 'unknown format!'
+        else # return original string
+          { :original => taxonomy }
         end
       end
 
