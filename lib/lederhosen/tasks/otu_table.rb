@@ -39,21 +39,22 @@ module Lederhosen
       pbar = ProgressBar.new "loading", input.size
 
       # Load cluster table
+
       input.each do |input_file|
         pbar.inc
         File.open(input_file) do |handle|
           handle.each do |line|
 
             dat = parse_usearch_line(line.strip)
+
             levels.each do |level|
+
               name =
                 if dat.nil?
                   'unclassified_reads'
                 else
-                  dat[level]
+                  dat[level] || 'unparsed_name'
                 end
-
-              name = 'unparsed_name' if name.nil?
 
               level_sample_cluster_count[level][input_file][name] += 1
               all_names[level] << name

@@ -6,6 +6,7 @@ gem 'thor'
 
 group :test do
   gem 'rspec'
+  gem 'rspec-prof'
 end
 
 group :development do

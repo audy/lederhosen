@@ -1,5 +1,8 @@
 module Lederhosen
   class CLI
+
+    attr_accessor :taxonomy_format
+
     no_tasks do
 
       # parse a line of usearch prefix
@@ -18,7 +21,7 @@ module Lederhosen
         identity = str[3].to_f
 
         # parse taxonomic_description
-        taxonomies = parse_taxonomy(taxonomic_description)
+        taxonomies = parse_taxonomy(taxonomic_description) rescue { :original => str[9] }
 
         { :identity => identity }.merge(taxonomies)
       end
@@ -31,11 +34,14 @@ module Lederhosen
       #
       def detect_taxonomy_format(taxonomy)
         # taxcollector taxonomy starts with a open square bracked
-        if taxonomy =~ /^\[/
-          :taxcollector
-        else
-          :greengenes
-        end
+        @taxonomy_format ||=
+          if taxonomy =~ /^\[/
+            :taxcollector
+          elsif taxonomy =~ /^\d/
+            :greengenes
+          else
+            :qiime
+          end
       end
 
       def parse_taxonomy(taxonomy)
@@ -46,31 +52,36 @@ module Lederhosen
           parse_taxonomy_greengenes(taxonomy)
         when :taxcollector
           parse_taxonomy_taxcollector(taxonomy)
+        when :qiime
+          parse_taxonomy_qiime(taxonomy)
         else
           fail 'unknown format!'
         end
       end
 
-      def parse_taxonomy_greengenes(taxonomy)
-
-        levels = { 'domain'  => /k__(\w*)/,
-                   'kingdom' => /k__(\w*)/,
-                   'phylum'  => /p__(\w*)/,
-                   'class'   => /c__(\w*)/,
-                   'order'   => /o__(\w*)/,
-                   'family'  => /f__(\w*)/,
-                   'genus'   => /g__(\w*)/,
-                   'species' => /s__(\w*)/
-                  }
+      def parse_taxonomy_qiime(taxonomy)
+        levels = %w{kingdom phylum class order family genus species}
+        match_data = taxonomy.match(/k__(\w*);p__(\w*);c__(\w*);o__(\w*);f__(\w*);g__(\w*);s__(\w*)/)
+        match_data = match_data[1..-1]
 
         names = Hash.new
-
-        levels.each_pair do |level, regexp|
-          names[level] = taxonomy.match(regexp)[1] rescue nil
-        end
+        # for some reason Hash[*levels.zip(match_data)] ain't working
+        levels.zip(match_data).each { |l, n| names[l] = n }
 
         names['original'] = taxonomy
+        names
+      end
 
+      def parse_taxonomy_greengenes(taxonomy)
+        levels = %w{kingdom phylum class order family genus species}
+        match_data = taxonomy.match(/k__(\w*); ?p__(\w*); ?c__(\w*); ?o__(\w*); ?f__(\w*); ?g__(\w*); ?(\w*);/)
+        match_data = match_data[1..-1]
+
+        names = Hash.new
+        # for some reason Hash[*levels.zip(match_data)] ain't working
+        levels.zip(match_data).each { |l, n| names[l] = n }
+
+        names['original'] = taxonomy
         names
       end
 
@@ -85,25 +96,21 @@ module Lederhosen
       #
       def parse_taxonomy_taxcollector(taxonomy)
 
-        levels = { 'domain'  => 0,
-                   'kingdom' => 0,
-                   'phylum'  => 1,
-                   'class'   => 2,
-                   'order'   => 3,
-                   'family'  => 4,
-                   'genus'   => 5,
-                   'species' => 6,
-                   'strain'  => 7 }
+        levels = %w{kingdom phylum class order family genus species strain}
+
+        match_data =
+          begin
+            taxonomy.match(/\[0\](.*);\[1\](.*);\[2\](.*);\[3\](.*);\[4\](.*);\[5\](.*);\[6\](.*);\[7\](.*);\[8\](.*)/)[1..-1]
+          rescue
+            $stderr.puts taxonomy.inspect
+            return nil
+          end
 
         names = Hash.new
-
-        levels.each_pair do |level, num|
-          name = taxonomy.match(/\[#{num}\](\w*)[;\[]/)[1] rescue nil
-          names[level] = name
-        end
+        # for some reason Hash[*levels.zip(match_data)] ain't working
+        levels.zip(match_data).each { |l, n| names[l] = n }
 
         # check if species name contains the word 'bacterium'
-        # if so, replace it with the strain name
         if names['species'] =~ /_bacterium/
           names['species'] = names['strain']
         end
