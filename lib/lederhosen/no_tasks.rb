@@ -61,7 +61,7 @@ module Lederhosen
 
       def parse_taxonomy_qiime(taxonomy)
         levels = %w{kingdom phylum class order family genus species}
-        match_data = taxonomy.match(/k__(\w*);p__(\w*);c__(\w*);o__(\w*);f__(\w*);g__(\w*);s__(\w*)/)
+        match_data = taxonomy.match(/k__(.*);p__(.*);c__(.*);o__(.*);f__(.*);g__(.*);s__(.*)/)
         match_data = match_data[1..-1]
 
         names = Hash.new
@@ -74,7 +74,7 @@ module Lederhosen
 
       def parse_taxonomy_greengenes(taxonomy)
         levels = %w{kingdom phylum class order family genus species}
-        match_data = taxonomy.match(/k__(\w*); ?p__(\w*); ?c__(\w*); ?o__(\w*); ?f__(\w*); ?g__(\w*); ?(\w*);/)
+        match_data = taxonomy.match(/k__(.*); ?p__(.*); ?c__(.*); ?o__(.*); ?f__(.*); ?g__(.*); ?(.*);/)
         match_data = match_data[1..-1]
 
         names = Hash.new
