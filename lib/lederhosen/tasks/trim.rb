@@ -2,6 +2,8 @@
 # QUALITY TRIMMING
 #
 
+# This should probably be broken into its own module or command-line utility.
+
 module Lederhosen
   class CLI
 
@@ -10,10 +12,12 @@ module Lederhosen
 
     method_option :reads_dir, :type => :string, :required => true
     method_option :out_dir,   :type => :string, :required => true
+    method_option :pretrim,   :type => :numeric, :default => 11
 
     def trim
       raw_reads = options[:reads_dir]
       out_dir   = options[:out_dir]
+      pretrim   = options[:pretrim]
 
       ohai "trimming #{File.dirname(raw_reads)} and saving to #{out_dir}"
 
@@ -92,16 +96,21 @@ module Lederhosen
       # returns just the sequence
       def trim_seq(dna, args={})
 
+
+        pretrim = args[:pretrim] || false
         # trim primers off of sequence
-        # (THIS IS EXPERIMENT-SPECIFIC)
-        dna.sequence = dna.sequence[11..-1]
-        dna.quality  = dna.quality[11..-1]
+        # XXX this is experiment-specific and needs to be made
+        # into a parameter
+        if pretrim
+          dna.sequence = dna.sequence[pretrim..-1]
+          dna.quality  = dna.quality[pretrim..-1]
+        end
 
         # throw away any read with an ambiguous primer
         return nil if dna.sequence =~ /N/
 
-        min    = args[:min]    || 20
-        offset = args[:cutoff] || 64
+        min    = args[:min]    || 20 # what is this constant?
+        offset = args[:cutoff] || 64 # XXX depends on sequencing tech.
 
         _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
 
@@ -116,6 +125,8 @@ module Lederhosen
             first = a
           end
         end
+
+        # XXX why is this rescue statement here?
         dna.sequence[start + 11, _end - start].gsub('.', 'N') rescue nil
       end
     end
