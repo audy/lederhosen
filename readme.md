@@ -70,6 +70,8 @@ lederhosen cluster \
   --database=taxcollector.udb
 ```
 
+The optional `--dry-run` parameter outputs the usearch command to standard out. This is useful if you want to run usearch on a cluster.
+
 ### Generate OTU table(s)
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
