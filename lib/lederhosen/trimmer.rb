@@ -1,56 +1,16 @@
 module Lederhosen
 module Trimmer
 
-# Base class for trimming paired-end reads
-class PairedTrimmer < Enumerator
-  def initialize(paired_iterator, args = {})
-    @paired_iterator = paired_iterator
-    @pretrim         = args[:pretrim]
-    @min_length      = args[:min_length] || 70
-    @min             = args[:min] || 20
-    @offset          = args[:cutoff] || 64 # XXX should both be called 'cutoff'
-    @pretrim         = args[:pretrim] || false
+# class that has the trim function. Used in mixins
+
+class SequenceTrimmer
+
+  def initialize(args={})
+    @min = args[:min]
+    @offset = args[:offset]
   end
 
-  def each(&block)
-    @paired_iterator.each_with_index do |a, i|
-      seqa = trim_seq a[0], :pretrim => @pretrim
-      seqb = trim_seq a[1], :pretrim => @pretrim
-      unless [seqa, seqb].include? nil
-        if seqb.length >= @min_length && seqa.length >= @min_length
-          seqb = reverse_complement(seqb) # experiment-specific?
-          a = Fasta.new :name => "#{i}:0", :sequence => seqa
-          b = Fasta.new :name => "#{i}:1", :sequence => seqb
-          block.yield a
-          block.yield b
-        else # we just skip bad reads entirely
-          next
-        end
-      else
-        next
-      end
-    end
-  end
-
-  # reverse complement a DNA sequence
-  # assumes only GATCN nucleotides
-  def reverse_complement(s)
-    s.reverse.tr('GATCNgatcn','CTAGNctagn')
-  end
-
-  # this method does the actual trimming. It is a class method
-  # so you can use it if you don't want to initialize a PairedTrimmer
-  def trim_seq(dna, args={})
-
-    # trim primers off of sequence
-    # XXX this is experiment-specific and needs to be made
-    # into a parameter
-    if @pretrim
-      dna.sequence = dna.sequence[@pretrim..-1]
-      dna.quality  = dna.quality[@pretrim..-1]
-    end
-
-    dna.sequence.gsub! '.', 'N'
+  def trim_seq(dna)
 
     _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
 
@@ -66,9 +26,55 @@ class PairedTrimmer < Enumerator
       end
     end
 
-    dna.sequence[start, _end - start] rescue nil
+    begin
+      dna.sequence[start, _end - start].gsub('.', 'N')
+    rescue
+      nil
+    end
+  end
+end
+
+# Base class for trimming paired-end reads
+class PairedTrimmer < Enumerator
+
+  def initialize(args = {})
+    @pretrim    = args[:pretrim]
+    @min_length = args[:min_length] || 70
+    @min        = args[:min] || 20
+    @offset     = args[:cutoff] || 64 # XXX should both be called 'cutoff'
+    @left_trim  = args[:left_trim] || 0 # trim adapter sequence
+    @trimmer    = SequenceTrimmer.new(:min => @min, :offset => @offset)
   end
 
+  def each(&block)
+    t = File.open('asdf', 'w')
+
+    skipped_because_singleton = 0
+    skipped_because_length = 0
+    @paired_iterator.each_with_index do |a, i|
+      seqa = @trimmer.trim_seq(a[0])[@left_trim..-1] rescue nil # trim adapter sequence
+      seqb = @trimmer.trim_seq a[1]
+      if [seqa, seqb].include? nil
+        skipped_because_singleton += 1
+      elsif !(seqb.length >= @min_length && seqa.length >= @min_length)
+        skipped_because_length += 1
+      else # reads are good
+        seqb = reverse_complement(seqb) # experiment-specific?
+        a = Fasta.new :name => "#{i}:0", :sequence => seqa
+        b = Fasta.new :name => "#{i}:1", :sequence => seqb
+        block.yield a
+        block.yield b
+      end
+    end
+
+    $stderr.puts "skipped singletons: #{skipped_because_singleton}, skipped short #{skipped_because_length}"
+  end
+
+  # reverse complement a DNA sequence
+  # assumes only GATCN nucleotides
+  def reverse_complement(s)
+    s.reverse.tr('GATCNgatcn','CTAGNctagn')
+  end
 end
 
 #
@@ -88,10 +94,9 @@ class InterleavedTrimmer < PairedTrimmer
       end
 
     reads = Dna.new handle
-    iterator = reads.each_slice(2)
+    @paired_iterator = reads.each_slice(2)
 
-    super(iterator, args)
-
+    super(args)
   end
 end
 
@@ -112,9 +117,9 @@ class QSEQTrimmer < PairedTrimmer
     left_file_reads  = Dna.new left_handle
     right_reads = Dna.new right_handle
 
-    iterator = left_file_reads.zip(right_reads)
+    @paired_iterator = left_file_reads.zip(right_reads)
 
-    super(iterator, args)
+    super(args)
 
     left_handle.close
     right_handle.close

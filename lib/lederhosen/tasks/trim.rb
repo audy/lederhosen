@@ -10,10 +10,10 @@ module Lederhosen
     desc "trim",
          "trim reads based on quality scores"
 
-    method_option :reads_dir, :type => :string, :required => true
-    method_option :out_dir,   :type => :string, :required => true
-    method_option :pretrim,   :type => :numeric, :default => 11
-    method_option :read_type, :type => :string, :default => 'qseq'
+    method_option :reads_dir,  :type => :string, :required => true
+    method_option :out_dir,    :type => :string, :required => true
+    method_option :left_trim,  :type => :numeric, :default => 0
+    method_option :read_type,  :type => :string, :default => 'qseq'
     method_option :min_length, :type => :numeric, :default => 75
 
     def trim
@@ -22,6 +22,7 @@ module Lederhosen
       pretrim    = options[:pretrim]
       read_type  = options[:read_type]
       min_length = options[:min_length]
+      left_trim  = options[:left_trim]
 
       ohai "trimming #{File.dirname(raw_reads)} and saving to #{out_dir}"
       run "mkdir -p #{out_dir}"
@@ -48,7 +49,7 @@ module Lederhosen
         out = File.join(out_dir, "#{File.basename(prefix)}.fasta")
 
         # create the trimmed sequence generator
-        trim_args = { :pretrim => pretrim, :min_length => min_length }
+        trim_args = { :left_trim => left_trim, :min_length => min_length }
 
         trimmer =
           if read_type == 'qseq'

@@ -6,6 +6,18 @@ describe Lederhosen::Trimmer do
 
   end
 
+  describe Lederhosen::Trimmer::SequenceTrimmer do
+    let(:sequence_trimmer) { Lederhosen::Trimmer::SequenceTrimmer.new(:cutoff => 64, :min => 20) }
+
+    it 'can trim a record' do
+    end
+
+    it 'trims records as expected' do
+      # now we need some examples
+    end
+
+  end
+
   describe Lederhosen::Trimmer::QSEQTrimmer do
 
     let(:qseq_trimmer) { Lederhosen::Trimmer::QSEQTrimmer.new 'spec/data/ILT_L_9_B_001_1.txt.gz', 'spec/data/ILT_L_9_B_001_3.txt.gz' }
