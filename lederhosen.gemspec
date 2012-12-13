@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.4.0"
+  s.version = "1.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
     "lib/lederhosen/tasks/split_fasta.rb",
     "lib/lederhosen/tasks/trim.rb",
     "lib/lederhosen/tasks/version.rb",
+    "lib/lederhosen/trimmer.rb",
     "lib/lederhosen/version.rb",
     "readme.md",
     "spec/cli_spec.rb",
@@ -43,10 +44,11 @@ Gem::Specification.new do |s|
     "spec/data/ILT_L_9_B_001_3.txt.gz",
     "spec/data/ILT_L_9_B_002_1.txt.gz",
     "spec/data/ILT_L_9_B_002_3.txt.gz",
+    "spec/data/example.fastq",
     "spec/data/test.uc",
-    "spec/misc_spec.rb",
     "spec/no_tasks_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "spec/trimmer_spec.rb"
   ]
   s.homepage = "http://audy.github.com/lederhosen"
   s.licenses = ["MIT"]
@@ -58,7 +60,7 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<dna>, ["= 0.0.12"])
+      s.add_runtime_dependency(%q<dna>, ["= 0.1.2"])
       s.add_runtime_dependency(%q<progressbar>, [">= 0"])
       s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
@@ -66,7 +68,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<ruby-prof>, [">= 0"])
     else
-      s.add_dependency(%q<dna>, ["= 0.0.12"])
+      s.add_dependency(%q<dna>, ["= 0.1.2"])
       s.add_dependency(%q<progressbar>, [">= 0"])
       s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
@@ -75,7 +77,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ruby-prof>, [">= 0"])
     end
   else
-    s.add_dependency(%q<dna>, ["= 0.0.12"])
+    s.add_dependency(%q<dna>, ["= 0.1.2"])
     s.add_dependency(%q<progressbar>, [">= 0"])
     s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
