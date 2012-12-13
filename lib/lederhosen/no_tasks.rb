@@ -1,3 +1,4 @@
+
 module Lederhosen
   class CLI
 
@@ -7,7 +8,7 @@ module Lederhosen
 
       # parse a line of usearch prefix
       # return a hash in the form:
-      # { :taxonomy => '', :identity => 0.00, ... }
+      # { :taxonomy => '', :identity => '0.00', ... }
       # unless the line is not a "hit" in which case
       # the function returns nil
       def parse_usearch_line(str)
@@ -18,7 +19,7 @@ module Lederhosen
         str = str.split
 
         taxonomic_description = str[9]
-        identity = str[3].to_f
+        identity = str[3]
 
         # parse taxonomic_description
         taxonomies = parse_taxonomy(taxonomic_description) rescue { 'original' => str[9] }
@@ -59,9 +60,13 @@ module Lederhosen
         end
       end
 
+      RE_TAXCOLLECTOR = /^\[0\](.*);\[1\](.*);\[2\](.*);\[3\](.*);\[4\](.*);\[5\](.*);\[6\](.*);\[7\](.*);\[8\](.*)/
+      RE_GREENGENES = /k__(.*); ?p__(.*); ?c__(.*); ?o__(.*); ?f__(.*); ?g__(.*); ?(.*);/
+      RE_QIIME = /k__(.*);p__(.*);c__(.*);o__(.*);f__(.*);g__(.*);s__(.*)/
+
       def parse_taxonomy_qiime(taxonomy)
         levels = %w{kingdom phylum class order family genus species}
-        match_data = taxonomy.match(/k__(.*);p__(.*);c__(.*);o__(.*);f__(.*);g__(.*);s__(.*)/)
+        match_data = taxonomy.match(RE_QIIME)
         match_data = match_data[1..-1]
 
         names = Hash.new
@@ -74,7 +79,7 @@ module Lederhosen
 
       def parse_taxonomy_greengenes(taxonomy)
         levels = %w{kingdom phylum class order family genus species}
-        match_data = taxonomy.match(/k__(.*); ?p__(.*); ?c__(.*); ?o__(.*); ?f__(.*); ?g__(.*); ?(.*);/)
+        match_data = taxonomy.match(RE_GREENGENES)
         match_data = match_data[1..-1]
 
         names = Hash.new
@@ -100,9 +105,8 @@ module Lederhosen
 
         match_data =
           begin
-            taxonomy.match(/\[0\](.*);\[1\](.*);\[2\](.*);\[3\](.*);\[4\](.*);\[5\](.*);\[6\](.*);\[7\](.*);\[8\](.*)/)[1..-1]
+            taxonomy.match(RE_TAXCOLLECTOR)[1..-1]
           rescue
-            $stderr.puts taxonomy.inspect
             return nil
           end
 

@@ -2,8 +2,6 @@
 # MAKE TABLES
 #
 
-require 'set'
-
 module Lederhosen
   class CLI
 
@@ -30,16 +28,19 @@ module Lederhosen
         fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom original}.include? level
       end
 
-      level_sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } } }
-
-      all_names = Hash.new { |h, k| h[k] = Set.new }
+      # there has to be a more efficient way of doing this
+      level_sample_cluster_count =
+        Hash.new do |h, k|
+          h[k] = Hash.new do |h, k|
+            h[k] = Hash.new(0)
+          end
+        end
 
       # create a progress bar with the total number of bytes of
       # the files we're slurping up
       pbar = ProgressBar.new "loading", input.size
 
       # Load cluster table
-
       input.each do |input_file|
         pbar.inc
         File.open(input_file) do |handle|
@@ -54,8 +55,8 @@ module Lederhosen
                   dat[level] || 'unparsed_name'
                 end
 
+              # the next two lines are what is slow
               level_sample_cluster_count[level][input_file][name] += 1
-              all_names[level] << name
             end
 
           end
@@ -63,6 +64,14 @@ module Lederhosen
       end
 
       pbar.finish
+
+      # get all taxonomic names at each level
+      all_names = Hash.new.tap do |bar|
+        level_sample_cluster_count.each_pair.map do |k, v|
+          names = v.each_value.map(&:keys).flatten.uniq
+          bar[k] = names
+        end
+      end
 
       # save to csv(s)
       levels.each do |level|
