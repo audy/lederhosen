@@ -46,11 +46,13 @@ module Lederhosen
         out = File.join(out_dir, "#{File.basename(prefix)}.fasta")
 
         # create the trimmed sequence generator
+        trim_args = { :pretrim => pretrim, :min_length => min_length }
+
         trimmer =
           if read_type == 'qseq'
-            Trimmer::QSEQTrimmer.new(*files)
+            Trimmer::QSEQTrimmer.new(*files, trim_args)
           elsif read_type == 'fastq'
-            Trimmer::InterleavedTrimmer.new(files)
+            Trimmer::InterleavedTrimmer.new(files, trim_args)
           end
 
         # trim and write

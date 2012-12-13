@@ -7,6 +7,9 @@ class PairedTrimmer < Enumerator
     @paired_iterator = paired_iterator
     @pretrim         = args[:pretrim]
     @min_length      = args[:min_length] || 70
+    @min             = args[:min] || 20
+    @offset          = args[:cutoff] || 64 # XXX should both be called 'cutoff'
+    @pretrim         = args[:pretrim] || false
   end
 
   def each(&block)
@@ -38,25 +41,21 @@ class PairedTrimmer < Enumerator
   # this method does the actual trimming. It is a class method
   # so you can use it if you don't want to initialize a PairedTrimmer
   def trim_seq(dna, args={})
-    pretrim = args[:pretrim] || false
 
     # trim primers off of sequence
     # XXX this is experiment-specific and needs to be made
     # into a parameter
-    if pretrim
-      dna.sequence = dna.sequence[pretrim..-1]
-      dna.quality  = dna.quality[pretrim..-1]
+    if @pretrim
+      dna.sequence = dna.sequence[@pretrim..-1]
+      dna.quality  = dna.quality[@pretrim..-1]
     end
 
     dna.sequence.gsub! '.', 'N'
 
-    min    = args[:min]    || 20 # what is this constant?
-    offset = args[:cutoff] || 64 # XXX depends on sequencing tech.
-
     _sum, _max, first, last, start, _end = 0, 0, 0, 0, 0
 
     dna.quality.each_byte.each_with_index do |b, a|
-      _sum += (b - offset - min)
+      _sum += (b - @offset - @min)
       if _sum > _max
         _max = _sum
         _end = a
