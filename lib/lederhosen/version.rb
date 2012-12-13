@@ -3,7 +3,7 @@ module Lederhosen
     MAJOR = 1
     MINOR = 3
     CODENAME = 'Dirndl' # changes for minor versions
-    PATCH = 9
+    PATCH = 10
 
     STRING = [MAJOR, MINOR, PATCH].join('.')
   end
