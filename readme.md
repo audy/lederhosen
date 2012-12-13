@@ -48,6 +48,8 @@ You can also trim interleaved, paired-end FASTQ files:
 
     lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
 
+(WARNING: by default, Lederhosen trims off the first 11 nucleotides. This was to remain backwards-compatibility with an experiment-specific version. To disable use `--pretrim 0`)
+
 ### Create Database
 
 Create UDB database required by usearch from TaxCollector
