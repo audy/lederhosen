@@ -40,7 +40,9 @@ module Lederhosen
         ohno 'glob matches no reads'
       end
 
-      raw_reads.map do |prefix, files|
+      pbar = ProgressBar.new 'trimming', raw_reads.size
+
+      raw_reads.each do |prefix, files|
 
         # get an output handle
         out = File.join(out_dir, "#{File.basename(prefix)}.fasta")
@@ -62,7 +64,10 @@ module Lederhosen
           end
         end # File.open
 
+        pbar.inc
       end
+
+      pbar.finish
 
     end
 
