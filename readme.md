@@ -38,11 +38,15 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 
 ### Trim Reads
 
-Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
+Trim (Illumina, QSEQ format) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
 
     lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 
 The trimming process will reverse complement the "right" pair so that both reads are in the forward orientation.
+
+You can also trim interleaved, paired-end FASTQ files:
+
+    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
 
 ### Create Database
 
@@ -65,6 +69,7 @@ lederhosen cluster \
   --output=clusters_95.uc \
   --database=taxcollector.udb
 ```
+
 ### Generate OTU table(s)
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
