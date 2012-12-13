@@ -10,6 +10,7 @@ module Lederhosen
     method_option :identity, :type => :numeric, :required => true
     method_option :output,   :type => :string,  :required => true
     method_option :strand,   :type => :string,  :default => 'plus'
+    method_option :dry_run,  :type => :boolean, :default => false
 
     def cluster
       input    = File.expand_path(options[:input])
@@ -18,8 +19,9 @@ module Lederhosen
       identity = options[:identity]
       output   = File.expand_path(options[:output])
       strand   = options[:strand]
+      dry_run  = options[:dry_run]
 
-      ohai "clustering #{input} to #{database} and saving to #{output}"
+      ohai "#{'(dry run)' if dry_run} clustering #{input} to #{database} and saving to #{output}"
 
       options.each_pair do |key, value|
         ohai "#{key} = #{value}"
@@ -40,7 +42,11 @@ module Lederhosen
 
       cmd = cmd.join(' ')
 
-      run cmd
+      unless dry_run
+        run cmd
+      else
+        puts cmd
+      end
     end
   end
 end

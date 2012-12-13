@@ -22,6 +22,13 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
+  it 'can (dry run) cluster reads using usearch and output usearch cmd to stdout' do
+    stdout = `./bin/lederhosen cluster --dry-run --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
+    stdout.should match /^usearch/
+    $?.success?.should be_true
+    File.exists?(File.join($test_dir, 'clusters.uc')).should be_false
+  end
+
   it 'can cluster reads using usearch' do
     `./bin/lederhosen cluster --input #{$test_dir}/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
     $?.success?.should be_true
