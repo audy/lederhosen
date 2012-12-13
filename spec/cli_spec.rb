@@ -12,8 +12,13 @@ describe Lederhosen::CLI do
     $?.success?.should be_true
   end
 
-  it 'should trim reads' do
+  it 'should trim paired QSEQ reads' do
     `./bin/lederhosen trim --reads-dir=spec/data/IL*.txt.gz --out-dir=#{$test_dir}/trimmed`
+    $?.success?.should be_true
+  end
+
+  it 'should trim paired, interleaved FASTQ reads' do
+    `./bin/lederhosen trim --reads-dir=spec/data/example.fastq --out-dir=#{$test_dir}/trimmed --read-type fastq`
     $?.success?.should be_true
   end
 
