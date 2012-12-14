@@ -11,7 +11,7 @@ Lederhosen is not a pipeline but rather a set of tools broken up into tasks. Tas
 Lederhosen is designed with the following "pipeline" in mind:
 
 1. Quality control of sequence data.
-2. Clustering sequences to centroid or reference sequences.
+2. Clustering sequences to centroid or reference sequences (read: database)
 3. Generating tables from USEARCH output.
 4. Filtering tables to remove small or insignificant OTUs.
 
@@ -27,13 +27,19 @@ using paired and non-paired end short reads such as those produced by Illumina (
 ### Features
 
 - Sequence trimming (paired-end Illumina).
-- Parallel, referenced-based clustering to TaxCollector using USEARCH
+- Parallel, referenced-based clustering to TaxCollector using USEARCH.
+- Queue-agnostic support for running jobs on clusters.
+- Support for RDP, TaxCollector or GreenGenes databases.
 - Generation and filtering of OTU abundancy matrices.
 
 ### Installation
 
 0. Obtain & Install [USEARCH](http://www.drive5.com/) (32bit is fine for non-commercial use)
-2. Get a copy of [TaxCollector](http://github.com/audy/taxcollector) or [GreenGenes](http://greengenes.lbl.gov) 16S database
+2. Get a database:
+  - [TaxCollector](http://github.com/audy/taxcollector)
+  - [GreenGenes](http://greengenes.lbl.gov) 16S database
+  - Submit a bug to request support for a different database format
+
 3. Install Lederhosen by typing:
 
     `sudo gem install lederhosen`
