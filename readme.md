@@ -106,17 +106,21 @@ This will create the files:
 You can get the representative sequences for each cluster using the `get_reps` tasks. This will extract the representative sequence from
 the __database__ you ran usearch with. Make sure you use the same database that you used when running usearch.
 
-    lederhosen get_reps \
-      --input=clusters.uc \
-      --database=taxcollector.fa \
-      --output=representatives.fasta
+```bash
+lederhosen get_reps \
+  --input=clusters.uc \
+  --database=taxcollector.fa \
+  --output=representatives.fasta
+```
 
 You can get the representatives from more than one cluster file using a glob:
 
-    lederhosen get_reps \
-      --input=*.uc \
-      --database=taxcollector.fa \
-      --output=representatives.fasta
+```bash
+lederhosen get_reps \
+  --input=*.uc \
+  --database=taxcollector.fa \
+  --output=representatives.fasta
+```
 
 ## Acknowledgements
 
