@@ -60,7 +60,9 @@ You can also trim interleaved, paired-end FASTQ files:
 
     lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
 
-(WARNING: by default, Lederhosen trims off the first 11 nucleotides. This was to remain backwards-compatibility with an experiment-specific version. To disable use `--pretrim 0`)
+Lederhosen will also trim off adapter sequences from the 5' end of the "left" read with the `--pre-trim` option.
+
+    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimed/ --read-type='fastq' --pre-trim=11
 
 ### Create Database
 
