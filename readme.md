@@ -15,10 +15,6 @@ Lederhosen is designed with the following "pipeline" in mind:
 3. Generating tables from USEARCH output.
 4. Filtering tables to remove small or insignificant OTUs.
 
-### Why not QIIME?
-
-QIIME is great but imagine for a moment, if you will, a world where there was only one web browser.
-
 ### About
 
 - Lederhosen is a project born out of the Triplett Lab at the University of Florida.
