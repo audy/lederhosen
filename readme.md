@@ -2,7 +2,18 @@
 
 # Lederhosen
 
-OTU clustering for rRNA amplicons. Lederhosen is intended to be simple, robust and easy to use.
+Lederhosen is a set of tools for OTU clustering rRNA amplicons using Robert Edgar's USEARCH.
+
+It handles quality control of raw sequence data, running USEARCH, and creating and filtering tables.
+
+Lederhosen is not a pipeline but rather a set of tools broken up into tasks. Tasks are invoked by running `lederhosen TASK ...`.
+
+Lederhosen is designed with the following "pipeline" in mind:
+
+1. Quality control of sequence data.
+2. Clustering sequences to centroid or reference sequences.
+3. Generating tables from USEARCH output.
+4. Filtering tables to remove small or insignificant OTUs.
 
 ### Why not QIIME?
 
