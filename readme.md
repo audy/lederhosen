@@ -38,7 +38,7 @@ using paired and non-paired end short reads such as those produced by Illumina (
 2. Get a database:
   - [TaxCollector](http://github.com/audy/taxcollector)
   - [GreenGenes](http://greengenes.lbl.gov) 16S database
-  - Submit a bug to request support for a different database format
+  - File an [issue report](https://github.com/audy/lederhosen/issues) or pull request ;) to request support for a different database.
 3. Install Lederhosen by typing:
 
     `sudo gem install lederhosen`
