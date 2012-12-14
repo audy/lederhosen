@@ -111,3 +111,12 @@ the __database__ you ran usearch with. Make sure you use the same database that 
 You can get the representatives from more than one cluster file using a glob:
 
     lederhosen get_reps --input=*.uc --database=taxcollector.fa --output=representatives.fasta
+
+## Acknowledgements
+
+- The QIIME project for inspiration
+- Sinbad Richardson for the Lederhosen Guy artwork
+
+## Please Cite
+
+Please cite this github repo with the version you used (type `lederhosen version`) unless I publish a paper. Then cite that.
