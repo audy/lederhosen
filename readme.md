@@ -114,6 +114,7 @@ You can get the representatives from more than one cluster file using a glob:
 
 ## Acknowledgements
 
+- Lexi, Vinnie and Kevin for beta-testing and putting up with bugs
 - The QIIME project for inspiration
 - Sinbad Richardson for the Lederhosen Guy artwork
 
