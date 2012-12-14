@@ -60,9 +60,9 @@ You can also trim interleaved, paired-end FASTQ files:
 
     lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
 
-Lederhosen will also trim off adapter sequences from the 5' end of the "left" read with the `--pre-trim` option.
+Lederhosen will also trim off adapter sequences from the 5' end of the "left" read with the `--left-trim` option.
 
-    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimed/ --read-type='fastq' --pre-trim=11
+    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimed/ --read-type='fastq' --left-trim=11
 
 ### Create Database
 
