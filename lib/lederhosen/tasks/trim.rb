@@ -19,10 +19,9 @@ module Lederhosen
     def trim
       raw_reads  = options[:reads_dir]
       out_dir    = options[:out_dir]
-      pretrim    = options[:pretrim]
+      left_trim  = options[:left_trim]
       read_type  = options[:read_type]
       min_length = options[:min_length]
-      left_trim  = options[:left_trim]
 
       ohai "trimming #{File.dirname(raw_reads)} and saving to #{out_dir}"
       run "mkdir -p #{out_dir}"

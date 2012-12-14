@@ -66,8 +66,6 @@ class PairedTrimmer < Enumerator
         block.yield b
       end
     end
-
-    $stderr.puts "skipped singletons: #{skipped_because_singleton}, skipped short #{skipped_because_length}"
   end
 
   # reverse complement a DNA sequence
