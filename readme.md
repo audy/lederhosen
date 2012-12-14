@@ -120,4 +120,4 @@ You can get the representatives from more than one cluster file using a glob:
 
 ## Please Cite
 
-Please cite this github repo with the version you used (type `lederhosen version`) unless I publish a paper. Then cite that.
+Please cite this GitHub repo (https://github.com/audy/lederhosen) with the version you used (type `lederhosen version`) unless I publish a paper. Then cite that.
