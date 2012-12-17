@@ -1,2 +1,6 @@
 *.swp
 Gemfile.lock
+vendor/
+.rbenv-version
+pkg/
+.bundle/
