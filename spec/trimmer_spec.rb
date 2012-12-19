@@ -4,6 +4,20 @@ describe Lederhosen::Trimmer do
 
   describe Lederhosen::Trimmer::PairedTrimmer
 
+  describe Lederhosen::Trimmer::ProbabilityTrimmer do
+    let :sequence_trimmer do
+      # default cutoff should be 0.005
+      Lederhosen::Trimmer::ProbabilityTrimmer.new :seq_tech => :illumina
+    end
+
+    it 'can be created' do
+      sequence_trimmer.should_not be_nil
+    end
+
+    it 'trims records as expected'
+
+  end
+
   describe Lederhosen::Trimmer::SequenceTrimmer do
 
     let :sequence_trimmer do
