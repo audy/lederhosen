@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'dna', '0.1.2'
+gem "dna", :git => 'http://github.com/audy/dna.git', :tag => 'v0.2.1'
 gem 'progressbar', '0.12.0'
 gem 'thor', '0.16.0'
 
