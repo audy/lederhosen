@@ -74,6 +74,8 @@ lederhosen make_udb \
   --output=taxcollector.udb
 ```
 
+(not actually required but will make batch searching a lot faster)
+
 ### Cluster Reads using USEARCH
 
 Cluster reads using USEARCH. Output is a uc file.
