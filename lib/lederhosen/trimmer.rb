@@ -46,21 +46,65 @@ class WangTrimmer
   end
 end
 
+# return the longest string starting from the left side
+# where the probability of error as computer from the PHRED
+# scores does not fall below a certain cutoff
+# (default is 0.05)
+class ProbabilityTrimmer
+
+  def initialize(args = {})
+    @cutoff = args[:cutoff] || 0.005
+    @min = args[:min]
+    @seqtech = args[:seq_tech] || fail
+    # must be illumina, sanger or solexa
+  end
+
+  def trim_seq(dna)
+    trim_coord = dna.sequence.size
+    probabilities = dna.send(:"#{@seqtech}_probabilities")
+    probabilities.each_with_index do |q, i|
+      if q > @cutoff
+        trim_coord = i
+        break
+      end
+    end
+
+    begin
+      dna.sequence[0..trim_coord].gsub('.', 'N')
+    rescue
+      nil
+    end
+  end
+end
+
 # Base class for trimming paired-end reads
 class PairedTrimmer < Enumerator
 
   def initialize(args = {})
     @pretrim    = args[:pretrim]
+    # TODO
+    # need to be able to trim from left, right of pairs
+    # thinking about specifying a "trimming language"
+    #
+    # Something like:
+    #
+    # --trim="5L0 0L3"
+    # --trim="0L4 2L6"
+    #
+    # also thinking about breaking all of this trimming stuff
+    # out into its own package. (to be more unixy and stuff ;)
+    
     @min_length = args[:min_length] || 70
     @min        = args[:min] || 20
     @offset     = args[:cutoff] || 64 # XXX should both be called 'cutoff'
     @left_trim  = args[:left_trim] || 0 # trim adapter sequence
-    @trimmer    = SequenceTrimmer.new(:min => @min, :offset => @offset)
+    @trimmer    = args[:trimmer] || ProbabilityTrimmer.new(:min => @min,
+                                                           :offset => @offset,
+                                                           :seq_tech =>
+                                                           :illumina)
   end
 
   def each(&block)
-    t = File.open('asdf', 'w')
-
     skipped_because_singleton = 0
     skipped_because_length = 0
     @paired_iterator.each_with_index do |a, i|
