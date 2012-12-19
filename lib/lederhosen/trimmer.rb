@@ -57,10 +57,12 @@ class HuangTrimmer
   end
 end
 
+#
 # return the longest string starting from the left side
-# where the probability of error as computer from the PHRED
-# scores does not fall below a certain cutoff
-# (default is 0.05)
+# where the PROBABILITY OF ERROR as computed from the PHRED
+# scores does not go above a certain cutoff
+# (default is 0.005)
+#
 class ProbabilityTrimmer
 
   def initialize(args = {})
@@ -88,7 +90,9 @@ class ProbabilityTrimmer
   end
 end
 
+#
 # Base class for trimming paired-end reads
+#
 class PairedTrimmer < Enumerator
 
   def initialize(args = {})
@@ -104,29 +108,52 @@ class PairedTrimmer < Enumerator
     #
     # also thinking about breaking all of this trimming stuff
     # out into its own package. (to be more unixy and stuff ;)
-
+    #
     @min_length = args[:min_length] || 70
-    @min        = args[:min] || 20
-    @offset     = args[:cutoff] || 64 # XXX should both be called 'cutoff'
-    @left_trim  = args[:left_trim] || 0 # trim adapter sequence
-    @trimmer    = args[:trimmer] || ProbabilityTrimmer.new(:min => @min,
+    @min         = args[:min] || 20
+    @offset      = args[:cutoff] || 64 # XXX should both be called 'cutoff'
+    @left_trim   = args[:left_trim] || 0 # trim adapter sequence
+    @skip_ambig  = args[:skip_ambiguous] || false
+    @trimmer     = args[:trimmer] || ProbabilityTrimmer.new(:min => @min,
                                                            :offset => @offset,
                                                            :seq_tech =>
                                                            :illumina)
   end
 
   def each(&block)
+
     skipped_because_singleton = 0
     skipped_because_length = 0
+    skipped_because_ambig = 0
+
     @paired_iterator.each_with_index do |a, i|
       seqa = @trimmer.trim_seq(a[0])[@left_trim..-1] rescue nil # trim adapter sequence
       seqb = @trimmer.trim_seq a[1]
+
+      # make sure sequences are good
+      # (both pairs survived and both are at least min_length long)
+      # optionally skip reads that contain ambiguous nucleotides (N)
       if [seqa, seqb].include? nil
         skipped_because_singleton += 1
       elsif !(seqb.length >= @min_length && seqa.length >= @min_length)
         skipped_because_length += 1
+      elsif @skip_ambig and (seqb =~ /N/ or seqa =~ /N/)
+        skipped_because_ambig
       else # reads are good
-        seqb = reverse_complement(seqb) # experiment-specific?
+        #
+        # TODO
+        # this is experiment specific. I save memory down the road
+        # by having both of the reads in the forward orientation
+        # but depending on the sequencing technology/pipeline
+        # this may change.
+        #
+        # I'm planning on removing the trimming steps from lederhosen
+        # for their own gem. With that, this will go too.
+        #
+        seqb = reverse_complement(seqb)
+        
+        # Create and yield new fasta objects
+        # Perhaps this is slow?
         a = Fasta.new :name => "#{i}:0", :sequence => seqa
         b = Fasta.new :name => "#{i}:1", :sequence => seqb
         block.yield a
@@ -145,6 +172,7 @@ end
 #
 # Yields trimmed fasta records given an input
 # interleaved, paired-end fastq file
+#
 class InterleavedTrimmer < PairedTrimmer
 
   def initialize(interleaved_file, args = {})
@@ -165,8 +193,10 @@ class InterleavedTrimmer < PairedTrimmer
   end
 end
 
+#
 # Yield trimmed fasta records given an two separate
 # paired QSEQ files
+#
 class QSEQTrimmer < PairedTrimmer
   def initialize(left_file, right_file, args = {})
     # create an iterator that yields paired records
