@@ -5,17 +5,28 @@ module Trimmer
 # Code used for sequence trimming
 #
 # - PairedTrimmer
-# - SequenceTrimmer
+# - HuangTrimmer
 # - ProbabilityTrimmer
 # - QSEQTrimmer
 #
 # Some major refactoring needs to get done here
 #
 
+# HaungTrimmer
+#
 # class that has the trim function. Used in mixins
 # this trim function is based on the function documented
-# in the paper by Wang, et al [citation needed].
-class WangTrimmer
+# in the paper:
+#   Huang X, Wang J, Aluru S, Yang SP, Hillier L. (2003). PCAP:
+#   a whole-genome assembly program. Genome Res 13:
+#   2164–2170.
+#
+# The implementation is a direct copy from the perl implementation
+# implemented in Pangea 1.0:
+#   PANGEA: pipeline for analysis of next generation amplicons
+#   A Giongo, DB Crabb, AG Davis-Richardson - ISME , 2010
+#
+class HuangTrimmer
 
   def initialize(args={})
     @min = args[:min]
@@ -93,7 +104,7 @@ class PairedTrimmer < Enumerator
     #
     # also thinking about breaking all of this trimming stuff
     # out into its own package. (to be more unixy and stuff ;)
-    
+
     @min_length = args[:min_length] || 70
     @min        = args[:min] || 20
     @offset     = args[:cutoff] || 64 # XXX should both be called 'cutoff'
