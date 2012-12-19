@@ -18,10 +18,10 @@ describe Lederhosen::Trimmer do
 
   end
 
-  describe Lederhosen::Trimmer::SequenceTrimmer do
+  describe Lederhosen::Trimmer::HuangTrimmer do
 
     let :sequence_trimmer do
-      Lederhosen::Trimmer::SequenceTrimmer.new(:offset => 64, :min => 20)
+      Lederhosen::Trimmer::HuangTrimmer.new(:offset => 64, :min => 20)
     end
 
     it 'trims records as expected' do
