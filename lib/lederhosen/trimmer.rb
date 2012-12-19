@@ -12,7 +12,10 @@ module Trimmer
 # Some major refactoring needs to get done here
 #
 
-class SequenceTrimmer
+# class that has the trim function. Used in mixins
+# this trim function is based on the function documented
+# in the paper by Wang, et al [citation needed].
+class WangTrimmer
 
   def initialize(args={})
     @min = args[:min]
