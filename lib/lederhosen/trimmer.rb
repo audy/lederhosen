@@ -1,7 +1,16 @@
 module Lederhosen
 module Trimmer
 
-# class that has the trim function. Used in mixins
+##
+# Code used for sequence trimming
+#
+# - PairedTrimmer
+# - SequenceTrimmer
+# - ProbabilityTrimmer
+# - QSEQTrimmer
+#
+# Some major refactoring needs to get done here
+#
 
 class SequenceTrimmer
 
