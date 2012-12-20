@@ -28,13 +28,24 @@
         </ul>
       </header>
       <section>
-        <p><img src="http://a.yfrog.com/img686/851/ds3wq.png" alt=""></p>
+        <p><img src="http://d.pr/i/26Js+#.png" align="right"></p>
 
 <h1>Lederhosen</h1>
 
-<p>Cluster raw Illumina 16S rRNA amplicon data to generate OTUs.</p>
+<p>Lederhosen is a set of tools for OTU clustering rRNA amplicons using Robert Edgar's USEARCH.</p>
 
-<h3>About</h3>
+<p>It handles quality control of raw sequence data, running USEARCH, and creating and filtering tables.</p>
+
+<p>Lederhosen is not a pipeline but rather a set of tools broken up into tasks. Tasks are invoked by running <code>lederhosen TASK ...</code>.</p>
+
+<p>Lederhosen is designed with the following "pipeline" in mind:</p>
+
+<ol>
+<li>Quality control of sequence data.</li>
+<li>Clustering sequences to centroid or reference sequences (read: database)</li>
+<li>Generating tables from USEARCH output.</li>
+<li>Filtering tables to remove small or insignificant OTUs.</li>
+</ol><h3>About</h3>
 
 <ul>
 <li>Lederhosen is a project born out of the Triplett Lab at the University of Florida.</li>
@@ -43,11 +54,26 @@ using paired and non-paired end short reads such as those produced by Illumina (
 <li>Lederhosen uses <a href="http://semver.org/">Semantic Versioning</a>.</li>
 <li>Lederhosen is free and open source under the <a href="http://opensource.org/licenses/mit-license.php/">MIT open source license</a>.</li>
 <li>Except for USEARCH which requires a license, Lederhosen is available for commercial use.</li>
-</ul><h2>How do I get Lederhosen?</h2>
+</ul><h3>Features</h3>
+
+<ul>
+<li>Sequence trimming (paired-end Illumina).</li>
+<li>Parallel, referenced-based clustering to TaxCollector using USEARCH.</li>
+<li>Queue-agnostic support for running jobs on clusters.</li>
+<li>Support for RDP, TaxCollector or GreenGenes databases.</li>
+<li>Generation and filtering of OTU abundancy matrices.</li>
+</ul><h3>Installation</h3>
 
 <ol>
 <li>Obtain &amp; Install <a href="http://www.drive5.com/">USEARCH</a> (32bit is fine for non-commercial use)</li>
-<li>Get a copy of <a href="http://github.com/audy/taxcollector">TaxCollector</a>
+<li>Get a database:
+
+<ul>
+<li><a href="http://github.com/audy/taxcollector">TaxCollector</a></li>
+<li>
+<a href="http://greengenes.lbl.gov">GreenGenes</a> 16S database</li>
+<li>File an <a href="https://github.com/audy/lederhosen/issues">issue report</a> or pull request ;) to request support for a different database.</li>
+</ul>
 </li>
 <li>
 <p>Install Lederhosen by typing:</p>
@@ -55,63 +81,96 @@ using paired and non-paired end short reads such as those produced by Illumina (
 <p><code>sudo gem install lederhosen</code></p>
 </li>
 <li><p>Check installation by typing <code>lederhosen</code>. You should see some help text.</p></li>
-</ol><h2>Features</h2>
-
-<ul>
-<li>Sequence trimming (paired-end Illumina).</li>
-<li>Parallel, referenced-based clustering to TaxCollector using USEARCH</li>
-<li>Generation and filtering of OTU abundancy matrices.</li>
-</ul><h2>How do I use Lederhosen?</h2>
-
-<p>Lederhosen is just a convenient wrapper for UCLUST and BLAT with some scripts for quality filtering, de-noising of data as well as creation of nice tables. It is similar to QIIME but meant for paired-end Illumina data rather than single-end 454. The basic lederhosen pipeline consists of: trimming, joining, sorting, filtering, clustering, more filtering, and output generation (OTU tables, representative reads, reads by cluster, and taxonomic descriptions for clusters). See the example pipeline in <code>pipeline.sh</code>.</p>
-
-<h2>Tasks</h2>
+</ol><h2>Tasks</h2>
 
 <p>Lederhosen is invoked by typing <code>lederhosen [TASK]</code></p>
 
 <h3>Trim Reads</h3>
 
-<p>Trim (Illumina) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.</p>
+<p>Trim (Illumina, QSEQ format) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.</p>
 
 <pre><code>lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
 </code></pre>
 
 <p>The trimming process will reverse complement the "right" pair so that both reads are in the forward orientation.</p>
 
+<p>You can also trim interleaved, paired-end FASTQ files:</p>
+
+<pre><code>lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
+</code></pre>
+
+<p>Lederhosen will also trim off adapter sequences from the 5' end of the "left" read with the <code>--left-trim</code> option.</p>
+
+<pre><code>lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimed/ --read-type='fastq' --left-trim=11
+</code></pre>
+
 <h3>Create Database</h3>
 
 <p>Create UDB database required by usearch from TaxCollector</p>
 
 <div class="highlight"><pre>lederhosen make_udb <span class="se">\</span>
-    --input<span class="o">=</span>taxcollector.fa <span class="se">\</span>
-    --output<span class="o">=</span>taxcollector.udb
+  --input<span class="o">=</span>taxcollector.fa <span class="se">\</span>
+  --output<span class="o">=</span>taxcollector.udb
 </pre></div>
+
+<p>(not actually required but will make batch searching a lot faster)</p>
 
 <h3>Cluster Reads using USEARCH</h3>
 
 <p>Cluster reads using USEARCH. Output is a uc file.</p>
 
 <div class="highlight"><pre>lederhosen cluster <span class="se">\</span>
-    --input<span class="o">=</span>trimmed/*.fasta <span class="se">\</span>
-    --identity<span class="o">=</span>0.95 <span class="se">\</span>
-    --output<span class="o">=</span>clusters_95.uc <span class="se">\</span>
-    --database<span class="o">=</span>taxcollector.udb
+  --input<span class="o">=</span>trimmed/*.fasta <span class="se">\</span>
+  --identity<span class="o">=</span>0.95 <span class="se">\</span>
+  --output<span class="o">=</span>clusters_95.uc <span class="se">\</span>
+  --database<span class="o">=</span>taxcollector.udb
 </pre></div>
+
+<p>The optional <code>--dry-run</code> parameter outputs the usearch command to standard out. This is useful if you want to run usearch on a cluster.</p>
 
 <h3>Generate OTU table(s)</h3>
 
 <p>Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.</p>
 
 <div class="highlight"><pre>lederhosen otu_table <span class="se">\</span>
-    --clusters<span class="o">=</span>clusters_95.uc <span class="se">\</span>
-    --prefix<span class="o">=</span>otu_table <span class="se">\</span>
-    --level<span class="o">=</span>domain phylum class order family genus species
+  --files<span class="o">=</span>clusters_95.uc <span class="se">\</span>
+  --prefix<span class="o">=</span>otu_table <span class="se">\</span>
+  --levels<span class="o">=</span>domain phylum class order family genus species
 </pre></div>
 
 <p>This will create the files:</p>
 
 <pre><code>otu_table.domain.csv, ..., otu_table.species.csv
 </code></pre>
+
+<h3>Get representative sequences</h3>
+
+<p>You can get the representative sequences for each cluster using the <code>get_reps</code> tasks. This will extract the representative sequence from
+the <strong>database</strong> you ran usearch with. Make sure you use the same database that you used when running usearch.</p>
+
+<div class="highlight"><pre>lederhosen get_reps <span class="se">\</span>
+  --input<span class="o">=</span>clusters.uc <span class="se">\</span>
+  --database<span class="o">=</span>taxcollector.fa <span class="se">\</span>
+  --output<span class="o">=</span>representatives.fasta
+</pre></div>
+
+<p>You can get the representatives from more than one cluster file using a glob:</p>
+
+<div class="highlight"><pre>lederhosen get_reps <span class="se">\</span>
+  --input<span class="o">=</span>*.uc <span class="se">\</span>
+  --database<span class="o">=</span>taxcollector.fa <span class="se">\</span>
+  --output<span class="o">=</span>representatives.fasta
+</pre></div>
+
+<h2>Acknowledgements</h2>
+
+<ul>
+<li>Lexi, Vinnie and Kevin for beta-testing and putting up with bugs</li>
+<li>The QIIME project for inspiration</li>
+<li>Sinbad Richardson for the Lederhosen Guy artwork</li>
+</ul><h2>Please Cite</h2>
+
+<p>Please cite this GitHub repo (<a href="https://github.com/audy/lederhosen">https://github.com/audy/lederhosen</a>) with the version you used (type <code>lederhosen version</code>) unless I publish a paper. Then cite that.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/audy">audy</a></p>
