@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'set'
 require 'dna'
 require 'progressbar'
 require 'thor'
