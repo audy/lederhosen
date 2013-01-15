@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'bundler'
 require 'set'
 require 'dna'
 require 'progressbar'
