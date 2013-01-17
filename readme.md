@@ -4,31 +4,32 @@
 
 Lederhosen is a set of tools for OTU clustering rRNA amplicons using Robert Edgar's USEARCH.
 
-It handles quality control of raw sequence data, running USEARCH, and creating and filtering tables.
+It's used to run USEARCH and create and filter tables. Unlike most of the software in Bioinformatics,
+It is meant to be UNIX-y: do one thing and do it well.
+
+Do you want to run Lederhosen on a cluster? Use `--dry-run` and feed it to your cluster's queue management system.
 
 Lederhosen is not a pipeline but rather a set of tools broken up into tasks. Tasks are invoked by running `lederhosen TASK ...`.
 
 Lederhosen is designed with the following "pipeline" in mind:
 
-1. Quality control of sequence data.
-2. Clustering sequences to centroid or reference sequences (read: database)
-3. Generating tables from USEARCH output.
-4. Filtering tables to remove small or insignificant OTUs.
+1. Clustering sequences to centroid or reference sequences (read: database)
+2. Generating tables from USEARCH output.
+3. Filtering tables to remove small or insignificant OTUs.
 
 ### About
 
 - Lederhosen is a project born out of the Triplett Lab at the University of Florida.
-- Lederhosen is designed to be a fast and simple method of clustering 16S rRNA amplicons sequenced
-using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq).
-- Lederhosen uses [Semantic Versioning](http://semver.org/).
-- Lederhosen is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/).
+- Lederhosen is designed to be a fast and **simple** tool to aid in clustering 16S rRNA amplicons sequenced
+using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq), Ion Torrent, or Roche-454.
+- Lederhosen uses [Semantic Versioning](http://semver.org/), is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/), and has **UNIT TESTS** (omg!).
 - Except for USEARCH which requires a license, Lederhosen is available for commercial use.
 
 ### Features
 
 - Parallel, referenced-based clustering to TaxCollector using USEARCH.
 - Queue-agnostic support for running jobs on clusters.
-- Support for RDP, TaxCollector or GreenGenes databases.
+- Support for RDP, TaxCollector or GreenGenes 16S rRNA databases.
 - Generation and filtering of OTU abundancy matrices.
 
 ### Installation
