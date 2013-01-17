@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.7.0"
+  s.version = "1.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2012-12-19"
+  s.date = "2013-01-17"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -33,11 +33,16 @@ Gem::Specification.new do |s|
     "lib/lederhosen/tasks/otu_filter.rb",
     "lib/lederhosen/tasks/otu_table.rb",
     "lib/lederhosen/tasks/split_fasta.rb",
-    "lib/lederhosen/tasks/trim.rb",
     "lib/lederhosen/tasks/version.rb",
     "lib/lederhosen/trimmer.rb",
     "lib/lederhosen/version.rb",
     "readme.md",
+    "scripts/illumina_pipeline/.gitignore",
+    "scripts/illumina_pipeline/Makefile",
+    "scripts/illumina_pipeline/pipeline.sh",
+    "scripts/illumina_pipeline/readme.md",
+    "scripts/otu_ref_picking/readme.md",
+    "scripts/readme.md",
     "spec/cli_spec.rb",
     "spec/data/ILT_L_9_B_001_1.txt.gz",
     "spec/data/ILT_L_9_B_001_3.txt.gz",
