@@ -27,8 +27,8 @@ using paired and non-paired end short reads such as those produced by Illumina (
 
 ### Features
 
-- Parallel, referenced-based clustering to TaxCollector using USEARCH.
-- Queue-agnostic support for running jobs on clusters.
+- Closed/Open/Mixed OTU clustering to TaxCollector or GreenGenes via USEARCH.
+- Parallel support (pipe commands into [parallel](http://savannah.gnu.org/projects/parallel/), or use your cluster's queue).
 - Support for RDP, TaxCollector or GreenGenes 16S rRNA databases.
 - Generation and filtering of OTU abundancy matrices.
 
