@@ -65,7 +65,7 @@ module Lederhosen
       RE_QIIME = /k__(.*);p__(.*);c__(.*);o__(.*);f__(.*);g__(.*);s__(.*)/
 
       def parse_taxonomy_qiime(taxonomy)
-        levels = %w{kingdom phylum class order family genus species}
+        levels = %w{domain phylum class order family genus species}
         match_data = taxonomy.match(RE_QIIME)
         match_data = match_data[1..-1]
 
@@ -78,7 +78,7 @@ module Lederhosen
       end
 
       def parse_taxonomy_greengenes(taxonomy)
-        levels = %w{kingdom phylum class order family genus species}
+        levels = %w{domain phylum class order family genus species}
         match_data = taxonomy.match(RE_GREENGENES)
         match_data = match_data[1..-1]
 
@@ -101,7 +101,7 @@ module Lederhosen
       #
       def parse_taxonomy_taxcollector(taxonomy)
 
-        levels = %w{kingdom phylum class order family genus species strain}
+        levels = %w{domain phylum class order family genus species strain}
 
         match_data =
           begin
