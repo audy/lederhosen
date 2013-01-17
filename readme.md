@@ -26,7 +26,6 @@ using paired and non-paired end short reads such as those produced by Illumina (
 
 ### Features
 
-- Sequence trimming (paired-end Illumina).
 - Parallel, referenced-based clustering to TaxCollector using USEARCH.
 - Queue-agnostic support for running jobs on clusters.
 - Support for RDP, TaxCollector or GreenGenes databases.
@@ -50,19 +49,7 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 
 ### Trim Reads
 
-Trim (Illumina, QSEQ format) reads using quality scores. Output will be a directory of fasta files. Reads can optionally be gzipped.
-
-    lederhosen trim --reads_dir=reads/*.txt --out_dir=trimmed/
-
-The trimming process will reverse complement the "right" pair so that both reads are in the forward orientation.
-
-You can also trim interleaved, paired-end FASTQ files:
-
-    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimmed/ read-type='fastq'
-
-Lederhosen will also trim off adapter sequences from the 5' end of the "left" read with the `--left-trim` option.
-
-    lederhosen trim --reads_dir=reads/*.fastq --out_dir=trimed/ --read-type='fastq' --left-trim=11
+Trimming removed. I think you should use [Sickle](https://github.com/najoshi/sickle).
 
 ### Create Database
 
