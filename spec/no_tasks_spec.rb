@@ -4,7 +4,7 @@ describe 'no_tasks' do
 
   let(:greengenes_taxonomies) { ['124 U55236.1 Methanobrevibacter thaueri str. CW k__Archaea; p__Euryarchaeota; c__Methanobacteria; o__Methanobacteriales; f__Methanobacteriaceae; g__Methanobrevibacter; Unclassified; otu_127']}
   let(:qiime_taxonomies) { [ 'k__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacteriales;f__Enterobacteriaceae;g__Rahnella;s__' ]}
-  let(:taxcollector_taxonomies) { ['[0]Bacteria;[1]Actinobacteria;[2]Actinobacteria;[3]null;[4]null;[5]null;[6]bacterium_TH3;[7]bacterium_TH3;[8]bacterium_TH3|M79434|8'] }
+  let(:taxcollector_taxonomies) { ['[0]domain;[1]phylum;[2]class;[3]order;[4]family;[5]genus;[6]species;[7]strain;[8]Genus_species_strain_id'] }
   let(:lederhosen) { Lederhosen::CLI.new }
 
   it '#parse_usearch_line should parse a line of usearch output'
@@ -25,17 +25,17 @@ describe 'no_tasks' do
     lederhosen.detect_taxonomy_format('this is not a taxonomic description').should raise_error
   end
 
-  it '#parse_taxonomy_taxcollector should parse taxcollector taxonomy' do
-    taxcollector_taxonomies.each do |taxcollector_taxonomy|
-      taxonomy = lederhosen.parse_taxonomy_taxcollector(taxcollector_taxonomy)
-      taxonomy['original'].should == taxcollector_taxonomy
-
-      levels = %w{domain phylum class order family genus species kingdom original strain}
-
-      taxonomy.keys.each do |v|
-        levels.should include v
+  %w{domain phylum class order family genus species strain}.each do |level|
+    it "#parse_taxonomy_taxcollector should parse taxcollector taxonomy (#{level})" do
+      taxcollector_taxonomies.each do |taxonomy|
+        taxonomy = lederhosen.parse_taxonomy_taxcollector(taxonomy)
+        taxonomy[level].should == level
       end
     end
+  end
+  
+  it '#parse_taxonomy_taxcollector should return original taxonomy' do
+    lederhosen.parse_taxonomy_taxcollector(taxcollector_taxonomies[0])['original'].should == taxcollector_taxonomies[0]
   end
 
   it '#parse_taxonomy_greengenes should parse greengenes taxonomy' do
