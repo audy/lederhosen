@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.8.1"
+  s.version = "1.8.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -43,16 +43,10 @@ Gem::Specification.new do |s|
     "scripts/otu_ref_picking/readme.md",
     "scripts/readme.md",
     "spec/cli_spec.rb",
-    "spec/data/ILT_L_9_B_001_1.txt.gz",
-    "spec/data/ILT_L_9_B_001_3.txt.gz",
-    "spec/data/ILT_L_9_B_002_1.txt.gz",
-    "spec/data/ILT_L_9_B_002_3.txt.gz",
-    "spec/data/example.fastq",
     "spec/data/test.uc",
-    "spec/data/trimmed_sizes.txt",
+    "spec/data/trimmed/ILT_L_9_B_001.fasta",
     "spec/no_tasks_spec.rb",
-    "spec/spec_helper.rb",
-    "spec/trimmer_spec.rb"
+    "spec/spec_helper.rb"
   ]
   s.homepage = "http://audy.github.com/lederhosen"
   s.licenses = ["MIT"]
