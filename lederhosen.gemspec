@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.8.0"
+  s.version = "1.8.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
     "lib/lederhosen/tasks/otu_table.rb",
     "lib/lederhosen/tasks/split_fasta.rb",
     "lib/lederhosen/tasks/version.rb",
-    "lib/lederhosen/trimmer.rb",
     "lib/lederhosen/version.rb",
     "readme.md",
     "scripts/illumina_pipeline/.gitignore",
