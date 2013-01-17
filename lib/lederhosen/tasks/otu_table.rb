@@ -54,6 +54,9 @@ module Lederhosen
                 else
                   dat[level] || 'unparsed_name'
                 end
+              
+              # remove commas from name
+              name = name.tr(',', '_')
 
               # the next two lines are what is slow
               level_sample_cluster_count[level][input_file][name] += 1
