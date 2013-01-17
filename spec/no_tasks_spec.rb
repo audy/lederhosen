@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'no_tasks' do
 
-  let(:greengenes_taxonomies) { ['124 U55236.1 Methanobrevibacter thaueri str. CW k__Archaea; p__Euryarchaeota; c__Methanobacteria; o__Methanobacteriales; f__Methanobacteriaceae; g__Methanobrevibacter; Unclassified; otu_127']}
-  let(:qiime_taxonomies) { [ 'k__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacteriales;f__Enterobacteriaceae;g__Rahnella;s__' ]}
+  let(:greengenes_taxonomies) { ['124 U55236.1 Methanobrevibacter thaueri str. CW k__domain; p__phylum; c__class; o__order; f__family; g__genus; species; otu_127']}
+  let(:qiime_taxonomies) { [ 'k__domain;p__phylum;c__class;o__order;f__family;g__genus;s__species' ]}
   let(:taxcollector_taxonomies) { ['[0]domain;[1]phylum;[2]class;[3]order;[4]family;[5]genus;[6]species;[7]strain;[8]Genus_species_strain_id'] }
   let(:lederhosen) { Lederhosen::CLI.new }
 
@@ -25,40 +25,35 @@ describe 'no_tasks' do
     lederhosen.detect_taxonomy_format('this is not a taxonomic description').should raise_error
   end
 
-  %w{domain phylum class order family genus species strain}.each do |level|
+  %w{domain phylum class order family genus species}.each do |level|
+
     it "#parse_taxonomy_taxcollector should parse taxcollector taxonomy (#{level})" do
       taxcollector_taxonomies.each do |taxonomy|
         taxonomy = lederhosen.parse_taxonomy_taxcollector(taxonomy)
         taxonomy[level].should == level
       end
     end
+    
+    it "#parse_taxonomy_greengenes should parse greengenes taxonomy (#{level})" do
+      greengenes_taxonomies.each do |greengenes_taxonomy|
+        taxonomy = lederhosen.parse_taxonomy_greengenes(greengenes_taxonomy)
+        taxonomy[level].should == level
+      end
+    end
+    
+    it "#parse_taxonomy_greengenes should parse qiime taxonomy #{level}" do
+      qiime_taxonomies.each do |qiime_taxonomy|
+        taxonomy = lederhosen.parse_taxonomy_qiime(qiime_taxonomy)
+        taxonomy[level].should == level
+      end
+    end
+    
   end
   
   it '#parse_taxonomy_taxcollector should return original taxonomy' do
     lederhosen.parse_taxonomy_taxcollector(taxcollector_taxonomies[0])['original'].should == taxcollector_taxonomies[0]
   end
 
-  it '#parse_taxonomy_greengenes should parse greengenes taxonomy' do
-    greengenes_taxonomies.each do |greengenes_taxonomy|
-      taxonomy = lederhosen.parse_taxonomy_greengenes(greengenes_taxonomy)
-      levels = %w{domain phylum class order family genus species kingdom original}
-
-      taxonomy.keys.each do |v|
-        levels.should include v
-      end
-    end
-  end
-
-  it '#parse_taxonomy_greengenes should parse qiime taxonomy' do
-    qiime_taxonomies.each do |qiime_taxonomy|
-      taxonomy = lederhosen.parse_taxonomy_qiime(qiime_taxonomy)
-      levels = %w{domain phylum class order family genus species kingdom original}
-
-      taxonomy.keys.each do |v|
-        levels.should include v
-      end
-    end
-  end
 
   it '#parse_taxonomy should automatically detect and parse greengenes taxonomy' do
     greengenes_taxonomies.each do |greengenes_taxonomy|
