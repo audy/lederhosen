@@ -41,7 +41,7 @@ describe 'no_tasks' do
       end
     end
     
-    it "#parse_taxonomy_greengenes should parse qiime taxonomy #{level}" do
+    it "#parse_taxonomy_greengenes should parse qiime taxonomy (#{level})" do
       qiime_taxonomies.each do |qiime_taxonomy|
         taxonomy = lederhosen.parse_taxonomy_qiime(qiime_taxonomy)
         taxonomy[level].should == level
