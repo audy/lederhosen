@@ -49,7 +49,7 @@ module Lederhosen
             dat = parse_usearch_line(line.strip)
             levels.each do |level|
               name =
-                if dat.nil?
+                unless dat[:hit] == 'H'
                   'unclassified_reads'
                 else
                   dat[level] || 'unparsed_name'

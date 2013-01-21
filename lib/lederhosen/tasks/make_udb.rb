@@ -3,8 +3,8 @@ module Lederhosen
 
     desc 'make_udb', 'format database for usearch'
 
-    method_option :input,       :type => :string,  :required => true
-    method_option :output,      :type => :string,  :required => true
+    method_option :input,  :type => :string, :required => true
+    method_option :output, :type => :string, :required => true
 
     def make_udb
       input       = options[:input]
