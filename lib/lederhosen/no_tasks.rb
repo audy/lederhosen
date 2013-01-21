@@ -34,8 +34,8 @@ module Lederhosen
           :alignment => str[7],
           :query_label => str[8],
         }
-        
-        r = 
+
+        r =
           if %w{S N H}.include? dat[:type] # hits
             { :length => str[2].to_i,
               :identity => str[3],
@@ -47,7 +47,7 @@ module Lederhosen
         else
           raise Exception, "Do not understand record type #{str[0]}!"
         end
-        
+
         dat.merge(r)
 
       end

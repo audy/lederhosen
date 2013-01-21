@@ -3,12 +3,12 @@ require 'set'
 module Lederhosen
 
   class CLI
-    
+
     desc 'separate_unclassified', 'separate unclassified reads'
-    
+
     method_option :uc_file, :type => :string, :required => true
-    method_option :reads, :type => :string, :required => true
-    method_option :output, :type => :string, :required => true
+    method_option :reads,   :type => :string, :required => true
+    method_option :output,  :type => :string, :required => true
 
     def separate_unclassified
       uc_file = options[:uc_file]
