@@ -136,8 +136,9 @@ interesting biological inferences and cure diseases.
 
 ### Get representative sequences
 
-You can get the representative sequences for each cluster using the `get_reps` tasks. This will extract the representative sequence from
-the __database__ you ran usearch with. Make sure you use the same database that you used when running usearch.
+You can get the representative sequences for each cluster using the `get_reps` tasks.
+This will extract the representative sequence from the __database__ you ran usearch with.
+Make sure you use the same database that you used when running usearch.
 
 ```bash
 lederhosen get_reps \
