@@ -4,11 +4,13 @@ module Lederhosen
 
   class CLI
 
-    desc 'separate_unclassified', 'separate unclassified reads'
+    desc 'separate_unclassified',
+         'separate unclassified reads (with or without strict pairing)'
 
     method_option :uc_file, :type => :string, :required => true
     method_option :reads,   :type => :string, :required => true
     method_option :output,  :type => :string, :required => true
+    method_option :strict,  :type => :string, :default => false
 
     def separate_unclassified
       uc_file = options[:uc_file]
@@ -20,6 +22,7 @@ module Lederhosen
           dat = parse_usearch_line(line.strip)
         end
       end
+
     end
   end
 end
