@@ -81,7 +81,16 @@ The optional `--dry-run` parameter outputs the usearch command to standard out. 
 For example:
 
 ```bash
-for reads_file in reads/*.fasta; echo lederhosen cluster --input=$reads_file --identity=0.95 --output=$(basename $i .fasta).95.uc --database=taxcollector.udb --dry-run --threads 1; end > jobs.sh
+for reads_file in reads/*.fasta;
+do
+    echo lederhosen cluster \
+                    --input=$reads_file \
+                    --identity=0.95 \
+                    --output=$(basename $i .fasta).95.uc \
+                    --database=taxcollector.udb \
+                    --threads 1 \
+                    --dry-run
+end > jobs.sh
 
 cat jobs.sh | parallel -j 24 # run 24 parallel jobs
 ```
@@ -103,7 +112,6 @@ From there, you can generate OTU abundance matrices at the different levels of c
 lederhosen count_taxonomies \
   --input=clusters.uc \
   --output=clusters_taxonomies.txt
-
 ```
 
 If you did paired-end sequencing, you can generate strict taxonomy tables that only count reads when *both pairs* have the *same*
