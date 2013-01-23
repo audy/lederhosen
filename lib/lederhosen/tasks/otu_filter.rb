@@ -39,7 +39,12 @@ module Lederhosen
       ohai "filtering"
 
       # filter sample_cluster_count
+      # todo: move filtered reads to 'unclassified_reads' classification
       filtered = cluster_sample_count.reject { |k, v| v.reject { |k, v| v < reads }.size < min_samples }
+
+      # use functional programming they said
+      # it will make your better they said
+      noise = cluster_sample_count.keys - filtered.keys
 
       ohai "saving to #{output}"
 
@@ -47,12 +52,14 @@ module Lederhosen
       out = File.open(output, 'w')
       samples = filtered.values.map(&:keys).flatten.uniq
       clusters = filtered.keys
-      out.puts "-,#{clusters.join(',')}"
+      out.puts "-,#{clusters.join(',')},noise"
       samples.each do |sample|
         out.print "#{sample}"
         clusters.each do |cluster|
           out.print ",#{filtered[cluster][sample]}"
         end
+        noise_sum = noise.map { |n| cluster_sample_count[n][sample]}.inject(:+)
+        out.print ",#{noise_sum}"
         out.print "\n"
       end
       out.close
