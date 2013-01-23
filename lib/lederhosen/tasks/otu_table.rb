@@ -16,6 +16,9 @@ module Lederhosen
     method_option :levels, :type => :array, :required => true,
                   :banner => 'valid options: domain, kingdom, phylum, class, order, genus, species, original (or all of them at once)'
 
+    method_option :strict_pairs, :type => :boolean, :default => false,
+                  :banner => 'do not count cluster unless taxonomies agree for both mates'
+
     def otu_table
       input  = Dir[options[:files]]
       prefix = options[:prefix]
