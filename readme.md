@@ -78,20 +78,61 @@ lederhosen cluster \
 
 The optional `--dry-run` parameter outputs the usearch command to standard out. This is useful if you want to run usearch on a cluster.
 
-### Generate OTU table(s)
+For example:
+
+```bash
+for reads_file in reads/*.fasta; echo lederhosen cluster --input=$reads_file --identity=0.95 --output=$(basename $i .fasta).95.uc --database=taxcollector.udb --dry-run --threads 1; end > jobs.sh
+
+cat jobs.sh | parallel -j 24 # run 24 parallel jobs
+```
+
+### Generate taxonomy counts tables
+
+Before generating OTU tables, you must generate taxonomy counts tables.
+
+A taxonomy count table looks something like this
+
+    # taxonomy, number_of_reads
+    [0]Bacteria[1];...;[8]Akkermansia_municipalia, 28
+    ...
+
+From there, you can generate OTU abundance matrices at the different levels of classification (domain, phylum, ..., genus, species).
+
+```bash
+
+lederhosen count_taxonomies \
+  --input=clusters.uc \
+  --output=clusters_taxonomies.txt
+
+```
+
+If you did paired-end sequencing, you can generate strict taxonomy tables that only count reads when *both pairs* have the *same*
+taxonomic description at a certain taxonomic level. This is useful for leveraging the increased length of having pairs and also
+acts as a sort of chimera filter. You will, however, end up using less of your reads as the level goes from domain to species.
+
+```bash
+lederhosen count_taxonomies \
+  --input=clusters.uc \
+  --strict=genus \
+  --output=clusters_taxonomies.strict.genus.txt
+```
+
+### Generate OTU tables
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
 
 ```bash
 lederhosen otu_table \
-  --files=clusters_95.uc \
-  --prefix=otu_table \
-  --levels=domain phylum class order family genus species
+  --files=clusters_taxonomies.strict.genus.*.txt \
+  --output=my_poop_samples_genus_strict.95.txt \
+  --level=genus
 ```
 
-This will create the files:
+This will create the file `my_poop_samples_genus_strict.95.txt` containing the clusters
+as columns and the samples as rows.
 
-    otu_table.domain.csv, ..., otu_table.species.csv
+You now will apply advanced data mining and statistical techniques to this table to make
+interesting biological inferences and cure diseases.
 
 ### Get representative sequences
 
