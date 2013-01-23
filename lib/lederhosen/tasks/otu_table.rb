@@ -6,99 +6,59 @@ module Lederhosen
   class CLI
 
     desc "otu_table",
-         "create an OTU abundance matrix from USEARCH prefix"
+         "create an OTU abundance matrix from taxonomy count files"
 
     method_option :files,  :type => :string, :required => true
-
-    method_option :prefix, :type => :string, :required => true,
-                  :banner => 'prefix prefix'
-
-    method_option :levels, :type => :array, :required => true,
-                  :banner => 'valid options: domain, kingdom, phylum, class, order, genus, species, original (or all of them at once)'
-
-    method_option :strict_pairs, :type => :boolean, :default => false,
-                  :banner => 'do not count cluster unless taxonomies agree for both mates'
+    method_option :level,  :type => :string, :required => true
+    method_option :output, :type => :string, :required => true
 
     def otu_table
-      input  = Dir[options[:files]]
-      prefix = options[:prefix]
-      levels = options[:levels].map(&:downcase)
+      inputs = Dir[options[:files]]
+      level  = options[:level].downcase
+      output = options[:output]
 
-      ohai "generating #{levels.join(', ')} table(s) from #{input.size} file(s) and saving to prefix #{prefix}."
+      ohai "Generating OTU matrix from #{inputs.size} inputs at #{level} level and saving to #{output}."
 
       # sanity check
-      levels.each do |level|
-        fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom original}.include? level
-      end
+      fail "bad level: #{level}" unless %w{domain phylum class order family genus species kingdom original}.include? level      
+      fail 'no inputs matched your glob' if inputs.size == 0
 
-      # there has to be a more efficient way of doing this
-      level_sample_cluster_count =
-        Hash.new do |h, k|
-          h[k] = Hash.new do |h, k|
-            h[k] = Hash.new(0)
-          end
-        end
+      sample_cluster_count = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = 0 } }
 
       # create a progress bar with the total number of bytes of
       # the files we're slurping up
-      pbar = ProgressBar.new "loading", input.size
+      pbar = ProgressBar.new "loading", inputs.size
 
-      # Load cluster table
-      input.each do |input_file|
-        pbar.inc
-        File.open(input_file) do |handle|
-          handle.each do |line|
-
-            dat = parse_usearch_line(line.strip)
-            levels.each do |level|
-              name =
-                unless dat[:hit] == 'H'
-                  'unclassified_reads'
-                else
-                  dat[level] || 'unparsed_name'
-                end
-              
-              # remove commas from name
-              name = name.tr(',', '_')
-
-              # the next two lines are what is slow
-              level_sample_cluster_count[level][input_file][name] += 1
+      inputs.each do |input_file|
+        File.open(input_file).each do |line|
+          next if line =~ /^#/ # skip header(s)
+          line = line.strip.split(',')
+          taxonomy, count = line
+          count = count.to_i
+          tax =
+            if taxonomy == 'unclassified_reads'
+              'unclassified_reads'
+            else
+              parse_taxonomy(taxonomy)[level]
             end
-
-          end
+          sample_cluster_count[input_file][tax] += count
         end
       end
 
-      pbar.finish
+      all_clusters = sample_cluster_count.values.map(&:keys).flatten.uniq.sort
 
-      # get all taxonomic names at each level
-      all_names = Hash.new.tap do |bar|
-        level_sample_cluster_count.each_pair.map do |k, v|
-          names = v.each_value.map(&:keys).flatten.uniq
-          bar[k] = names
+      out = File.open(output, 'w')
+      
+      out.puts all_clusters.join(',')
+      inputs.sort.each do |input|
+        out.print "#{input}"
+        all_clusters.each do |c|
+          out.print ",#{sample_cluster_count[input][c]}"
         end
+        out.print "\n"
       end
 
-      # save to csv(s)
-      levels.each do |level|
-
-        ohai "saving #{level} table"
-
-        File.open("#{prefix}.#{level}.csv", 'w') do |handle|
-          header = all_names[level].to_a.compact.sort
-          handle.puts "#{level.capitalize},#{header.join(',')}"
-
-          input.each do |sample|
-            handle.print "#{sample}"
-            header.each do |name|
-              handle.print ",#{level_sample_cluster_count[level][sample][name]}"
-            end
-            handle.print "\n"
-          end
-        end
-      end
     end
-
 
   end # class CLI
 end # module Lederhosen

@@ -17,26 +17,44 @@ module Lederhosen
 
       taxonomy_count = Hash.new { |h, k| h[k] = 0 }
 
+      def get_tax(s)
+
+        dat = parse_usearch_line(s.strip)
+        if dat[:type] == 'H'
+          dat[:taxonomic_description].tr(',', '_')
+        elsif dat[:type] == 'N'
+          'unclassified_reads'
+        else
+          nil
+        end
+      end
+
       File.open(input) do |handle|
         handle.each do |line|
-          dat = parse_usearch_line(line.strip)
 
-          taxonomy =
-            if dat[:type] == 'H'
-              dat[:taxonomic_description]["original"].tr(',','_') # remove commas!
-            elsif dat[:type] == 'N'
-              'unclassified_reads'
+          taxonomy = get_tax(line.strip)
+          
+          unless strict
+            taxonomy_count[taxonomy] += 1
+          else
+            next_tax = get_tax(handle.gets.strip)
+            a, b = parse_taxonomy(taxonomy), parse_taxonomy(next_tax)
+            unless ([a, b].include? nil) || ([a, b].include? 'unclassified_reads')
+              if a[strict] == b[strict]
+                taxonomy_count[taxonomy] += 2
+              else
+                taxonomy_count['unclassified_reads'] += 2
+              end
             else
-              nil
+              taxonomy_count['unclassified_reads'] += 2
             end
-
-          taxonomy_count[taxonomy] += 1
+          end
 
         end
       end
 
       out = File.open(output, 'w')
-      out.puts "taxonomy,number_of_reads"
+      out.puts '# taxonomy, number_of_reads'
       taxonomy_count.each_pair do |taxonomy, count|
         out.puts "#{taxonomy},#{count}"
       end

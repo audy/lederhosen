@@ -30,7 +30,7 @@ module Lederhosen
         dat = {
           :type => str[0],
           :cluster_no => str[1],
-          :taxonomic_description => (parse_taxonomy(taxonomic_description) rescue { 'original' => str[9] }),
+          :taxonomic_description => str[9],
           :alignment => str[7],
           :query_label => str[8],
         }

@@ -30,19 +30,59 @@ describe Lederhosen::CLI do
     File.exists?(File.join($test_dir, 'clusters.uc')).should be_true
   end
 
-  it 'should build abundance matrices for each level' do
-    levels = "domain phylum class order FAMILY genus Species"
-    `./bin/lederhosen otu_table --files=spec/data/test.uc --prefix=#{$test_dir}/otu_table --levels=#{levels}`
+  it 'can create taxonomy count tables' do
+    `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.txt`
+    $?.success?.should be_true
+    File.exists?(File.join($test_dir, 'taxonomy_count.txt')).should be_true
+  end
+
+  it 'generates taxonomy tables w/ comma-free taxonomic descriptions' do
+    File.readlines(File.join($test_dir, 'taxonomy_count.txt'))
+      .map(&:strip)
+      .map { |x| x.count(',') }
+      .uniq
+      .should == [1]
+  end
+  
+  %w{domain phylum class order family genus species}.each do |level|
+    it "generates taxonomy tables only counting pairs that agree at level: #{level}" do
+      `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.strict.#{level}.txt --strict=#{level}`
+      $?.success?.should be_true
+      
+      lines = File.readlines(File.join($test_dir, "taxonomy_count.strict.#{level}.txt"))
+      
+      # make sure that all classifications are even
+      lines.select { |x| !(x =~ /^#/) }
+           .select { |x| !(x =~ /^unclassified_reads$/) }
+           .map(&:strip)
+           .map { |x| x.split(',') }
+           .map(&:last)
+           .map(&:to_i)
+           .map(&:even?)
+           .uniq
+           .should == [true]
+
+      # make sure total number of reads adds up to 684
+      lines.select { |x| !(x =~ /^#/) }
+           .map(&:strip)
+           .map { |x| x.split(',') }
+           .map(&:last)
+           .map(&:to_i)
+           .inject(:+).should == 684
+    end
+  end
+
+  it 'should create OTU abundance matrices from taxonomy count tables' do
+    `./bin/lederhosen otu_table --files=#{$test_dir}/taxonomy_count.strict.*.txt --level=genus --output=#{$test_dir}/otus_genus.strict.csv`
     $?.success?.should be_true
   end
 
   it 'should filter OTU abundance matrices' do
-    `./bin/lederhosen otu_filter --input=#{$test_dir}/otu_table.species.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
-    $?.success?.should be_true
-  end
-
-  it 'should combine OTU abundance matrices' do
-    `./bin/lederhosen join_otu_tables --input=#{$test_dir}/otu_table*.csv --output=#{$test_dir}/merged.csv`
+    # TODO
+    # filtering should move filtered reads to 'unclassified_reads' so that we maintain
+    # our knowledge of depth of coverage throughout
+    # this makes normalization better later.
+    `./bin/lederhosen otu_filter --input=#{$test_dir}/otus_genus.strict.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
     $?.success?.should be_true
   end
 
@@ -54,6 +94,4 @@ describe Lederhosen::CLI do
   it 'should print representative sequences from uc files' do
     `./bin/lederhosen get_reps --input=#{$test_dir}/clusters.uc --database=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/representatives.fasta`
   end
-
-  it 'should create a fasta file containing representative reads for each cluster'
 end
