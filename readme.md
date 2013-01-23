@@ -125,6 +125,8 @@ lederhosen count_taxonomies \
   --output=clusters_taxonomies.strict.genus.txt
 ```
 
+Reads that do not have the same phylogeny at `level` will become `unclassified_reads`
+
 ### Generate OTU tables
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
@@ -142,7 +144,30 @@ as columns and the samples as rows.
 You now will apply advanced data mining and statistical techniques to this table to make
 interesting biological inferences and cure diseases.
 
+### Filter OTU tables
+
+Sometimes, clustering high-throughput reads at stringent identities can create many, small clusters.
+In fact, these clusters represent the vast majority (>99%) of the created clusters but the minority (<1%>)
+of the reads. In other words, 1% of the reads have 99% of the clusters.
+
+If you want to filter out these small clusters which are composed of inseparable sequencing error or
+actual biodiversity, you can do so with the `otu_filter` task.
+
+```bash
+lederhosen otu_filter \
+  --input=table.csv \
+  --output=filtere.csv \
+  --reads=50 \
+  --samples=50
+```
+
+This will remove any clusters that do not appear in at least 10 samples with at least 50 reads. The read counts
+for filtered clusters will be moved to the `noise` psuedocluster.
+
+
 ### Get representative sequences
+
+(not yet implemented)
 
 You can get the representative sequences for each cluster using the `get_reps` tasks.
 This will extract the representative sequence from the __database__ you ran usearch with.
