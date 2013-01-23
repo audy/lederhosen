@@ -8,7 +8,7 @@ group :test do
   gem 'rspec', '2.12.0'
   gem 'rspec-prof', '0.0.3'
   gem 'pry'
-  gem 'plymouth'
+#  gem 'plymouth'
 end
 
 group :development do
