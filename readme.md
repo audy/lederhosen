@@ -76,9 +76,8 @@ lederhosen cluster \
   --database=taxcollector.udb
 ```
 
-The optional `--dry-run` parameter outputs the usearch command to standard out. This is useful if you want to run usearch on a cluster.
-
-For example:
+The optional `--dry-run` parameter outputs the usearch command to standard out.
+This is useful if you want to run usearch on a cluster.
 
 ```bash
 for reads_file in reads/*.fasta;
@@ -86,12 +85,13 @@ do
     echo lederhosen cluster \
                     --input=$reads_file \
                     --identity=0.95 \
-                    --output=$(basename $i .fasta).95.uc \
+                    --output=$(basename $reads_file_ .fasta).95.uc \
                     --database=taxcollector.udb \
                     --threads 1 \
                     --dry-run
 end > jobs.sh
 
+# send jobs to queue system
 cat jobs.sh | parallel -j 24 # run 24 parallel jobs
 ```
 
