@@ -6,6 +6,23 @@ module Lederhosen
 
     no_tasks do
 
+      # get a taxonomic description from a line of usearch (uc) output
+      # return 'unclassified_reads' if the result was not a hit
+      # if the result was neither a hit nor a miss (for example, a seed)
+      # return nil
+      # this will probably break for different versions of uc file
+      # as produced by uclust or older versions of usearch
+      def get_tax(s)
+        dat = parse_usearch_line(s.strip)
+        if dat[:type] == 'H'
+          dat[:taxonomic_description].tr(',', '_')
+        elsif dat[:type] == 'N'
+          'unclassified_reads'
+        else
+          nil
+        end
+      end
+
       # parse a line of usearch prefix
       # return a hash in the form:
       # { :taxonomy => '', :identity => '0.00', ... }
