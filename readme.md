@@ -13,10 +13,14 @@ Lederhosen is not a pipeline but rather a set of tools broken up into tasks. Tas
 
 Lederhosen is designed with the following "pipeline" in mind:
 
-1. Clustering sequences to centroid or reference sequences (read: database)
+1. Clustering sequences to reference sequences (read: database) and/or _de novo_ OTU clustering.
+  - `lederhosen cluster ...`
 2. Generating tables from USEARCH output.
+  - `lederhosen count_taxonomies ...`
+  - `lederhosen otu_table ...`
 3. Filtering tables to remove small or insignificant OTUs.
-4. Support for paired end reads (considers taxonomic assignment for both reads in a pair).
+  - `lederhosen otu_filter ...`
+
 
 ### About
 
@@ -33,6 +37,7 @@ using paired and non-paired end short reads such as those produced by Illumina (
 - Parallel support (pipe commands into [parallel](http://savannah.gnu.org/projects/parallel/), or use your cluster's queue).
 - Support for RDP, TaxCollector or GreenGenes 16S rRNA databases.
 - Generation and filtering of OTU abundancy matrices.
+-. Support for paired end reads (considers taxonomic assignment for both reads in a pair).
 
 ### Installation
 
