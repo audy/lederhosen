@@ -16,13 +16,15 @@ Lederhosen is designed with the following "pipeline" in mind:
 1. Clustering sequences to centroid or reference sequences (read: database)
 2. Generating tables from USEARCH output.
 3. Filtering tables to remove small or insignificant OTUs.
+4. Support for paired end reads (considers taxonomic assignment for both reads in a pair).
 
 ### About
 
 - Lederhosen is a project born out of the Triplett Lab at the University of Florida.
-- Lederhosen is designed to be a fast and **simple** tool to aid in clustering 16S rRNA amplicons sequenced
+- Lederhosen is designed to be a fast and **simple** (~700 SLOC) tool to aid in clustering 16S rRNA amplicons sequenced
 using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq), Ion Torrent, or Roche-454.
-- Lederhosen uses [Semantic Versioning](http://semver.org/), is free and open source under the [MIT open source license](http://opensource.org/licenses/mit-license.php/), and has **UNIT TESTS** (omg!).
+- Lederhosen uses [Semantic Versioning](http://semver.org/), is free and open source under the
+[MIT open source license](http://opensource.org/licenses/mit-license.php/).
 - Except for USEARCH which requires a license, Lederhosen is available for commercial use.
 
 ### Features
@@ -187,6 +189,25 @@ lederhosen get_reps \
   --input=*.uc \
   --database=taxcollector.fa \
   --output=representatives.fasta
+```
+
+### Get unclassified sequences
+
+```bash
+lederhosen separate_unclassified \
+  --uc-file=my_results.uc \
+  --reads=reads_that_were_used_to_generate_results.fasta
+  --output=unclassified_reads.fasta
+```
+
+`separate_unclassified` has support for strict pairing
+
+```
+lederhosen separate_unclassified \
+  --uc-file=my_results.uc \
+  --reads=reads_that_were_used_to_generate_results.fasta
+  --strict=phylum
+  --output=unclassified_reads.fasta
 ```
 
 ## Acknowledgements
