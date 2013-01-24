@@ -66,8 +66,8 @@ module Lederhosen
         :type => str[0],
         :cluster_no => str[1],
         :alignment => str[7],
+        :query => str[8],
         :target => str[9],
-        :query => str[10],
       }
 
       r =
