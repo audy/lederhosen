@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "1.8.2"
+  s.version = "2.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2013-01-17"
+  s.date = "2013-01-24"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -27,13 +27,16 @@ Gem::Specification.new do |s|
     "lib/lederhosen/cli.rb",
     "lib/lederhosen/no_tasks.rb",
     "lib/lederhosen/tasks/cluster.rb",
+    "lib/lederhosen/tasks/count_taxonomies.rb",
     "lib/lederhosen/tasks/get_reps.rb",
     "lib/lederhosen/tasks/join_otu_tables.rb",
     "lib/lederhosen/tasks/make_udb.rb",
     "lib/lederhosen/tasks/otu_filter.rb",
     "lib/lederhosen/tasks/otu_table.rb",
+    "lib/lederhosen/tasks/separate_unclassified.rb",
     "lib/lederhosen/tasks/split_fasta.rb",
     "lib/lederhosen/tasks/version.rb",
+    "lib/lederhosen/uc_parser.rb",
     "lib/lederhosen/version.rb",
     "readme.md",
     "scripts/illumina_pipeline/.gitignore",
@@ -46,7 +49,8 @@ Gem::Specification.new do |s|
     "spec/data/test.uc",
     "spec/data/trimmed/ILT_L_9_B_001.fasta",
     "spec/no_tasks_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "spec/uc_parser_spec.rb"
   ]
   s.homepage = "http://audy.github.com/lederhosen"
   s.licenses = ["MIT"]
