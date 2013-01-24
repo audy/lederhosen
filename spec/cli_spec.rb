@@ -30,26 +30,26 @@ describe Lederhosen::CLI do
     File.exists?(File.join($test_dir, 'clusters.uc')).should be_true
   end
 
-  # it 'can separate unclassified reads from usearch output' do
-  #   `./bin/lederhosen separate_unclassified --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.fasta`
-  #   $?.success?.should be_true
-  #   a = File.readlines("spec/data/test.uc")
-  #     .select { |x| x =~ /^N/ }
-  #     .size
-  #   b = File.readlines("#{$test_dir}/unclassified.fasta")
-  #     .select { |x| x =~ /^>/ }
-  #     .size
-  # 
-  #   a.should == b
-  # end
-  # 
-  # it 'can separate unclassified reads from usearch output using strict pairing' do
-  #   `./bin/lederhosen separate_unclassified --strict=genus --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.strict_genus.fasta`
-  #   $?.success?.should be_true
-  #   File.readlines("#{$test_dir}/unclassified.strict_genus.fasta")
-  #     .select { |x| x =~ /^>/ }
-  #     .size.should be_even
-  # end
+  it 'can separate unclassified reads from usearch output' do
+    `./bin/lederhosen separate_unclassified --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.fasta`
+    $?.success?.should be_true
+    unclassified_results = File.readlines("spec/data/test.uc")
+                               .select { |x| x =~ /^N/ }
+                               .size
+    unclassified_reads = File.readlines("#{$test_dir}/unclassified.fasta")
+                             .select { |x| x =~ /^>/ }
+                             .size
+  
+    unclassified_results.should == unclassified_reads
+  end
+  
+  it 'can separate unclassified reads from usearch output using strict pairing' do
+    `./bin/lederhosen separate_unclassified --strict=genus --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.strict_genus.fasta`
+    $?.success?.should be_true
+    File.readlines("#{$test_dir}/unclassified.strict_genus.fasta")
+      .select { |x| x =~ /^>/ }
+      .size.should be_even
+  end
 
   it 'can create taxonomy count tables' do
     `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.txt`
