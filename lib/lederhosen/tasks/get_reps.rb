@@ -23,10 +23,9 @@ module Lederhosen
 
       inputs.each do |input|
         File.open(input) do |handle|
-          pbar.inc
-          handle.each do |line|
-            header = parse_usearch_line(line.strip)
-            taxa << header['original'] rescue nil
+          results = UCParser.new(handle)
+          results.each do |result|
+            taxa << result.target if result.hit?
           end
         end
       end

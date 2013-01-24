@@ -25,10 +25,31 @@ describe Lederhosen::CLI do
   end
 
   it 'can cluster reads using usearch' do
-    `./bin/lederhosen cluster --input spec/data/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.95 --output #{$test_dir}/clusters.uc`
+    `./bin/lederhosen cluster --input spec/data/trimmed/ILT_L_9_B_001.fasta --database #{$test_dir}/test_db.udb --identity 0.99 --output #{$test_dir}/clusters.uc`
     $?.success?.should be_true
     File.exists?(File.join($test_dir, 'clusters.uc')).should be_true
   end
+
+  # it 'can separate unclassified reads from usearch output' do
+  #   `./bin/lederhosen separate_unclassified --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.fasta`
+  #   $?.success?.should be_true
+  #   a = File.readlines("spec/data/test.uc")
+  #     .select { |x| x =~ /^N/ }
+  #     .size
+  #   b = File.readlines("#{$test_dir}/unclassified.fasta")
+  #     .select { |x| x =~ /^>/ }
+  #     .size
+  # 
+  #   a.should == b
+  # end
+  # 
+  # it 'can separate unclassified reads from usearch output using strict pairing' do
+  #   `./bin/lederhosen separate_unclassified --strict=genus --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.strict_genus.fasta`
+  #   $?.success?.should be_true
+  #   File.readlines("#{$test_dir}/unclassified.strict_genus.fasta")
+  #     .select { |x| x =~ /^>/ }
+  #     .size.should be_even
+  # end
 
   it 'can create taxonomy count tables' do
     `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.txt`
@@ -43,38 +64,30 @@ describe Lederhosen::CLI do
       .uniq
       .should == [1]
   end
-  
+
   %w{domain phylum class order family genus species}.each do |level|
     it "generates taxonomy tables only counting pairs that agree at level: #{level}" do
       `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.strict.#{level}.txt --strict=#{level}`
       $?.success?.should be_true
-      
-      lines = File.readlines(File.join($test_dir, "taxonomy_count.strict.#{level}.txt"))
-      
-      # make sure that all classifications are even
-      lines.select { |x| !(x =~ /^#/) }
-           .select { |x| !(x =~ /^unclassified_reads$/) }
-           .map(&:strip)
-           .map { |x| x.split(',') }
-           .map(&:last)
-           .map(&:to_i)
-           .map(&:even?)
-           .uniq
-           .should == [true]
 
-      # make sure total number of reads adds up to 684
+      lines = File.readlines(File.join($test_dir, "taxonomy_count.strict.#{level}.txt"))
+
+      # make sure total number of reads is even
+      # requires that there should be an odd number if classification is not strict
       lines.select { |x| !(x =~ /^#/) }
            .map(&:strip)
            .map { |x| x.split(',') }
            .map(&:last)
            .map(&:to_i)
-           .inject(:+).should == 684
+           .inject(:+).should be_even
     end
   end
 
-  it 'should create OTU abundance matrices from taxonomy count tables' do
-    `./bin/lederhosen otu_table --files=#{$test_dir}/taxonomy_count.strict.*.txt --level=genus --output=#{$test_dir}/otus_genus.strict.csv`
-    $?.success?.should be_true
+  %w{domain phylum class order family genus species}.each do |level|
+    it "should create OTU abundance matrices from taxonomy count tables at level: #{level}" do
+      `./bin/lederhosen otu_table --files=#{$test_dir}/taxonomy_count.strict.*.txt --level=#{level} --output=#{$test_dir}/otus_genus.strict.csv`
+      $?.success?.should be_true
+    end
   end
 
   it 'should filter OTU abundance matrices' do
@@ -93,5 +106,6 @@ describe Lederhosen::CLI do
 
   it 'should print representative sequences from uc files' do
     `./bin/lederhosen get_reps --input=#{$test_dir}/clusters.uc --database=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/representatives.fasta`
+    $?.success?.should be_true
   end
 end
