@@ -19,32 +19,37 @@ module Lederhosen
       strict  = options[:strict]
 
       unclassifieds = Set.new
+      handle = File.open(uc_file)
+      uc = UCParser.new(handle)
 
-      UCParser.new(File.open(uc_file)) do |uc|
+      if not strict
+        uc.each do |result|
+          unclassifieds << result.query if result.miss?
+        end
 
-        if not strict
-          uc.results do |result|
-            unclassifieds << result.query if result.miss?
-          end
-        elsif strict
-          uc.results.each_slice(2) do |left, right|
-            if a.miss? or b.miss? # at least one is a miss
+      elsif strict
+
+        uc.each_slice(2) do |left, right|
+          if left.miss? || right.miss? # at least one is a miss
+            unclassifieds << left.query
+            unclassifieds << right.query
+          # both are hits, check taxonomies
+          else
+            ta = parse_taxonomy(right.target)
+            tb = parse_taxonomy(left.target)
+            # inconsistent assignment or at least one is a miss
+            if (ta[strict] != tb[strict])
               unclassifieds << left.query
               unclassifieds << right.query
-            # both are hits, check taxonomies
-            else
-              ta = parse_taxonomy(a.taxonomy)
-              tb = parse_taxonomy(b.taxonomy)
-              # they match up, count both separately
-              if ta[strict] != tb[strict]
-                unclassifieds << left.query
-                unclassifieds << right.query
-              end
             end
           end
         end
 
       end
+
+      ohai "found #{unclassifieds.size} unclassified #{'(strict pairing)' if strict} reads."
+
+      handle.close
 
       # open fasta file, output unclassified reads
       out = File.open(output, 'w')
