@@ -43,7 +43,9 @@ module Lederhosen
             end
           sample_cluster_count[input_file][tax] += count
         end
+        pbar.inc
       end
+      pbar.finish
 
       all_clusters = sample_cluster_count.values.map(&:keys).flatten.uniq.sort
 
