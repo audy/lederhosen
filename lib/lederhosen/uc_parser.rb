@@ -14,11 +14,11 @@ module Lederhosen
     end
 
     def hit?
-      @source.type == 'H'
+      @source.hit_type == 'H'
     end
 
     def miss?
-      @source.type == 'N'
+      @source.hit_type == 'N'
     end
   end
 
@@ -63,7 +63,7 @@ module Lederhosen
       str = str.split("\t")
 
       dat = {
-        :type => str[0],
+        :hit_type => str[0],
         :cluster_no => str[1],
         :alignment => str[7],
         :query => str[8],
@@ -71,12 +71,12 @@ module Lederhosen
       }
 
       r =
-        if dat[:type] =~ /[SNH]/ # hits
+        if dat[:hit_type] =~ /[SNH]/ # hits
           { :length => str[2].to_i,
             :identity => str[3],
             :strand => str[4],
           }
-      elsif dat[:type] == 'C' # clusters
+      elsif dat[:hit_type] == 'C' # clusters
         { :cluster_size => str[2].to_i }
       else
         raise Exception, "Do not understand record type #{str[0]}!"

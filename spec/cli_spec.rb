@@ -33,11 +33,11 @@ describe Lederhosen::CLI do
   it 'can separate unclassified reads from usearch output' do
     `./bin/lederhosen separate_unclassified --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.fasta`
     $?.success?.should be_true
-    unclassified_results = File.readlines("spec/data/test.uc")
-                               .select { |x| x =~ /^N/ }
+    unclassified_results = File.readlines("spec/data/test.uc")\
+                               .select { |x| x =~ /^N/ }\
                                .size
-    unclassified_reads = File.readlines("#{$test_dir}/unclassified.fasta")
-                             .select { |x| x =~ /^>/ }
+    unclassified_reads = File.readlines("#{$test_dir}/unclassified.fasta")\
+                             .select { |x| x =~ /^>/ }\
                              .size
   
     unclassified_results.should == unclassified_reads
@@ -46,8 +46,8 @@ describe Lederhosen::CLI do
   it 'can separate unclassified reads from usearch output using strict pairing' do
     `./bin/lederhosen separate_unclassified --strict=genus --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.strict_genus.fasta`
     $?.success?.should be_true
-    File.readlines("#{$test_dir}/unclassified.strict_genus.fasta")
-      .select { |x| x =~ /^>/ }
+    File.readlines("#{$test_dir}/unclassified.strict_genus.fasta")\
+      .select { |x| x =~ /^>/ }\
       .size.should be_even
   end
 
@@ -58,10 +58,10 @@ describe Lederhosen::CLI do
   end
 
   it 'generates taxonomy tables w/ comma-free taxonomic descriptions' do
-    File.readlines(File.join($test_dir, 'taxonomy_count.txt'))
-      .map(&:strip)
-      .map { |x| x.count(',') }
-      .uniq
+    File.readlines(File.join($test_dir, 'taxonomy_count.txt'))\
+      .map(&:strip)\
+      .map { |x| x.count(',') }\
+      .uniq\
       .should == [1]
   end
 
@@ -74,11 +74,11 @@ describe Lederhosen::CLI do
 
       # make sure total number of reads is even
       # requires that there should be an odd number if classification is not strict
-      lines.select { |x| !(x =~ /^#/) }
-           .map(&:strip)
-           .map { |x| x.split(',') }
-           .map(&:last)
-           .map(&:to_i)
+      lines.select { |x| !(x =~ /^#/) }\
+           .map(&:strip)\
+           .map { |x| x.split(',') }\
+           .map(&:last)\
+           .map(&:to_i)\
            .inject(:+).should be_even
     end
   end
