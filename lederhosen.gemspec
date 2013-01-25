@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lederhosen"
-  s.version = "2.0.0"
+  s.version = "2.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Austin G. Davis-Richardson"]
-  s.date = "2013-01-24"
+  s.date = "2013-01-25"
   s.description = "Various tools for OTU clustering"
   s.email = "harekrishna@gmail.com"
   s.executables = ["lederhosen"]
@@ -55,7 +55,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://audy.github.com/lederhosen"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.23"
+  s.rubygems_version = "1.8.24"
   s.summary = "OTU Clustering"
 
   if s.respond_to? :specification_version then
@@ -67,14 +67,12 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<thor>, ["= 0.16.0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<jeweler>, ["= 1.8.4"])
-      s.add_development_dependency(%q<ruby-prof>, ["= 0.11.2"])
     else
       s.add_dependency(%q<dna>, [">= 0"])
       s.add_dependency(%q<progressbar>, ["= 0.12.0"])
       s.add_dependency(%q<thor>, ["= 0.16.0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<jeweler>, ["= 1.8.4"])
-      s.add_dependency(%q<ruby-prof>, ["= 0.11.2"])
     end
   else
     s.add_dependency(%q<dna>, [">= 0"])
@@ -82,7 +80,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<thor>, ["= 0.16.0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<jeweler>, ["= 1.8.4"])
-    s.add_dependency(%q<ruby-prof>, ["= 0.11.2"])
   end
 end
 
