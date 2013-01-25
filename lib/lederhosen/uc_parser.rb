@@ -1,24 +1,36 @@
-require 'ostruct'
-
 module Lederhosen
 
   # represents a usearch result
   class UResult
 
-    def initialize(hash)
-      @source = OpenStruct.new(hash)
-    end
+    attr_accessor :hit_type,
+                  :cluster_no,
+                  :alignment,
+                  :query,
+                  :target,
+                  :length,
+                  :identity,
+                  :strand,
+                  :cluster_size
 
-    def method_missing(method, *args, &block)
-      @source.send(method, *args, &block)
+    def initialize(hash)
+      self.hit_type = hash[:hit_type]
+      self.cluster_no = hash[:cluster_no]
+      self.alignment = hash[:alignment]
+      self.target = hash[:target]
+      self.query = hash[:query]
+      self.length = hash[:length]
+      self.identity = hash[:identity]
+      self.strand = hash[:strand]
+      self.cluster_size = hash[:cluster_size]
     end
 
     def hit?
-      @source.hit_type == 'H'
+      self.hit_type == 'H'
     end
 
     def miss?
-      @source.hit_type == 'N'
+      self.hit_type == 'N'
     end
   end
 
@@ -40,7 +52,7 @@ module Lederhosen
     end
 
     private
-    
+
     # parse a line of usearch prefix
     # return a hash in the form:
     # { :taxonomy => '', :identity => '0.00', ... }

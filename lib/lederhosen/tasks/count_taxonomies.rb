@@ -21,6 +21,7 @@ module Lederhosen
       taxonomy_count =
         if not strict
           get_taxonomy_count(uc)
+
         elsif strict
           get_strict_taxonomy_count(uc, strict)
         end
@@ -77,7 +78,7 @@ module Lederhosen
         end # results.each_slice
         taxonomy_count
       end
-      
+
     end
   end
 end
