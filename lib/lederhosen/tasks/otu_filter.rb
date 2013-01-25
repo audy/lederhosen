@@ -25,7 +25,7 @@ module Lederhosen
       # slurp up CSV file
       File.open input do |handle|
         header = handle.gets.strip.split(',')
-        cluster_ids = header[1..-1]
+        cluster_ids = header[0..-1]
         handle.each do |line|
           line = line.strip.split(',')
           sample_id = line[0].to_sym
@@ -53,13 +53,14 @@ module Lederhosen
       samples = filtered.values.map(&:keys).flatten.uniq
       clusters = filtered.keys
       out.puts "-,#{clusters.join(',')},noise"
+
       samples.each do |sample|
         out.print "#{sample}"
         clusters.each do |cluster|
           out.print ",#{filtered[cluster][sample]}"
         end
-        noise_sum = noise.map { |n| cluster_sample_count[n][sample]}.inject(:+)
-        out.print ",#{noise_sum}"
+        noise_sum = noise.map { |n| cluster_sample_count[n][sample] }.inject(:+)
+        out.print ",#{noise_sum || 0}"
         out.print "\n"
       end
       out.close
