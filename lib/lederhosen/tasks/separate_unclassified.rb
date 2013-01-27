@@ -21,15 +21,18 @@ module Lederhosen
       unclassifieds = Set.new
       handle = File.open(uc_file)
       uc = UCParser.new(handle)
+      total_reads = 0
 
       if not strict
         uc.each do |result|
           unclassifieds << result.query if result.miss?
+          total_reads += 1
         end
 
       elsif strict
 
         uc.each_slice(2) do |left, right|
+          total_reads += 2
           if left.miss? || right.miss? # at least one is a miss
             unclassifieds << left.query
             unclassifieds << right.query
@@ -48,6 +51,7 @@ module Lederhosen
       end
 
       ohai "found #{unclassifieds.size} unclassified #{'(strict pairing)' if strict} reads."
+      ohai "unclassified: #{'%0.2f' % (100*unclassifieds.size/total_reads.to_f)} %"
 
       handle.close
 
