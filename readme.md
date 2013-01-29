@@ -51,6 +51,10 @@ using paired and non-paired end short reads such as those produced by Illumina (
     `sudo gem install lederhosen`
 4. Check installation by typing `lederhosen`. You should see some help text.
 
+### Need Help?
+
+Bug me: [@heyaudy](http://twitter.com/heyaudy) (twitter)
+
 ## Tasks
 
 Lederhosen is invoked by typing `lederhosen [TASK]`
