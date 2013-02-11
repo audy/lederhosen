@@ -1,4 +1,4 @@
-<img src="http://d.pr/i/26Js+#.png" align="right">
+<img src="https://raw.github.com/audy/lederhosen/master/logo.png" align="right">
 
 # Lederhosen
 
