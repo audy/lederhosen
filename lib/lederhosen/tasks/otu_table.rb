@@ -39,7 +39,11 @@ module Lederhosen
             if taxonomy == 'unclassified_reads'
               'unclassified_reads'
             else
-              parse_taxonomy(taxonomy)[level]
+              if level == 'original'
+                taxonomy
+              else
+                parse_taxonomy(taxonomy)[level]
+              end
             end
           sample_cluster_count[input_file][tax] += count
         end
