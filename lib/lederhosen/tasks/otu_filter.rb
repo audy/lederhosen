@@ -48,6 +48,7 @@ module Lederhosen
       pbar.finish
 
       mask = otu_order.map { |x| seen[x] >= min_samples }
+
       ohai "found #{otu_order.size} otus, keeping #{mask.reject { |x| x }.size}"
 
       output = File.open(output, 'w')
@@ -57,26 +58,28 @@ module Lederhosen
       File.open(input) do |handle|
         header = handle.gets.strip.split(',')
         header = header.zip(mask).map { |k, m| k if m }.compact
-        output.puts header.join(',')
+        output.print header.join(',')
+        output.print ",noise\n" # need a "noise" column
 
         handle.each do |line|
           pbar.set handle.pos
           line = line.strip.split(',')
 
           sample_name = line[0]
-          counts = line[1..-1]
+          counts = line[1..-1].map &:to_i
 
-          counts = counts.zip(mask).map { |h, k| h.to_i if k }.compact
-          filtered_reads += counts.inject(:+)
+          kept_counts = counts.zip(mask).map { |c, m| c if m }.compact
+          noise = counts.zip(mask).map { |c, m| c unless m }.compact.inject(:+)
+          filtered_reads += noise
 
-          output.puts "#{sample_name},#{counts.join(',')}"
+          output.puts "#{sample_name},#{kept_counts.join(',')},#{noise}"
 
         end
       end
 
       pbar.finish
 
-      ohai "kept #{total_reads}/#{filtered_reads} reads (#{100*filtered_reads/total_reads.to_f}%)"
+      ohai "kept #{total_reads - filtered_reads}/#{total_reads} reads (#{100*(total_reads - filtered_reads)/total_reads.to_f}%)"
 
       output.close
 
