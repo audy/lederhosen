@@ -18,57 +18,68 @@ module Lederhosen
 
       ohai "filtering otu file #{input} (reads = #{reads}, samples = #{min_samples})"
 
-      cluster_sample_count = Hash.new { |h, k| h[k] = Hash.new }
+      # make one pass finding which OTUs to keep
+      # create mask that maps which columns correspond to good OTUs
+      # pass over table again printing only those columns
 
-      ohai "loading csv file #{input}"
+      seen = Hash.new { |h, k| h[k] = 0 }
 
-      # slurp up CSV file
-      File.open input do |handle|
+      otu_order = []
+
+      pbar = ProgressBar.new 'counting', File.size(input)
+      total_reads = 0
+
+      File.open(input) do |handle|
         header = handle.gets.strip.split(',')
-        cluster_ids = header[0..-1]
+        header.each { |x| otu_order << x }
+
         handle.each do |line|
+          pbar.set handle.pos
           line = line.strip.split(',')
-          sample_id = line[0].to_sym
-          counts = line[1..-1].map(&:to_i)
-          cluster_ids.zip(counts).each do |cluster, count|
-            cluster_sample_count[cluster][sample_id] = count
+          sample_name = line[0]
+          abunds = line[1..-1].map &:to_i
+          otu_order.zip(abunds) do |o, a|
+            total_reads += a
+            seen[o] += 1 if a >= reads
           end
         end
       end
 
-      ohai "filtering"
+      pbar.finish
 
-      # filter sample_cluster_count
-      # todo: move filtered reads to 'unclassified_reads' classification
-      filtered = cluster_sample_count.reject { |k, v| v.reject { |k, v| v < reads }.size < min_samples }
+      mask = otu_order.map { |x| seen[x] >= min_samples }
+      ohai "found #{otu_order.size} otus, keeping #{mask.reject { |x| x }.size}"
 
-      # use functional programming they said
-      # it will make your better they said
-      noise = cluster_sample_count.keys - filtered.keys
+      output = File.open(output, 'w')
 
-      ohai "saving to #{output}"
+      pbar = ProgressBar.new 'writing', File.size(input)
+      filtered_reads = 0
+      File.open(input) do |handle|
+        header = handle.gets.strip.split(',')
+        header = header.zip(mask).map { |k, m| k if m }.compact
+        output.puts header.join(',')
 
-      # save the table
-      out = File.open(output, 'w')
-      samples = filtered.values.map(&:keys).flatten.uniq
-      clusters = filtered.keys
-      out.puts "-,#{clusters.join(',')},noise"
+        handle.each do |line|
+          pbar.set handle.pos
+          line = line.strip.split(',')
 
-      samples.each do |sample|
-        out.print "#{sample}"
-        clusters.each do |cluster|
-          out.print ",#{filtered[cluster][sample]}"
+          sample_name = line[0]
+          counts = line[1..-1]
+
+          counts = counts.zip(mask).map { |h, k| h.to_i if k }.compact
+          filtered_reads += counts.inject(:+)
+
+          output.puts "#{sample_name},#{counts.join(',')}"
+
         end
-        noise_sum = noise.map { |n| cluster_sample_count[n][sample] }.inject(:+)
-        out.print ",#{noise_sum || 0}"
-        out.print "\n"
       end
-      out.close
 
-      ohai "kept #{filtered.keys.size} clusters (#{filtered.keys.size/cluster_sample_count.size.to_f})."
-      kept_reads = filtered.values.map { |x| x.values.inject(:+) }.inject(:+)
-      total_reads = cluster_sample_count.values.map { |x| x.values.inject(:+) }.inject(:+)
-      ohai "kept #{kept_reads}/#{total_reads} reads (#{kept_reads/total_reads.to_f})."
+      pbar.finish
+
+      ohai "kept #{total_reads}/#{filtered_reads} reads (#{100*filtered_reads/total_reads.to_f}%)"
+
+      output.close
+
     end
 
   end
