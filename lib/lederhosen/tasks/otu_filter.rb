@@ -49,7 +49,7 @@ module Lederhosen
 
       mask = otu_order.map { |x| seen[x] >= min_samples }
 
-      ohai "found #{otu_order.size} otus, keeping #{mask.reject { |x| x }.size}"
+      ohai "found #{otu_order.size} otus, keeping #{mask.count(true)}"
 
       output = File.open(output, 'w')
 
