@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 gem "dna", :git => 'http://github.com/audy/dna.git', :tag => 'v0.2.1'
 gem 'progressbar', '0.12.0'
