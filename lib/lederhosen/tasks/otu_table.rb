@@ -54,15 +54,18 @@ module Lederhosen
       all_clusters = sample_cluster_count.values.map(&:keys).flatten.uniq.sort
 
       out = File.open(output, 'w')
-      
+
       out.puts all_clusters.join(',')
+      pbar = ProgressBar.new('saving', inputs.size)
       inputs.sort.each do |input|
+        pbar.inc
         out.print "#{input}"
         all_clusters.each do |c|
           out.print ",#{sample_cluster_count[input][c]}"
         end
         out.print "\n"
       end
+      pbar.finish
 
     end
 
