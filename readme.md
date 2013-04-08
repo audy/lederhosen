@@ -61,7 +61,9 @@ Lederhosen is invoked by typing `lederhosen [TASK]`
 
 ### Trim Reads
 
-Trimming removed. I think you should use [Sickle](https://github.com/najoshi/sickle).
+Trimming removed. I think you should use
+[Sickle](https://github.com/najoshi/sickle), or
+[Trimmomatic](http://www.usadellab.org/cms/index.php?page=trimmomatic)
 
 ### Create Database
 
