@@ -85,7 +85,7 @@ Cluster reads using USEARCH. Output is a uc file.
 
 ```bash
 lederhosen cluster \
-  --input=trimmed/*.fasta \
+  --input=trimmed/sequences.fasta \
   --identity=0.95 \
   --output=clusters_95.uc \
   --database=taxcollector.udb
