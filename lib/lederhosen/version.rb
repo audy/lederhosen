@@ -1,10 +1,16 @@
 module Lederhosen
   module Version
-    MAJOR = 2
+    MAJOR = 3
     MINOR = 0
-    CODENAME = 'Schnittlauchbrot' # changes for minor versions
-    PATCH = 8
+    CODENAME = 'Biergarten' # changes for minor versions
+    PATCH = 0
+    PRE = 'dev'
 
-    STRING = [MAJOR, MINOR, PATCH].join('.')
+    string = [MAJOR, MINOR, PATCH].join('.')
+    if PRE
+      string = string + "-#{PRE}"
+    end
+    
+    STRING = string
   end
 end
