@@ -52,42 +52,22 @@ describe Lederhosen::CLI do
   end
 
   it 'can create taxonomy count tables' do
-    `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.txt`
+    `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.tax`
     $?.success?.should be_true
-    File.exists?(File.join($test_dir, 'taxonomy_count.txt')).should be_true
+    File.exists?(File.join($test_dir, 'taxonomy_count.tax')).should be_true
   end
 
   it 'generates taxonomy tables w/ comma-free taxonomic descriptions' do
-    File.readlines(File.join($test_dir, 'taxonomy_count.txt'))\
+    File.readlines(File.join($test_dir, 'taxonomy_count.tax'))\
       .map(&:strip)\
       .map { |x| x.count(',') }\
       .uniq\
       .should == [1]
   end
 
-  %w{domain phylum class order family genus species}.each do |level|
-    it "generates taxonomy tables only counting pairs that agree at level: #{level}" do
-      `./bin/lederhosen count_taxonomies --input=spec/data/test.uc --output=#{$test_dir}/taxonomy_count.strict.#{level}.txt --strict=#{level}`
-      $?.success?.should be_true
-
-      lines = File.readlines(File.join($test_dir, "taxonomy_count.strict.#{level}.txt"))
-
-      # make sure total number of reads is even
-      # requires that there should be an odd number if classification is not strict
-      lines.select { |x| !(x =~ /^#/) }\
-           .map(&:strip)\
-           .map { |x| x.split(',') }\
-           .map(&:last)\
-           .map(&:to_i)\
-           .inject(:+).should be_even
-    end
-  end
-
-  %w{domain phylum class order family genus species}.each do |level|
-    it "should create OTU abundance matrices from taxonomy count tables at level: #{level}" do
-      `./bin/lederhosen otu_table --files=#{$test_dir}/taxonomy_count.strict.*.txt --level=#{level} --output=#{$test_dir}/otus_genus.strict.csv`
-      $?.success?.should be_true
-    end
+  it 'can create OTU abundance matrices' do
+    `./bin/lederhosen otu_table --files=#{$test_dir}/taxonomy_count.tax --output=#{$test_dir}/otus.genus.csv --level=genus`
+    $?.success?.should be_true
   end
 
   it 'should filter OTU abundance matrices' do
@@ -95,7 +75,7 @@ describe Lederhosen::CLI do
     # filtering should move filtered reads to 'unclassified_reads' so that we maintain
     # our knowledge of depth of coverage throughout
     # this makes normalization better later.
-    `./bin/lederhosen otu_filter --input=#{$test_dir}/otus_genus.strict.csv --output=#{$test_dir}/otu_table.filtered.csv --reads 1 --samples 1`
+    `./bin/lederhosen otu_filter --input=#{$test_dir}/otus.genus.csv --output=#{$test_dir}/otus_genus.filtered.csv --reads 1 --samples 1`
     $?.success?.should be_true
   end
 
