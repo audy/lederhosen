@@ -39,10 +39,10 @@ describe Lederhosen::CLI do
     unclassified_reads = File.readlines("#{$test_dir}/unclassified.fasta")\
                              .select { |x| x =~ /^>/ }\
                              .size
-  
+
     unclassified_results.should == unclassified_reads
   end
-  
+
   it 'can separate unclassified reads from usearch output using strict pairing' do
     `./bin/lederhosen separate_unclassified --strict=genus --uc-file=spec/data/test.uc --reads=spec/data/trimmed/ILT_L_9_B_001.fasta --output=#{$test_dir}/unclassified.strict_genus.fasta`
     $?.success?.should be_true
