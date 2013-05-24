@@ -70,7 +70,7 @@ module Lederhosen
 
           kept_counts = counts.zip(mask).map { |c, m| c if m }.compact
           noise = counts.zip(mask).map { |c, m| c unless m }.compact.inject(:+)
-          filtered_reads += noise
+          filtered_reads += noise || 0
 
           output.puts "#{sample_name},#{kept_counts.join(',')},#{noise}"
 
