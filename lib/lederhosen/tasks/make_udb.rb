@@ -10,12 +10,14 @@ module Lederhosen
       input       = options[:input]
       output      = options[:output]
       word_length = options[:word_length]
+      db_step     = options[:db_step]
 
       ohai "making udb w/ #{input}, saving as #{output}."
 
       cmd = ['usearch',
              "-makeudb_usearch #{input}",
-             "-output #{output}"]
+             "-output #{output}",
+            ]
 
       cmd = cmd.join(' ')
 

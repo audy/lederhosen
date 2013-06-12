@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lederhosen::CLI do
+describe Lederhosen::CLI, :requires_usearch => true do
 
   it 'should have an executable' do
     `./bin/lederhosen`
