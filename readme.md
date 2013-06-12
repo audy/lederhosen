@@ -1,7 +1,7 @@
 <img src="https://raw.github.com/audy/lederhosen/master/logo.png" align="right">
 
 [![Build
-Status](https://travis-ci.org/audy/lederhosen.png?branch=usearch)](https://travis-ci.org/audy/lederhosen)
+Status](https://travis-ci.org/audy/lederhosen.png)](https://travis-ci.org/audy/lederhosen)
 
 # Lederhosen
 
