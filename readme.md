@@ -12,13 +12,8 @@ No assumptions are made about the design of your experiment.
 Therefore, there are no tools for read pre-processing and data analysis
 or statistics. Insert reads, receive data.
 
-### About
-
-- Lederhosen is designed to be a fast and **simple** (~700 SLOC) tool to aid in clustering 16S rRNA amplicons sequenced
-using paired and non-paired end short reads such as those produced by Illumina (GAIIx, HiSeq and MiSeq), Ion Torrent, or Roche-454.
-- Lederhosen uses [Semantic Versioning](http://semver.org/), is free and open source under the
-[MIT open source license](http://opensource.org/licenses/mit-license.php/).
-- Except for USEARCH which requires a license, Lederhosen is available for commercial use.
+Lederhosen is free and open source under the MIT license. Except for
+the USEARCH license, Lederhosen is free for commercial use.
 
 ### Features
 
@@ -57,15 +52,15 @@ You can use
 
 ### Create Database
 
-Create UDB database required by usearch from TaxCollector
+The 16S database can optionally be in USEARCH database format (udb).
+This speeds things up if you are clustering sequences in multiple FASTA
+files.
 
 ```bash
 lederhosen make_udb \
   --input=taxcollector.fa \
   --output=taxcollector.udb
 ```
-
-(not actually required but will make batch searching a lot faster)
 
 ### Cluster Reads using USEARCH
 
@@ -79,8 +74,9 @@ lederhosen cluster \
   --database=taxcollector.udb
 ```
 
-The optional `--dry-run` parameter outputs the usearch command to standard out.
-This is useful if you want to run usearch on a cluster.
+The optional `--dry-run` parameter prints the USEARCH command to
+standard out. Instead of actually running the command. This is useful if
+you want to run jobs in parallel and/or on a cluster.
 
 ```bash
 for reads_file in reads/*.fasta;
@@ -100,7 +96,7 @@ cat jobs.sh | parallel -j 24 # run 24 parallel jobs
 
 ### Generate taxonomy counts tables
 
-Before generating OTU tables, you must generate taxonomy counts tables.
+Before generating OTU tables, you must generate taxonomy counts (`.tax`) tables.
 
 A taxonomy count table looks something like this
 
@@ -117,19 +113,6 @@ lederhosen count_taxonomies \
   --output=clusters_taxonomies.txt
 ```
 
-If you did paired-end sequencing, you can generate strict taxonomy tables that only count reads when *both pairs* have the *same*
-taxonomic description at a certain taxonomic level. This is useful for leveraging the increased length of having pairs and also
-acts as a sort of chimera filter. You will, however, end up using less of your reads as the level goes from domain to species.
-
-```bash
-lederhosen count_taxonomies \
-  --input=clusters.uc \
-  --strict=genus \
-  --output=clusters_taxonomies.strict.genus.txt
-```
-
-Reads that do not have the same phylogeny at `level` will become `unclassified_reads`
-
 ### Generate OTU tables
 
 Create an OTU abundance table where rows are samples and columns are clusters. The entries are the number of reads for that cluster in a sample.
@@ -144,8 +127,8 @@ lederhosen otu_table \
 This will create the file `my_poop_samples_genus_strict.95.txt` containing the clusters
 as columns and the samples as rows.
 
-You now will apply advanced data mining and statistical techniques to this table to make
-interesting biological inferences and cure diseases.
+If your database doesn't have taxonomic descriptions, use
+`--level=original`.
 
 ### Filter OTU tables
 
@@ -166,7 +149,6 @@ lederhosen otu_filter \
 
 This will remove any clusters that do not appear in at least 10 samples with at least 50 reads. The read counts
 for filtered clusters will be moved to the `noise` psuedocluster.
-
 
 ### Get representative sequences
 
@@ -211,9 +193,9 @@ lederhosen separate_unclassified \
 
 ## Acknowledgements
 
-- Lexi, Vinnie and Kevin for beta-testing and putting up with bugs
-- The QIIME project for inspiration
-- Sinbad Richardson for the Lederhosen Guy artwork
+- [Sinbad Richardson](http://viennapitts.com/) for the Lederhosen Guy artwork
+- Lexi, and Kevin for beta-testing and putting up with bugs.
+- The QIIME project for inspiration.
 
 ## Please Cite
 
