@@ -30,7 +30,8 @@ the USEARCH license, Lederhosen is free for commercial use.
 0. Obtain & Install [USEARCH](http://www.drive5.com/).
 1. Get a database:
   - [TaxCollector](http://github.com/audy/taxcollector)
-  - [GreenGenes](http://greengenes.lbl.gov) 16S database
+  - [GreenGenes 13.5 Rep. Set](http://greengenes.secondgenome.com/downloads) 16S
+    database (**recommended**)
   - File an [issue report](https://github.com/audy/lederhosen/issues) or pull request ;) to request support for a different database.
 2. Install Lederhosen by typing:
 
