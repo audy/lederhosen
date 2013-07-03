@@ -40,7 +40,7 @@ the USEARCH license, Lederhosen is free for commercial use.
 
 ### Need Help?
 
-Bug me: [@heyaudy](http://twitter.com/heyaudy) (twitter)
+Tweets: [@heyaudy](http://twitter.com/heyaudy).
 
 ## Tasks
 
