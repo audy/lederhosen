@@ -36,6 +36,8 @@ module Lederhosen
         # taxcollector taxonomy starts with a open square bracked
         if taxonomy =~ /^\[/
           :taxcollector
+        elsif taxonomy =~ /s__/
+          :greengenes135
         elsif taxonomy =~ /^\d/
           :greengenes
         elsif taxonomy.nil?
@@ -62,6 +64,7 @@ module Lederhosen
 
       RE_TAXCOLLECTOR = /^\[0\](.*);\[1\](.*);\[2\](.*);\[3\](.*);\[4\](.*);\[5\](.*);\[6\](.*);\[7\](.*);\[8\](.*)/
       RE_GREENGENES = /k__(.*); ?p__(.*); ?c__(.*); ?o__(.*); ?f__(.*); ?g__(.*); ?(.*);/
+      RE_GREENGENES_135 = /k__(.*); ?p__(.*); ?c__(.*); ?o__(.*); ?f__(.*); ?g__(.*); ?s__(.*)/
       RE_QIIME = /k__(.*);p__(.*);c__(.*);o__(.*);f__(.*);g__(.*);s__(.*)/
 
       def parse_taxonomy_qiime(taxonomy)
@@ -80,6 +83,19 @@ module Lederhosen
       def parse_taxonomy_greengenes(taxonomy)
         levels = %w{domain phylum class order family genus species}
         match_data = taxonomy.match(RE_GREENGENES)
+        match_data = match_data[1..-1]
+
+        names = Hash.new
+        # for some reason Hash[*levels.zip(match_data)] ain't working
+        levels.zip(match_data).each { |l, n| names[l] = n }
+
+        names['original'] = taxonomy
+        names
+      end
+
+      def parse_taxonomy_greengenes_135(taxonomy)
+        levels = %w{domain phylum class order family genus species}
+        match_data = taxonomy.match(RE_GREENGENES_135)
         match_data = match_data[1..-1]
 
         names = Hash.new

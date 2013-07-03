@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'no_tasks' do
 
   let(:greengenes_taxonomies) { ['124 U55236.1 Methanobrevibacter thaueri str. CW k__domain; p__phylum; c__class; o__order; f__family; g__genus; species; otu_127']}
+  let(:greengenes135_taxonomies) { ['k__Bacteria; p__Proteobacteria; c__Gammaproteobacteria; o__Pseudomonadales; f__Pseudomonadaceae; g__Pseudomonas; s__alcaligenes']}
   let(:qiime_taxonomies) { [ 'k__domain;p__phylum;c__class;o__order;f__family;g__genus;s__species' ]}
   let(:taxcollector_taxonomies) { ['[0]domain;[1]phylum;[2]class;[3]order;[4]family;[5]genus;[6]species;[7]strain;[8]Genus_species_strain_id'] }
   let(:lederhosen) { Lederhosen::CLI.new }
@@ -12,6 +13,12 @@ describe 'no_tasks' do
   it '#detect_taxonomy_format should recognize GreenGenes' do
     greengenes_taxonomies.each do |greengenes_taxonomy|
       lederhosen.detect_taxonomy_format(greengenes_taxonomy).should == :greengenes
+    end
+  end
+
+  it '#detect_taxonomy_format should recognize GreenGenes v13.5' do
+    greengenes135_taxonomies.each do |greengenes_taxonomy|
+      lederhosen.detect_taxonomy_format(greengenes_taxonomy).should == :greengenes135
     end
   end
 
