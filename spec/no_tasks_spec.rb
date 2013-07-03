@@ -33,27 +33,26 @@ describe 'no_tasks' do
         taxonomy[level].should == level
       end
     end
-    
+
     it "#parse_taxonomy_greengenes should parse greengenes taxonomy (#{level})" do
       greengenes_taxonomies.each do |greengenes_taxonomy|
         taxonomy = lederhosen.parse_taxonomy_greengenes(greengenes_taxonomy)
         taxonomy[level].should == level
       end
     end
-    
+
     it "#parse_taxonomy_greengenes should parse qiime taxonomy (#{level})" do
       qiime_taxonomies.each do |qiime_taxonomy|
         taxonomy = lederhosen.parse_taxonomy_qiime(qiime_taxonomy)
         taxonomy[level].should == level
       end
     end
-    
+
   end
-  
+
   it '#parse_taxonomy_taxcollector should return original taxonomy' do
     lederhosen.parse_taxonomy_taxcollector(taxcollector_taxonomies[0])['original'].should == taxcollector_taxonomies[0]
   end
-
 
   it '#parse_taxonomy should automatically detect and parse greengenes taxonomy' do
     greengenes_taxonomies.each do |greengenes_taxonomy|
