@@ -37,7 +37,7 @@ module Lederhosen
         if taxonomy =~ /^\[/
           :taxcollector
         elsif taxonomy =~ /s__/
-          :greengenes135
+          :greengenes_135
         elsif taxonomy =~ /^\d/
           :greengenes
         elsif taxonomy.nil?
@@ -53,6 +53,8 @@ module Lederhosen
         case @taxonomy_format
         when :greengenes
           parse_taxonomy_greengenes(taxonomy)
+        when :greengenes_135
+          parse_taxonomy_greengenes_135(taxonomy)
         when :taxcollector
           parse_taxonomy_taxcollector(taxonomy)
         when :qiime
