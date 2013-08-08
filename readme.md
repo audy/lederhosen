@@ -27,6 +27,8 @@ the USEARCH license, Lederhosen is free for commercial use.
 
 ### Installation
 
+Tested using Ruby 1.9.3 and 2.0.0 (1.8.7 not supported)
+
 0. Obtain & Install [USEARCH](http://www.drive5.com/).
 1. Get a database:
   - [TaxCollector](http://github.com/audy/taxcollector)
