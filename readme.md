@@ -27,10 +27,13 @@ the USEARCH license, Lederhosen is free for commercial use.
 
 ### Installation
 
+Tested using Ruby 1.9.3 and 2.0.0 (1.8.7 not supported)
+
 0. Obtain & Install [USEARCH](http://www.drive5.com/).
 1. Get a database:
   - [TaxCollector](http://github.com/audy/taxcollector)
-  - [GreenGenes](http://greengenes.lbl.gov) 16S database
+  - [GreenGenes 13.5 Rep. Set](http://greengenes.secondgenome.com/downloads) 16S
+    database (**recommended**)
   - File an [issue report](https://github.com/audy/lederhosen/issues) or pull request ;) to request support for a different database.
 2. Install Lederhosen by typing:
 
@@ -39,7 +42,7 @@ the USEARCH license, Lederhosen is free for commercial use.
 
 ### Need Help?
 
-Bug me: [@heyaudy](http://twitter.com/heyaudy) (twitter)
+Tweets: [@heyaudy](http://twitter.com/heyaudy).
 
 ## Tasks
 
