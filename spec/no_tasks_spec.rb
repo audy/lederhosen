@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'no_tasks' do
+describe 'Lederhosen::CLI.no_tasks' do
 
   let(:greengenes_taxonomies) { ['124 U55236.1 Methanobrevibacter thaueri str. CW k__domain; p__phylum; c__class; o__order; f__family; g__genus; species; otu_127']}
   let(:qiime_taxonomies) { [ 'k__domain;p__phylum;c__class;o__order;f__family;g__genus;s__species' ]}
