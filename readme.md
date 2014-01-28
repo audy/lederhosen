@@ -90,7 +90,7 @@ do
     echo lederhosen cluster \
                     --input=$reads_file \
                     --identity=0.95 \
-                    --output=$(basename $reads_file_ .fasta).95.uc \
+                    --output=$(basename $reads_file .fasta).95.uc \
                     --database=taxcollector.udb \
                     --threads 1 \
                     --dry-run
