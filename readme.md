@@ -94,7 +94,7 @@ do
                     --database=taxcollector.udb \
                     --threads 1 \
                     --dry-run
-end > jobs.sh
+done > jobs.sh
 
 # send jobs to queue system
 cat jobs.sh | parallel -j 24 # run 24 parallel jobs
