@@ -3,7 +3,7 @@ module Lederhosen
     MAJOR = 3
     MINOR = 2
     CODENAME = 'Tandem-Fahrrad' # changes for minor versions
-    PATCH = 0
+    PATCH = 1
 
     string = [MAJOR, MINOR, PATCH].join('.')
 
