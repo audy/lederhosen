@@ -1,11 +1,5 @@
 <img src="https://raw.github.com/audy/lederhosen/master/logo.png" align="right">
 
-[![Gem Version](https://badge.fury.io/rb/lederhosen.svg)](http://badge.fury.io/rb/lederhosen)
-
-[![Build Status](https://travis-ci.org/audy/lederhosen.png)](https://travis-ci.org/audy/lederhosen)
-
-[![Coverage Status](https://coveralls.io/repos/audy/lederhosen/badge.png)](https://coveralls.io/r/audy/lederhosen)
-
 # Lederhosen
 
 Lederhosen is a set of tools for OTU clustering rRNA amplicons using
@@ -20,6 +14,14 @@ or statistics. Insert reads, receive data.
 
 Lederhosen is free and open source under the MIT license. Except for
 the USEARCH license, Lederhosen is free for commercial use.
+
+### Badges
+
+[![Gem Version](https://badge.fury.io/rb/lederhosen.svg)](http://badge.fury.io/rb/lederhosen)
+
+[![Build Status](https://travis-ci.org/audy/lederhosen.png)](https://travis-ci.org/audy/lederhosen)
+
+[![Coverage Status](https://coveralls.io/repos/audy/lederhosen/badge.png)](https://coveralls.io/r/audy/lederhosen)
 
 ### Features
 
