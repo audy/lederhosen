@@ -10,6 +10,7 @@ group :development do
 end
 
 group :test do
+  gem 'coveralls'
   gem 'pry'
   gem 'rspec', '2.12.0'
 end

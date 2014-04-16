@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/audy/lederhosen.png)](https://travis-ci.org/audy/lederhosen)
 
+[![Coverage Status](https://coveralls.io/repos/audy/lederhosen/badge.png)](https://coveralls.io/r/audy/lederhosen)
+
 # Lederhosen
 
 Lederhosen is a set of tools for OTU clustering rRNA amplicons using
